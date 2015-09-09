@@ -9,15 +9,15 @@
 [general]
 name=PAG Luxembourg
 qgisMinimumVersion=2.8
-description=Gestion de Plans d'Aménagement Général du Grand-Duché de Luxembourg
+description=Gestion de Plans d'Amenagement General du Grand-Duche de Luxembourg
 version=1.0
 author=arx iT
 email=mba@arxit.com
 
-about=Gestion de Plans d'Aménagement Général du Grand-Duché de Luxembourg
+about=Gestion de Plans d'Amenagement General du Grand-Duche de Luxembourg
 
-tracker=Todo Github
-repository=Todo Github
+tracker=https://github.com/Geoportail-Luxembourg/qgis-pag-plugin/issues
+repository=https://github.com/Geoportail-Luxembourg/qgis-pag-plugin
 # End of mandatory metadata
 
 # Recommended items:

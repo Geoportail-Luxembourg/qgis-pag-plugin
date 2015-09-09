@@ -31,5 +31,5 @@ def classFactory(iface):  # pylint: disable=invalid-name
     :type iface: QgsInterface
     """
     #
-    from .pag_luxembourg import PagLuxembourg
+    from pag_luxembourg import PagLuxembourg
     return PagLuxembourg(iface)

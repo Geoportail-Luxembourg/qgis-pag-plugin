@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/plugins/PagLuxembourg" >
         <file>icon.png</file>
+        <file>widgets/create_project/icon.png</file>
     </qresource>
 </RCC>

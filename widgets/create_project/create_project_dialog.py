@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """
 /***************************************************************************
- PagLuxembourgDialog
+ CreateProjectDialog
                                  A QGIS plugin
  Gestion de Plans d'Aménagement Général du Grand-Duché de Luxembourg
                              -------------------
-        begin                : 2015-08-25
+        begin                : 2015-09-09
         git sha              : $Format:%H$
         copyright            : (C) 2015 by arx iT
         email                : mba@arxit.com
@@ -26,13 +26,13 @@ import os
 from PyQt4 import QtGui, uic
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'pag_luxembourg_dialog_base.ui'))
+    os.path.dirname(__file__), 'create_project_dialog.ui'))
 
 
-class PagLuxembourgDialog(QtGui.QDialog, FORM_CLASS):
+class CreateProjectDialog(QtGui.QDialog, FORM_CLASS):
     def __init__(self, parent=None):
         """Constructor."""
-        super(PagLuxembourgDialog, self).__init__(parent)
+        super(CreateProjectDialog, self).__init__(parent)
         # Set up the user interface from Designer.
         # After setupUI you can access any designer object by doing
         # self.<objectname>, and you can use autoconnect slots - see

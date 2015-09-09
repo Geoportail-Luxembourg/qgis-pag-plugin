@@ -25,9 +25,9 @@ from PyQt4.QtGui import QAction, QIcon
 # Initialize Qt resources from file resources.py
 import resources
 # Import the code for the dialog
-from pag_luxembourg_dialog import PagLuxembourgDialog
 import os.path
-
+# Widgets
+from widgets.create_project.create_project import *
 
 class PagLuxembourg:
     """QGIS Plugin Implementation."""
@@ -49,7 +49,7 @@ class PagLuxembourg:
         locale_path = os.path.join(
             self.plugin_dir,
             'i18n',
-            'PagLuxembourg_{}.qm'.format(locale))
+            '{}.qm'.format(locale))
 
         if os.path.exists(locale_path):
             self.translator = QTranslator()
@@ -57,9 +57,6 @@ class PagLuxembourg:
 
             if qVersion() > '4.3.3':
                 QCoreApplication.installTranslator(self.translator)
-
-        # Create the dialog (after translation) and keep reference
-        self.dlg = PagLuxembourgDialog()
 
         # Declare instance attributes
         self.actions = []
@@ -136,7 +133,8 @@ class PagLuxembourg:
 
         icon = QIcon(icon_path)
         action = QAction(icon, text, parent)
-        action.triggered.connect(callback)
+        if callback is not None:
+            action.triggered.connect(callback)
         action.setEnabled(enabled_flag)
 
         if status_tip is not None:
@@ -160,14 +158,23 @@ class PagLuxembourg:
     def initGui(self):
         """Create the menu entries and toolbar icons inside the QGIS GUI."""
 
-        icon_path = ':/plugins/PagLuxembourg/icon.png'
+        # New project
+        self.create_project_widget=CreateProject(self.iface)
         self.add_action(
-            icon_path,
-            text=self.tr(u'PAG Luxembourg'),
-            callback=self.run,
+            ':/plugins/PagLuxembourg/widgets/create_project/icon.png',
+            text=self.tr(u'New project'),
+            callback=self.create_project_widget.run,
+            status_tip=self.tr(u'Creates a new PAG project'),
             parent=self.iface.mainWindow())
-
-
+        
+        # About
+        self.add_action(
+            ':/plugins/PagLuxembourg/icon.png',
+            text=self.tr(u'About'),
+            callback=None,
+            status_tip=self.tr(u'About the PAG plugin'),
+            parent=self.iface.mainWindow())
+    
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
         for action in self.actions:
@@ -177,16 +184,3 @@ class PagLuxembourg:
             self.iface.removeToolBarIcon(action)
         # remove the toolbar
         del self.toolbar
-
-
-    def run(self):
-        """Run method that performs all the real work"""
-        # show the dialog
-        self.dlg.show()
-        # Run the dialog event loop
-        result = self.dlg.exec_()
-        # See if OK was pressed
-        if result:
-            # Do something useful here - delete the line containing pass and
-            # substitute with your code.
-            pass
