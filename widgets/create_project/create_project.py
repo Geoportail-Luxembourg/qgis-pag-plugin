@@ -1,11 +1,13 @@
 '''
-Created on 9 sept. 2015
+Created on 17 sept. 2015
 
 @author: arxit
 '''
 
-from create_project_dialog import CreateProjectDialog
-from PagLuxembourg.schema import *
+from PyQt4.QtGui import QFileDialog
+from PyQt4.QtCore import QCoreApplication
+
+import os
 
 class CreateProject(object):
     '''
@@ -13,12 +15,28 @@ class CreateProject(object):
     '''
 
 
-    def __init__(self):
+    def __init__(self, iface):
         '''
         Constructor
         '''
         
-        self.dlg = CreateProjectDialog()
+        self.iface = iface
     
     def run(self):
-        self.dlg.show()
+        dialog = QFileDialog()
+        dialog.setFileMode(QFileDialog.Directory)
+        dialog.setOption(QFileDialog.ShowDirsOnly)
+        dialog.setWindowTitle(QCoreApplication.translate('CreateProject','Select the new project location'))
+        dialog.setSizeGripEnabled(False)
+        result = dialog.exec_()
+        
+        if result == 0:
+            return
+        
+        selected_files = dialog.selectedFiles()
+        
+        if len(selected_files)==0:
+            return
+        
+        selected_folder = selected_files[0]
+        pass

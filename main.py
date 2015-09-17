@@ -167,7 +167,7 @@ class PAGLuxembourg(object):
         '''
 
         # New project
-        self.create_project_widget=CreateProject()
+        self.create_project_widget=CreateProject(self.iface)
         self.add_action(
             ':/plugins/PagLuxembourg/widgets/create_project/icon.png',
             text=self.tr(u'New project'),
