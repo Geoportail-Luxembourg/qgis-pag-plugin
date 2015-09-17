@@ -5,6 +5,7 @@ Created on 9 sept. 2015
 '''
 
 from create_project_dialog import CreateProjectDialog
+from PagLuxembourg.schema import *
 
 class CreateProject(object):
     '''
@@ -12,12 +13,12 @@ class CreateProject(object):
     '''
 
 
-    def __init__(self, iface):
+    def __init__(self):
         '''
         Constructor
         '''
-        self.iface=iface
-        self.dlg=CreateProjectDialog()
+        
+        self.dlg = CreateProjectDialog()
     
     def run(self):
         self.dlg.show()

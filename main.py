@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
+'''
 /***************************************************************************
  PagLuxembourg
                                  A QGIS plugin
@@ -19,7 +19,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-"""
+'''
 from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication
 from PyQt4.QtGui import QAction, QIcon
 # Initialize Qt resources from file resources.py
@@ -28,26 +28,31 @@ import resources
 import os.path
 # Widgets
 from widgets.create_project.create_project import *
+# Schema
+from PagLuxembourg.schema import *
 
-class PagLuxembourg:
-    """QGIS Plugin Implementation."""
+# Global variables
+plugin_dir = os.path.dirname(__file__)
+xsd_schema = PAGSchema()
+
+class PAGLuxembourg(object):
+    '''QGIS Plugin Implementation.'''
 
     def __init__(self, iface):
-        """Constructor.
+        '''Constructor.
 
         :param iface: An interface instance that will be passed to this class
             which provides the hook by which you can manipulate the QGIS
             application at run time.
         :type iface: QgsInterface
-        """
+        '''
         # Save reference to the QGIS interface
         self.iface = iface
-        # initialize plugin directory
-        self.plugin_dir = os.path.dirname(__file__)
+        
         # initialize locale
         locale = QSettings().value('locale/userLocale')[0:2]
         locale_path = os.path.join(
-            self.plugin_dir,
+            plugin_dir,
             'i18n',
             '{}.qm'.format(locale))
 
@@ -61,13 +66,14 @@ class PagLuxembourg:
         # Declare instance attributes
         self.actions = []
         self.menu = self.tr(u'&PAG Luxembourg')
+        
         # TODO: We are going to let the user set this up in a future iteration
         self.toolbar = self.iface.addToolBar(u'PagLuxembourg')
         self.toolbar.setObjectName(u'PagLuxembourg')
 
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
-        """Get the translation for a string using Qt translation API.
+        '''Get the translation for a string using Qt translation API.
 
         We implement this ourselves since we do not inherit QObject.
 
@@ -76,7 +82,7 @@ class PagLuxembourg:
 
         :returns: Translated version of message.
         :rtype: QString
-        """
+        '''
         # noinspection PyTypeChecker,PyArgumentList,PyCallByClass
         return QCoreApplication.translate('PagLuxembourg', message)
 
@@ -92,7 +98,7 @@ class PagLuxembourg:
         status_tip=None,
         whats_this=None,
         parent=None):
-        """Add a toolbar icon to the toolbar.
+        '''Add a toolbar icon to the toolbar.
 
         :param icon_path: Path to the icon for this action. Can be a resource
             path (e.g. ':/plugins/foo/bar.png') or a normal file system path.
@@ -129,7 +135,7 @@ class PagLuxembourg:
         :returns: The action that was created. Note that the action is also
             added to self.actions list.
         :rtype: QAction
-        """
+        '''
 
         icon = QIcon(icon_path)
         action = QAction(icon, text, parent)
@@ -156,10 +162,12 @@ class PagLuxembourg:
         return action
 
     def initGui(self):
-        """Create the menu entries and toolbar icons inside the QGIS GUI."""
+        '''
+        Create the menu entries and toolbar icons inside the QGIS GUI.
+        '''
 
         # New project
-        self.create_project_widget=CreateProject(self.iface)
+        self.create_project_widget=CreateProject()
         self.add_action(
             ':/plugins/PagLuxembourg/widgets/create_project/icon.png',
             text=self.tr(u'New project'),
@@ -176,11 +184,15 @@ class PagLuxembourg:
             parent=self.iface.mainWindow())
     
     def unload(self):
-        """Removes the plugin menu item and icon from QGIS GUI."""
+        '''
+        Removes the plugin menu item and icon from QGIS GUI.
+        '''
+        
         for action in self.actions:
             self.iface.removePluginMenu(
                 self.tr(u'&PAG Luxembourg'),
                 action)
             self.iface.removeToolBarIcon(action)
+            
         # remove the toolbar
         del self.toolbar
