@@ -34,6 +34,7 @@ from PagLuxembourg.schema import *
 # Global variables
 plugin_dir = os.path.dirname(__file__)
 xsd_schema = PAGSchema()
+qgis_interface = None
 
 class PAGLuxembourg(object):
     '''QGIS Plugin Implementation.'''
@@ -47,6 +48,8 @@ class PAGLuxembourg(object):
         :type iface: QgsInterface
         '''
         # Save reference to the QGIS interface
+        global qgis_interface
+        qgis_interface = iface
         self.iface = iface
         
         # initialize locale
@@ -167,7 +170,7 @@ class PAGLuxembourg(object):
         '''
 
         # New project
-        self.create_project_widget=CreateProject(self.iface)
+        self.create_project_widget=CreateProject()
         self.add_action(
             ':/plugins/PagLuxembourg/widgets/create_project/icon.png',
             text=self.tr(u'New project'),

@@ -1,0 +1,80 @@
+# -*- coding: utf-8 -*-
+"""
+/***************************************************************************
+ CreateProjectDialog
+                                 A QGIS plugin
+ Gestion de Plans d'Aménagement Général du Grand-Duché de Luxembourg
+                             -------------------
+        begin                : 2015-09-09
+        git sha              : $Format:%H$
+        copyright            : (C) 2015 by arx iT
+        email                : mba@arxit.com
+ ***************************************************************************/
+
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
+"""
+
+import os
+
+from PyQt4 import QtGui, uic
+from PyQt4.QtGui import QFileDialog, QMessageBox
+from PyQt4.QtCore import QCoreApplication
+
+from PagLuxembourg.project import *
+
+FORM_CLASS, _ = uic.loadUiType(os.path.join(
+    os.path.dirname(__file__), 'create_project_dialog.ui'))
+
+
+class CreateProjectDialog(QtGui.QDialog, FORM_CLASS):
+    def __init__(self, parent=None):
+        """Constructor."""
+        super(CreateProjectDialog, self).__init__(parent)
+        # Set up the user interface from Designer.
+        # After setupUI you can access any designer object by doing
+        # self.<objectname>, and you can use autoconnect slots - see
+        # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
+        # #widgets-and-dialogs-with-auto-connect
+        self.setupUi(self)
+
+    def showFolderList(self):
+        dialog = QFileDialog()
+        dialog.setFileMode(QFileDialog.Directory)
+        dialog.setOption(QFileDialog.ShowDirsOnly)
+        dialog.setWindowTitle(QCoreApplication.translate('CreateProject','Select the new project location'))
+        dialog.setSizeGripEnabled(False)
+        result = dialog.exec_()
+        
+        if result == 0:
+            return
+        
+        selected_files = dialog.selectedFiles()
+        
+        if len(selected_files)==0:
+            return
+        
+        self.txtProjectFolder.setText(selected_files[0])
+        
+    def accept(self):
+        folder = self.txtProjectFolder.text()
+        name = self.txtProjectName.text()
+        
+        if len(name)==0:
+            QMessageBox.critical(self, 
+                                 QCoreApplication.translate('CreateProject','Error'),
+                                 QCoreApplication.translate('CreateProject','Please type a project name'))
+        
+        if not os.path.exists(folder):
+            QMessageBox.critical(self, 
+                                 QCoreApplication.translate('CreateProject','Error'),
+                                 QCoreApplication.translate('CreateProject','The folder does not exist'))
+        
+        project = Project()
+        project.create(folder,name)

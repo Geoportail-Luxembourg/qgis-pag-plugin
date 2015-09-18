@@ -160,9 +160,9 @@ class GeometryType:
     Geometry types
     '''
     
-    POINT='point'
-    POLYLINE='polyline'
-    POLYGON='polygon'
+    POINT='POINT'
+    POLYLINE='LINESTRING'
+    POLYGON='POLYGON'
     
 class DataType:
     '''
