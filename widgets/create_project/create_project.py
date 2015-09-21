@@ -23,6 +23,10 @@ class CreateProject(object):
         self.dlg = CreateProjectDialog()
     
     def run(self):
-        self.dlg.show()
-        #project = Project()
-        #project.create('C:/Users/arxit/Documents','Test')
+        '''
+        Runs the widget
+        '''
+        
+        #self.dlg.show()
+        project = Project()
+        project.create('C:/Users/arxit/Documents','Test')

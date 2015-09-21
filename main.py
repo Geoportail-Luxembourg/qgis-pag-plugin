@@ -47,6 +47,7 @@ class PAGLuxembourg(object):
             application at run time.
         :type iface: QgsInterface
         '''
+        
         # Save reference to the QGIS interface
         global qgis_interface
         qgis_interface = iface

@@ -19,7 +19,7 @@ DATABASE = 'database.sqlite'
 
 class Project(object):
     '''
-    PAG project
+    A class which represent a PAG project
     '''
 
     def __init__(self):
@@ -28,8 +28,25 @@ class Project(object):
         '''
         pass    
     
+    def open(self, filename):
+        '''
+        Called when a QGIS project is opened
+        
+        :param filename: Project filename
+        :type filename: str, QString
+        '''
+        
+        # Setting 
+        self.folder = os.path.dirname(filename)
+        self.filename = filename
+        self.database = os.path.join(self.folder, DATABASE)
+        
+        self._updateDatabase()
+        
     def create(self, folder, name):
         '''
+        Creates a new projects, and loads it in the interface
+        
         :param folder: Folder path which will contain the new project folder
         :type folder: str, QString
         
@@ -49,10 +66,15 @@ class Project(object):
         QgsProject.instance().setFileName(self.filename)
         QgsProject.instance().write()
         
-        self.updateDatabase()
-        
-    def updateDatabase(self):
+        # Database
         self.database = os.path.join(self.folder, DATABASE)
+        self._updateDatabase()
+        
+    def _updateDatabase(self):
+        '''
+        Updates the project database
+        '''
+        
         xsd_schema = main.xsd_schema
         createdb = not os.path.isfile(self.database)
         
@@ -75,58 +97,89 @@ class Project(object):
             
             # Create layer if not valid
             if not layer.isValid():
-                self.createTable(conn, type, layer)
+                self._createTable(conn, type, layer)
                 layer = QgsVectorLayer(uri.uri(), display_name, 'spatialite')
                 QgsMapLayerRegistry.instance().addMapLayer(layer)
                 
-            self.updateTable(type, layer)
+            self._updateTable(type, layer)
             
         conn.close()
         del conn
         
-    def createTable(self, conn, type, layer):
-            # Create table
-            query="CREATE TABLE '%s' (OGC_FID integer primary key autoincrement,"%type.name
-            
-            # Geometry column
-            if type.geometry_type is not None: #add geocol
-                query+="'GEOMETRY' %s,"%type.geometry_type
-            
-            query=query[:-1]+")"
+    def _createTable(self, conn, type):
+        '''
+        Creates a new table in the spatialite database according to the XSD
+        
+        :param conn: The database connection
+        :type conn: Connection
+        
+        :param type: XSD schema type
+        :type type: PAGType
+        '''
+        
+        # Create table
+        query="CREATE TABLE '%s' (OGC_FID integer primary key autoincrement,"%type.name
+        
+        # Geometry column
+        if type.geometry_type is not None: #add geocol
+            query+="'GEOMETRY' %s,"%type.geometry_type
+        
+        query=query[:-1]+")"
+        cursor=conn.cursor()
+        cursor.execute(query)
+        conn.commit()
+        cursor.close()
+        del cursor
+        
+        # Register geometry column
+        if type.geometry_type is not None:
+            query="SELECT RecoverGeometryColumn('%s','GEOMETRY',2169,'%s',2)"%(type.name,type.geometry_type)
             cursor=conn.cursor()
             cursor.execute(query)
-            conn.commit()
+            rep=cursor.fetchall()
+            
+            if rep[0][0]==0:
+                conn.rollback()
+            else:
+                conn.commit()
+            
             cursor.close()
             del cursor
-            
-            # Register geometry column
-            if type.geometry_type is not None:
-                query="SELECT RecoverGeometryColumn('%s','GEOMETRY',2169,'%s',2)"%(type.name,type.geometry_type)
-                cursor=conn.cursor()
-                cursor.execute(query)
-                rep=cursor.fetchall()
-                
-                if rep[0][0]==0:
-                    conn.rollback()
-                else:
-                    conn.commit()
-                
-                cursor.close()
-                del cursor
     
-    def updateTable(self, type, layer):
+    def _updateTable(self, type, layer):
+        '''
+        Updates the layer's table according to the XSD
+        
+        :param type: XSD schema type
+        :type type: PAGType
+        
+        :param layer: the QGIS vector layer object
+        :type layer: QgsVectorLayer
+        '''
+        
         for field in type.fields:
             if layer.fieldNameIndex(field.name)<0:
-                layer.dataProvider().addAttributes([self.getField(field)])
+                layer.dataProvider().addAttributes([self._getField(field)])
         
         layer.updateFields()
         
+    # Mapping between XSD datatype and QGIS datatype
     datatypeMap = {DataType.STRING:QVariant.String,
                DataType.INTEGER:QVariant.Int,
                DataType.DOUBLE:QVariant.Double,
                DataType.DATE:QVariant.String}
 
-    def getField(self, pagfield):
+    def _getField(self, pagfield):
+        '''
+        Creates a QGIS Field according to the XSD
+        
+        :param pagfield: XSD schema field
+        :type pagfield: PAGField
+        
+        :returns: The corresponding QGIS Field
+        :rtype: QgsField
+        '''
+        
         return QgsField(pagfield.name,
                         self.datatypeMap[pagfield.type],
                         pagfield.type,

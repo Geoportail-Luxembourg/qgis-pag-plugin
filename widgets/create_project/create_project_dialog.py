@@ -35,7 +35,10 @@ FORM_CLASS, _ = uic.loadUiType(os.path.join(
 
 class CreateProjectDialog(QtGui.QDialog, FORM_CLASS):
     def __init__(self, parent=None):
-        """Constructor."""
+        '''
+        Constructor.
+        '''
+        
         super(CreateProjectDialog, self).__init__(parent)
         # Set up the user interface from Designer.
         # After setupUI you can access any designer object by doing
@@ -45,6 +48,10 @@ class CreateProjectDialog(QtGui.QDialog, FORM_CLASS):
         self.setupUi(self)
 
     def showFolderList(self):
+        '''
+        Display the project folder selection dialog
+        '''
+        
         dialog = QFileDialog()
         dialog.setFileMode(QFileDialog.Directory)
         dialog.setOption(QFileDialog.ShowDirsOnly)
@@ -63,14 +70,20 @@ class CreateProjectDialog(QtGui.QDialog, FORM_CLASS):
         self.txtProjectFolder.setText(selected_files[0])
         
     def accept(self):
+        '''
+        Dialog accept action (OK)
+        '''
+        
         folder = self.txtProjectFolder.text()
         name = self.txtProjectName.text()
         
+        # No project name
         if len(name)==0:
             QMessageBox.critical(self, 
                                  QCoreApplication.translate('CreateProject','Error'),
                                  QCoreApplication.translate('CreateProject','Please type a project name'))
         
+        # Project folder error
         if not os.path.exists(folder):
             QMessageBox.critical(self, 
                                  QCoreApplication.translate('CreateProject','Error'),
