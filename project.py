@@ -41,7 +41,13 @@ class Project(object):
         self.filename = filename
         self.database = os.path.join(self.folder, DATABASE)
         
+        # Update database
         self._updateDatabase()
+        
+        # Update map layers
+        self._updateLayers()
+        
+        QgsProject.instance().write()
         
     def create(self, folder, name):
         '''
@@ -64,11 +70,16 @@ class Project(object):
         self.filename = os.path.join(self.folder, FILENAME)
         main.qgis_interface.newProject(True)
         QgsProject.instance().setFileName(self.filename)
-        QgsProject.instance().write()
+        #QgsProject.instance().write()
         
         # Database
         self.database = os.path.join(self.folder, DATABASE)
         self._updateDatabase()
+        
+        # Update map layers
+        self._updateLayers()
+        
+        QgsProject.instance().write()
         
     def _updateDatabase(self):
         '''
@@ -88,23 +99,33 @@ class Project(object):
         
         # Check and update fields
         for type in xsd_schema.types:
-            uri = QgsDataSourceURI()
-            uri.setDatabase(self.database)
-            geom_column = 'GEOMETRY' if type.geometry_type is not None else ''
-            uri.setDataSource('', type.name, geom_column,'','OGC_FID')            
-            display_name = type.name
-            layer = QgsVectorLayer(uri.uri(), display_name, 'spatialite')
+            uri = self._getTypeUri(type)
+            layer = QgsVectorLayer(uri, type.name, 'spatialite')
             
             # Create layer if not valid
             if not layer.isValid():
-                self._createTable(conn, type, layer)
-                layer = QgsVectorLayer(uri.uri(), display_name, 'spatialite')
-                QgsMapLayerRegistry.instance().addMapLayer(layer)
+                self._createTable(conn, type)
+                layer = QgsVectorLayer(uri, type.name, 'spatialite')
                 
             self._updateTable(type, layer)
             
         conn.close()
         del conn
+        
+    def _getTypeUri(self, type):
+        '''
+        Gets a uri to the table according to the XSD
+        
+        :param type: XSD schema type
+        :type type: PAGType
+        '''
+        
+        uri = QgsDataSourceURI()
+        uri.setDatabase(self.database)
+        geom_column = 'GEOMETRY' if type.geometry_type is not None else ''
+        uri.setDataSource('', type.name, geom_column,'','OGC_FID')
+        
+        return uri.uri()
         
     def _createTable(self, conn, type):
         '''
@@ -121,7 +142,7 @@ class Project(object):
         query="CREATE TABLE '%s' (OGC_FID integer primary key autoincrement,"%type.name
         
         # Geometry column
-        if type.geometry_type is not None: #add geocol
+        if type.geometry_type is not None:
             query+="'GEOMETRY' %s,"%type.geometry_type
         
         query=query[:-1]+")"
@@ -184,3 +205,52 @@ class Project(object):
                         self.datatypeMap[pagfield.type],
                         pagfield.type,
                         int(pagfield.length) if pagfield.length is not None else 0)
+        
+    def _updateLayers(self):
+        '''
+        Update layers attributes editors
+        '''
+        # Map layers in the TOC
+        maplayers = QgsMapLayerRegistry.instance().mapLayers()
+        
+        # Keep only vector layers
+        for k,v in maplayers.iteritems():
+            if v.type()!=QgsMapLayer.VectorLayer:
+                del maplayers[k]
+        
+        maplayers = QgsMapLayerRegistry.instance().mapLayers()
+        
+        # Iterates through XSD types
+        for type in main.xsd_schema.types:
+            uri = self._getTypeUri(type)
+            found = False
+            
+            # Check is a layer with type datasource exists in the TOC
+            for k,v in maplayers.iteritems():
+                if self._compareURIs(v.source(), uri):
+                    found = True
+                    break
+            
+            # If not found, add to the TOC
+            if not found:
+                layer = QgsVectorLayer(uri, type.name, 'spatialite')
+                QgsMapLayerRegistry.instance().addMapLayer(layer)
+                
+        
+                
+    def _compareURIs(self, uri1, uri2):
+        '''
+        Compares 2 URIs
+        In case direct string comparison is not enough
+        
+        :param uri1: URI 1
+        :type uri1: QString
+        
+        :param uri2: URI 2
+        :type uri2: QString
+        
+        :returns: True is the URIs point to the same table
+        :rtype: Boolean
+        '''
+        
+        return v.source() == uri
