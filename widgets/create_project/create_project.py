@@ -29,4 +29,5 @@ class CreateProject(object):
         
         #self.dlg.show()
         project = Project()
-        project.create('C:/Users/arxit/Documents','Test')
+        #project.create('C:/Users/arxit/Documents','Test')
+        project.open('C:/Users/arxit/Documents/Test/project.qgs')

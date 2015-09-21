@@ -16,6 +16,7 @@ from PagLuxembourg.schema import *
 
 FILENAME = 'project.qgs'
 DATABASE = 'database.sqlite'
+PK = 'OGC_FID'
 
 class Project(object):
     '''
@@ -37,15 +38,15 @@ class Project(object):
         '''
         
         # Setting 
-        self.folder = os.path.dirname(filename)
-        self.filename = filename
+        self.folder = os.path.normpath(os.path.dirname(filename))
+        self.filename = os.path.normpath(filename)
         self.database = os.path.join(self.folder, DATABASE)
         
         # Update database
         self._updateDatabase()
         
         # Update map layers
-        self._updateLayers()
+        self._updateMapLayers()
         
         QgsProject.instance().write()
         
@@ -61,7 +62,7 @@ class Project(object):
         '''
         
         # Create project path
-        self.folder = os.path.join(folder,name)
+        self.folder = os.path.normpath(os.path.join(folder,name))
                 
         if not os.path.exists(self.folder):
             os.makedirs(self.folder)
@@ -70,14 +71,13 @@ class Project(object):
         self.filename = os.path.join(self.folder, FILENAME)
         main.qgis_interface.newProject(True)
         QgsProject.instance().setFileName(self.filename)
-        #QgsProject.instance().write()
         
         # Database
         self.database = os.path.join(self.folder, DATABASE)
         self._updateDatabase()
         
         # Update map layers
-        self._updateLayers()
+        self._updateMapLayers()
         
         QgsProject.instance().write()
         
@@ -123,7 +123,7 @@ class Project(object):
         uri = QgsDataSourceURI()
         uri.setDatabase(self.database)
         geom_column = 'GEOMETRY' if type.geometry_type is not None else ''
-        uri.setDataSource('', type.name, geom_column,'','OGC_FID')
+        uri.setDataSource('', type.name, geom_column,'',PK)
         
         return uri.uri()
         
@@ -139,7 +139,7 @@ class Project(object):
         '''
         
         # Create table
-        query="CREATE TABLE '%s' (OGC_FID integer primary key autoincrement,"%type.name
+        query="CREATE TABLE '%s' (%s integer primary key autoincrement,"%(type.name,PK)
         
         # Geometry column
         if type.geometry_type is not None:
@@ -206,10 +206,11 @@ class Project(object):
                         pagfield.type,
                         int(pagfield.length) if pagfield.length is not None else 0)
         
-    def _updateLayers(self):
+    def _updateMapLayers(self):
         '''
         Update layers attributes editors
         '''
+        
         # Map layers in the TOC
         maplayers = QgsMapLayerRegistry.instance().mapLayers()
         
@@ -225,23 +226,24 @@ class Project(object):
             uri = self._getTypeUri(type)
             found = False
             
-            # Check is a layer with type datasource exists in the TOC
+            # Check is a layer with type data source exists in the TOC
             for k,v in maplayers.iteritems():
                 if self._compareURIs(v.source(), uri):
                     found = True
+                    layer = v
                     break
             
             # If not found, add to the TOC
             if not found:
                 layer = QgsVectorLayer(uri, type.name, 'spatialite')
                 QgsMapLayerRegistry.instance().addMapLayer(layer)
-                
-        
+            
+            # Update attributes editors
+            self._updateLayerEditors(layer, type)
                 
     def _compareURIs(self, uri1, uri2):
         '''
         Compares 2 URIs
-        In case direct string comparison is not enough
         
         :param uri1: URI 1
         :type uri1: QString
@@ -253,4 +255,103 @@ class Project(object):
         :rtype: Boolean
         '''
         
-        return v.source() == uri
+        # URI 1
+        split = uri1.split(' ')
+        for kv in split:
+            if kv.startswith('dbname'):
+                db1 = os.path.normpath(kv[8:-1])
+            if kv.startswith('table'):
+                table1 = kv[8:-1]
+        
+        # URI 2
+        split = uri2.split(' ')
+        for kv in split:
+            if kv.startswith('dbname'):
+                db2 = os.path.normpath(kv[8:-1])
+            if kv.startswith('table'):
+                table2 = kv[8:-1]
+        
+        return db1 == db2 and table1 == table2
+    
+    def _updateLayerEditors(self, layer, type):
+        '''
+        Update the layer's attributes editors
+        
+        :param layer: The layer to update
+        :type layer: QgsVectorLayer
+        
+        :param type: XSD schema type
+        :type type: PAGType
+        '''
+        
+        # Hide fields
+        hidden = [PK,]
+        for field in layer.pendingFields():
+            if field.name() in hidden:
+                layer.setEditorWidgetV2(layer.fieldNameIndex(field.name()),'Hidden')
+        
+        # Editors
+        for field in type.fields:
+            self._setupFieldEditor(field, layer)
+    
+    fileFields = ['NOM_FICHIER','NOM_EC','NOM_GR']
+        
+    def _setupFieldEditor(self, field, layer):
+        fieldIndex = layer.fieldNameIndex(field.name)
+        
+        if fieldIndex == -1:
+            return
+        
+        config = dict()
+        
+        # String
+        if field.type == DataType.STRING:
+            # Simple text
+            editor = 'TextEdit'
+            
+            # File
+            for fileField in self.fileFields:
+                if field.name.startswith(fileField):
+                    editor = 'FileName'
+            
+            # Enumeration
+            if field.listofvalues is not None:
+                editor = 'ValueMap'
+                for element in field.listofvalues:
+                    split = element.split(',')
+                    config[split[0]]=split[0] #split1
+            
+        # Integer
+        elif field.type == DataType.INTEGER:
+            editor = 'Range'
+            config['Style'] = 'SpinBox'
+            config['Min'] = int(field.minvalue) if field.minvalue is not None else -sys.maxint-1
+            config['Max'] = int(field.maxvalue) if field.maxvalue is not None else sys.maxint
+            config['Step'] = 1
+            config['AllowNull'] = field.nullable
+            
+        # Double
+        elif field.type == DataType.DOUBLE:
+            editor = 'Range'
+            config['Style'] = 'SpinBox'
+            config['Min'] = float(field.minvalue) if field.minvalue is not None else -sys.maxint-1
+            config['Max'] = float(field.maxvalue) if field.maxvalue is not None else sys.maxint
+            mindecimal = len(field.minvalue.split('.')[1]) if field.minvalue is not None and len(field.minvalue.split('.'))==2 else 0
+            maxdecimal = len(field.maxvalue.split('.')[1]) if field.maxvalue is not None and len(field.maxvalue.split('.'))==2 else 0
+            config['Step'] = 1.0/pow(10,max(mindecimal,maxdecimal))
+            config['AllowNull'] = field.nullable
+            
+        # Date
+        elif field.type == DataType.DATE:
+            editor = 'DateTime'
+            config['field_format'] = 'yyyy-MM-dd'
+            config['display_format'] = 'yyyy-MM-dd'
+            config['calendar_popup'] = True
+            config['allow_null'] = field.nullable
+            
+        # Other
+        else:
+            raise NotImplementedError('Unknown datatype')
+        
+        layer.setEditorWidgetV2(fieldIndex,editor)
+        layer.setEditorWidgetV2Config(fieldIndex, config)

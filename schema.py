@@ -6,6 +6,7 @@ Created on 17 sept. 2015
 
 import os.path
 import xml.etree.ElementTree as ET
+
 import main
 
 class PAGSchema(object):
@@ -188,6 +189,15 @@ class PAGField(object):
             enumeration.append(enumeration_element.get('value'))
         
         return type, length, minvalue, maxvalue, enumeration if len(enumeration)>0 else None
+    
+    def getEnumerationMap(self):
+        map = dict()
+        
+        for element in self.listofvalues:
+            split = element.split(',')
+            map[split[0]]=split[0] #split1
+            
+        return map
     
 class GeometryType:
     '''
