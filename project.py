@@ -8,7 +8,7 @@ import os.path
 from pyspatialite import dbapi2 as db
 
 from qgis.core import *
-from PyQt4.QtCore import QFileInfo, QVariant
+from PyQt4.QtCore import QFileInfo, QVariant, QObject, pyqtSignal
 from PyQt4.QtGui import QMessageBox
 
 import main
@@ -18,16 +18,18 @@ FILENAME = 'project.qgs'
 DATABASE = 'database.sqlite'
 PK = 'OGC_FID'
 
-class Project(object):
+class Project(QObject):
     '''
     A class which represent a PAG project
     '''
 
+    ready = pyqtSignal()
+    
     def __init__(self):
         '''
         Constructor
         '''
-        pass    
+        super(Project, self).__init__()    
     
     def open(self):
         '''
@@ -46,6 +48,7 @@ class Project(object):
         
         # If not PAG project return
         if not self.isPagProject():
+            self.ready.emit()
             return
         
         # Update database
@@ -55,6 +58,8 @@ class Project(object):
         self._updateMapLayers()
         
         QgsProject.instance().write()
+        
+        self.ready.emit()
         
     def create(self, folder, name):
         '''
@@ -87,32 +92,39 @@ class Project(object):
         
         QgsProject.instance().write()
         
+        # Notify project is ready
+        self.ready.emit()
+        
     def isPagProject(self):
         '''
         Indicates if this is a PAG project
         '''
         
-        # Metadata table
-        metadata_table = PAGType()
-        metadata_table.name = 'Metadata'
-        uri = self._getTypeUri(metadata_table)
-        layer = QgsVectorLayer(uri, metadata_table.name, 'spatialite')
+        try:
+            # Metadata table
+            metadata_table = PAGType()
+            metadata_table.name = 'Metadata'
+            uri = self.getTypeUri(metadata_table)
+            layer = QgsVectorLayer(uri, metadata_table.name, 'spatialite')
+            
+            if not layer.isValid():
+                return False
+            
+            exp = QgsExpression('Key=\'ProjetPAG\'')
+            features = layer.getFeatures(QgsFeatureRequest(exp))
+            
+            # Features count
+            count = 0
+            for feature in features:
+                count = count + 1
+            
+            if count == 0:
+                return False
+            else:
+                return True
         
-        if not layer.isValid():
+        except AttributeError:
             return False
-        
-        exp = QgsExpression('Key=\'ProjetPAG\'')
-        features = layer.getFeatures(QgsFeatureRequest(exp))
-        
-        # Features count
-        count = 0
-        for feature in features:
-            count = count + 1
-        
-        if count == 0:
-            return False
-        else:
-            return True
             
     def _updateDatabase(self):
         '''
@@ -132,7 +144,7 @@ class Project(object):
         
         # Check and update tables
         for type in xsd_schema.types:
-            uri = self._getTypeUri(type)
+            uri = self.getTypeUri(type)
             layer = QgsVectorLayer(uri, type.friendlyName(), 'spatialite')
             
             # Create layer if not valid
@@ -148,7 +160,7 @@ class Project(object):
         conn.close()
         del conn
         
-    def _getTypeUri(self, type):
+    def getTypeUri(self, type):
         '''
         Gets a uri to the table according to the XSD
         
@@ -229,7 +241,7 @@ class Project(object):
         value_field.nullable = False
         metadata_table.fields.append(value_field)
         
-        uri = self._getTypeUri(metadata_table)
+        uri = self.getTypeUri(metadata_table)
         layer = QgsVectorLayer(uri, metadata_table.friendlyName(), 'spatialite')
         
         # Create table if not valid
@@ -305,21 +317,14 @@ class Project(object):
         # Map layers in the TOC
         maplayers = QgsMapLayerRegistry.instance().mapLayers()
         
-        # Keep only vector layers
-        for k,v in maplayers.iteritems():
-            if v.type() != QgsMapLayer.VectorLayer:
-                del maplayers[k]
-        
-        maplayers = QgsMapLayerRegistry.instance().mapLayers()
-        
         # Iterates through XSD types
         for type in main.xsd_schema.types:
-            uri = self._getTypeUri(type)
+            uri = self.getTypeUri(type)
             found = False
             
             # Check is a layer with type data source exists in the map
             for k,v in maplayers.iteritems():
-                if self._compareURIs(v.source(), uri):
+                if self.compareURIs(v.source(), uri):
                     found = True
                     layer = v
                     break
@@ -355,7 +360,7 @@ class Project(object):
         group_index = legend.groups().index(type.topic())
         legend.moveLayer(layer,group_index)
         
-    def _compareURIs(self, uri1, uri2):
+    def compareURIs(self, uri1, uri2):
         '''
         Compares 2 URIs
         
