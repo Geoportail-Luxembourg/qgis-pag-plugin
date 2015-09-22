@@ -6,11 +6,12 @@ Created on 17 sept. 2015
 
 import os.path
 import xml.etree.ElementTree as ET
+
 import main
 
 class PAGSchema(object):
     '''
-    classdocs
+    The PAG schema parsed from the XSD
     '''
 
     def __init__(self):
@@ -20,6 +21,10 @@ class PAGSchema(object):
         self.parseXSD()
     
     def parseXSD(self):
+        '''
+        Parses the XSD
+        '''
+        
         xsd_path = os.path.join(
             main.plugin_dir,
             'assets',
@@ -37,16 +42,32 @@ class PAGSchema(object):
         for type in xsd_types:
             # Filtering types to keep those starting with PAG. and having 2 dots (remove PAG.GESTION for example)
             if type.get('name').startswith('PAG.') and type.get('name').count('.')==2:
-                self.types.append(PAGType(type,ns))
+                pag_type = PAGType()
+                pag_type.parse(type, ns)
+                self.types.append(pag_type)
 
 class PAGType(object):
     '''
-    A type contained in the xsd
+    A PAG XSD type
     '''
     
-    def __init__(self, xml_element, ns):
+    def __init__(self):
         '''
         Constructor
+        '''
+        
+        self.geometry_type = None        
+        self.fields = list()
+    
+    def parse(self, xml_element, ns):
+        '''
+        Parse XML node
+        
+        :param xml_element: The root XML node of the type (xsd:complexType)
+        :type xml_element: Element
+        
+        :param ns: XSD namespaces
+        :type ns: dict
         '''
         
         # Type name
@@ -61,14 +82,54 @@ class PAGType(object):
         for element in elements:
             # Process geometry
             if element.get('name')=='GEOMETRIE':
-                self.geometry_type = self.getGeometry(element, ns)
+                self.geometry_type = self._getGeometry(element, ns)
             # Process field
             else:
-                self.fields.append(PAGField(element, ns))
+                pag_field = PAGField()
+                pag_field.parse(element, ns)
+                self.fields.append(pag_field)
                 
-    def getGeometry(self, xml_element, ns):
+    def friendlyName(self):
+        '''
+        Gets the friendly name of the type aka table name
+        E.g. BIOTOPE_LIGNE for PAG.ARTIKEL17.BIOTOPE_LIGNE
+        '''
+        
+        if self.name is None:
+            return ''
+        
+        split = self.name.split('.')
+        
+        if len(split)==1:
+            return split[0]
+        else:
+            return split[-1]
+        
+    def topic(self):
+        '''
+        Gets the topic of the type
+        E.g. ARTIKEL17 for PAG.ARTIKEL17.BIOTOPE_LIGNE
+        '''
+        
+        if self.name is None:
+            return ''
+        
+        split = self.name.split('.')
+        
+        if len(split)==1:
+            return split[0]
+        else:
+            return split[len(split)-2]
+    
+    def _getGeometry(self, xml_element, ns):
         '''
         Returns the geometry of the type
+        
+        :param xml_element: The root XML node of the geometry (xsd:element)
+        :type xml_element: Element
+        
+        :param ns: XSD namespaces
+        :type ns: dict
         '''
         
         geometries = {'PAG.LUREF':GeometryType.POINT,
@@ -86,12 +147,29 @@ class PAGType(object):
     
 class PAGField(object):
     '''
-    A field
+    A PAG XSD field
     '''
     
-    def __init__(self, xml_element, ns):
+    def __init__(self):
         '''
         Constructor
+        '''
+        self.nullable = True
+        self.type = DataType.STRING
+        self.length = None
+        self.minvalue = None
+        self.maxvalue = None
+        self.listofvalues = None
+    
+    def parse(self, xml_element, ns):
+        '''
+        Parse XML node
+        
+        :param xml_element: The root XML node of the field (xsd:element)
+        :type xml_element: Element
+        
+        :param ns: XSD namespaces
+        :type ns: dict
         '''
         
         # Field name
@@ -100,7 +178,7 @@ class PAGField(object):
         # Field is nullable
         self.nullable = xml_element.get('minOccurs') is not None and xml_element.get('minOccurs')=='0'
         
-        type = self.getType(xml_element, ns)
+        type = self._getDataType(xml_element, ns)
         
         # Data type
         self.type = type[0]
@@ -117,9 +195,15 @@ class PAGField(object):
         # List of possible values, enumeration
         self.listofvalues = type[4]
         
-    def getType(self, xml_element, ns):
+    def _getDataType(self, xml_element, ns):
         '''
         Returns the datatype of the field
+        
+        :param xml_element: The root XML node of the data type (xsd:element)
+        :type xml_element: Element
+        
+        :param ns: XSD namespaces
+        :type ns: dict
         '''
         
         # Dictionary of data types
@@ -155,14 +239,23 @@ class PAGField(object):
         
         return type, length, minvalue, maxvalue, enumeration if len(enumeration)>0 else None
     
+    def getEnumerationMap(self):
+        map = dict()
+        
+        for element in self.listofvalues:
+            split = element.split(',')
+            map[split[0]]=split[0] #split1
+            
+        return map
+    
 class GeometryType:
     '''
     Geometry types
     '''
     
-    POINT='point'
-    POLYLINE='polyline'
-    POLYGON='polygon'
+    POINT='POINT'
+    POLYLINE='LINESTRING'
+    POLYGON='POLYGON'
     
 class DataType:
     '''

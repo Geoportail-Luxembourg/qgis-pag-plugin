@@ -1,15 +1,16 @@
 '''
-Created on 9 sept. 2015
+Created on 17 sept. 2015
 
 @author: arxit
 '''
 
+import os
+
 from create_project_dialog import CreateProjectDialog
-from PagLuxembourg.schema import *
 
 class CreateProject(object):
     '''
-    classdocs
+    Main class for the create project widget
     '''
 
 
@@ -21,4 +22,9 @@ class CreateProject(object):
         self.dlg = CreateProjectDialog()
     
     def run(self):
+        '''
+        Runs the widget
+        '''
+        
+        self.dlg.clear()
         self.dlg.show()

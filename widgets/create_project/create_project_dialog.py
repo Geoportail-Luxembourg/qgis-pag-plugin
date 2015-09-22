@@ -24,6 +24,10 @@
 import os
 
 from PyQt4 import QtGui, uic
+from PyQt4.QtGui import QFileDialog, QMessageBox
+from PyQt4.QtCore import QCoreApplication
+
+import PagLuxembourg.main
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'create_project_dialog.ui'))
@@ -31,7 +35,10 @@ FORM_CLASS, _ = uic.loadUiType(os.path.join(
 
 class CreateProjectDialog(QtGui.QDialog, FORM_CLASS):
     def __init__(self, parent=None):
-        """Constructor."""
+        '''
+        Constructor.
+        '''
+        
         super(CreateProjectDialog, self).__init__(parent)
         # Set up the user interface from Designer.
         # After setupUI you can access any designer object by doing
@@ -39,3 +46,57 @@ class CreateProjectDialog(QtGui.QDialog, FORM_CLASS):
         # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
+
+    def showFolderList(self):
+        '''
+        Display the project folder selection dialog
+        '''
+        
+        dialog = QFileDialog()
+        dialog.setFileMode(QFileDialog.Directory)
+        dialog.setOption(QFileDialog.ShowDirsOnly)
+        dialog.setWindowTitle(QCoreApplication.translate('CreateProject','Select the new project location'))
+        dialog.setSizeGripEnabled(False)
+        result = dialog.exec_()
+        
+        if result == 0:
+            return
+        
+        selected_files = dialog.selectedFiles()
+        
+        if len(selected_files)==0:
+            return
+        
+        self.txtProjectFolder.setText(selected_files[0])
+        
+    def clear(self):
+        '''
+        Clears the text boxes
+        '''
+        
+        self.txtProjectName.setText('')
+        self.txtProjectFolder.setText('')
+        
+    def accept(self):
+        '''
+        Dialog accept action (OK)
+        '''
+        
+        folder = self.txtProjectFolder.text()
+        name = self.txtProjectName.text()
+        
+        # No project name
+        if len(name)==0:
+            QMessageBox.critical(self, 
+                                 QCoreApplication.translate('CreateProject','Error'),
+                                 QCoreApplication.translate('CreateProject','Please type a project name'))
+        
+        # Project folder error
+        if not os.path.exists(folder):
+            QMessageBox.critical(self, 
+                                 QCoreApplication.translate('CreateProject','Error'),
+                                 QCoreApplication.translate('CreateProject','The folder does not exist'))
+        
+        PagLuxembourg.main.current_project.create(folder,name)
+        
+        self.close()
