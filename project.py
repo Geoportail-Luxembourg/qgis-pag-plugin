@@ -42,8 +42,9 @@ class Project(object):
         self.filename = os.path.normpath(filename)
         self.database = os.path.join(self.folder, DATABASE)
         
-        '''if not self._mustUpdateProject():
-            return'''
+        if not self.isPagProject():
+            return
+        
         # Update database
         self._updateDatabase()
         
@@ -94,43 +95,21 @@ class Project(object):
         uri = self._getTypeUri(metadata_table)
         layer = QgsVectorLayer(uri, metadata_table.name, 'spatialite')
         
+        if not layer.isValid():
+            return False
+        
         exp = QgsExpression('Key=\'ProjetPAG\'')
         features = layer.getFeatures(QgsFeatureRequest(exp))
         
-        # Add features if empty
-        if layer.featureCount() == 0:
+        # Features count
+        count = 0
+        for feature in features:
+            count = count + 1
+        
+        if count == 0:
             return False
         else:
             return True
-        
-    def _mustUpdateProject(self):
-        '''
-        Indicates if it must update the project
-        '''
-        
-        # Metadata table
-        metadata_table = PAGType()
-        metadata_table.name = 'Metadata'
-        uri = self._getTypeUri(metadata_table)
-        layer = QgsVectorLayer(uri, metadata_table.name, 'spatialite')
-        
-        if not layer.isValid():
-            return True
-        
-        exp = QgsExpression('Key=\'PluginVersion\'')
-        features = layer.getFeatures(QgsFeatureRequest(exp))
-        
-        # Features count
-        count=0
-        for feat in features:
-            count=count+1
-        
-        # Check plugin version
-        if count == 0:
-            return True
-        else:
-            features.rewind()
-            return str(features.next()['Value']) != main.PLUGIN_VERSION
             
     def _updateDatabase(self):
         '''
