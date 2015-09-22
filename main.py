@@ -28,6 +28,7 @@ import resources
 import os.path
 # Widgets
 from widgets.create_project.create_project import *
+from widgets.stylize.stylize import *
 # Schema
 from PagLuxembourg.schema import *
 from PagLuxembourg.project import *
@@ -186,6 +187,15 @@ class PAGLuxembourg(object):
             text=self.tr(u'New project'),
             callback=self.create_project_widget.run,
             status_tip=self.tr(u'Creates a new PAG project'),
+            parent=self.iface.mainWindow())
+        
+        # Apply styles
+        self.stylize_project_widget = StylizeProject()
+        self.add_action(
+            ':/plugins/PagLuxembourg/widgets/stylize/icon.png',
+            text=self.tr(u'Apply styles'),
+            callback=self.stylize_project_widget.run,
+            status_tip=self.tr(u'Apply predefined styles to the project'),
             parent=self.iface.mainWindow())
         
         # About
