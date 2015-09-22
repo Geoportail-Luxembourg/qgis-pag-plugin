@@ -42,22 +42,26 @@ class PAGSchema(object):
         for type in xsd_types:
             # Filtering types to keep those starting with PAG. and having 2 dots (remove PAG.GESTION for example)
             if type.get('name').startswith('PAG.') and type.get('name').count('.')==2:
-                self.types.append(PAGType(type,ns))
+                pag_type = PAGType()
+                pag_type.parse(type, ns)
+                self.types.append(pag_type)
 
 class PAGType(object):
     '''
     A PAG XSD type
-        
-    :param folder: Folder path which will contain the new project folder
-    :type folder: str, QString
-    
-    :param name: Project name, will be the project folder name
-    :type name: str, QString
     '''
     
-    def __init__(self, xml_element, ns):
+    def __init__(self):
         '''
         Constructor
+        '''
+        
+        self.geometry_type = None        
+        self.fields = list()
+    
+    def parse(self, xml_element, ns):
+        '''
+        Parse XML node
         
         :param xml_element: The root XML node of the type (xsd:complexType)
         :type xml_element: Element
@@ -81,7 +85,9 @@ class PAGType(object):
                 self.geometry_type = self._getGeometry(element, ns)
             # Process field
             else:
-                self.fields.append(PAGField(element, ns))
+                pag_field = PAGField()
+                pag_field.parse(element, ns)
+                self.fields.append(pag_field)
                 
     def _getGeometry(self, xml_element, ns):
         '''
@@ -112,9 +118,20 @@ class PAGField(object):
     A PAG XSD field
     '''
     
-    def __init__(self, xml_element, ns):
+    def __init__(self):
         '''
         Constructor
+        '''
+        self.nullable = True
+        self.type = DataType.STRING
+        self.length = None
+        self.minvalue = None
+        self.maxvalue = None
+        self.listofvalues = None
+    
+    def parse(self, xml_element, ns):
+        '''
+        Parse XML node
         
         :param xml_element: The root XML node of the field (xsd:element)
         :type xml_element: Element

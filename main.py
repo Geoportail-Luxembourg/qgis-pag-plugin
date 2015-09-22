@@ -32,6 +32,7 @@ from widgets.create_project.create_project import *
 from PagLuxembourg.schema import *
 
 # Global variables
+PLUGIN_VERSION = '1.0'
 plugin_dir = os.path.dirname(__file__)
 xsd_schema = PAGSchema()
 qgis_interface = None

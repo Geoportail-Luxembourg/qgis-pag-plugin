@@ -42,6 +42,8 @@ class Project(object):
         self.filename = os.path.normpath(filename)
         self.database = os.path.join(self.folder, DATABASE)
         
+        '''if not self._mustUpdateProject():
+            return'''
         # Update database
         self._updateDatabase()
         
@@ -81,6 +83,55 @@ class Project(object):
         
         QgsProject.instance().write()
         
+    def isPagProject(self):
+        '''
+        Indicates if this is a PAG project
+        '''
+        
+        # Metadata table
+        metadata_table = PAGType()
+        metadata_table.name = 'Metadata'
+        uri = self._getTypeUri(metadata_table)
+        layer = QgsVectorLayer(uri, metadata_table.name, 'spatialite')
+        
+        exp = QgsExpression('Key=\'ProjetPAG\'')
+        features = layer.getFeatures(QgsFeatureRequest(exp))
+        
+        # Add features if empty
+        if layer.featureCount() == 0:
+            return False
+        else:
+            return True
+        
+    def _mustUpdateProject(self):
+        '''
+        Indicates if it must update the project
+        '''
+        
+        # Metadata table
+        metadata_table = PAGType()
+        metadata_table.name = 'Metadata'
+        uri = self._getTypeUri(metadata_table)
+        layer = QgsVectorLayer(uri, metadata_table.name, 'spatialite')
+        
+        if not layer.isValid():
+            return True
+        
+        exp = QgsExpression('Key=\'PluginVersion\'')
+        features = layer.getFeatures(QgsFeatureRequest(exp))
+        
+        # Features count
+        count=0
+        for feat in features:
+            count=count+1
+        
+        # Check plugin version
+        if count == 0:
+            return True
+        else:
+            features.rewind()
+            return str(features.next()['Value']) != main.PLUGIN_VERSION
+            
     def _updateDatabase(self):
         '''
         Updates the project database
@@ -97,7 +148,7 @@ class Project(object):
             cursor.execute("SELECT InitSpatialMetadata()")
             del cursor
         
-        # Check and update fields
+        # Check and update tables
         for type in xsd_schema.types:
             uri = self._getTypeUri(type)
             layer = QgsVectorLayer(uri, type.name, 'spatialite')
@@ -109,6 +160,9 @@ class Project(object):
                 
             self._updateTable(type, layer)
             
+        # Check and update metadata
+        self._updateMetadataTable(conn)
+        
         conn.close()
         del conn
         
@@ -167,6 +221,61 @@ class Project(object):
             cursor.close()
             del cursor
     
+    def _updateMetadataTable(self, conn):
+        '''
+        Update the metadata table (Metadata)
+        
+        :param conn: The database connection
+        :type conn: Connection
+        '''
+        
+        # Metadata table
+        metadata_table = PAGType()
+        metadata_table.name = 'Metadata'
+        
+        # Key field
+        key_field = PAGField()
+        key_field.name = 'Key'
+        key_field.type = DataType.STRING
+        key_field.nullable = False
+        metadata_table.fields.append(key_field)
+        
+        # Value field
+        value_field = PAGField()
+        value_field.name = 'Value'
+        value_field.type = DataType.STRING
+        value_field.nullable = False
+        metadata_table.fields.append(value_field)
+        
+        uri = self._getTypeUri(metadata_table)
+        layer = QgsVectorLayer(uri, metadata_table.name, 'spatialite')
+        
+        # Create table if not valid
+        if not layer.isValid():
+            self._createTable(conn, metadata_table)
+            layer = QgsVectorLayer(uri, metadata_table.name, 'spatialite')
+        
+        # Update fields
+        self._updateTable(metadata_table, layer)
+        
+        features = layer.getFeatures()
+        
+        # Add features if empty
+        if layer.featureCount() == 0:
+            feat = QgsFeature(layer.pendingFields())
+            feat.setAttribute('Key', 'ProjetPAG')
+            feat.setAttribute('Value', '1')
+            layer.dataProvider().addFeatures([feat])
+            feat = QgsFeature(layer.pendingFields())
+            feat.setAttribute('Key', 'PluginVersion')
+            feat.setAttribute('Value', main.PLUGIN_VERSION)
+            layer.dataProvider().addFeatures([feat])
+        else:
+            exp = QgsExpression('Key=\'PluginVersion\'')
+            feat = layer.getFeatures(QgsFeatureRequest(exp)).next()
+            changes = {layer.fieldNameIndex('Value'):main.PLUGIN_VERSION}
+            layer.dataProvider().changeAttributeValues({ feat.id() : changes })
+        
     def _updateTable(self, type, layer):
         '''
         Updates the layer's table according to the XSD
@@ -208,7 +317,7 @@ class Project(object):
         
     def _updateMapLayers(self):
         '''
-        Update layers attributes editors
+        Update layers attributes editors and add missing layers to the TOC
         '''
         
         # Map layers in the TOC
@@ -216,7 +325,7 @@ class Project(object):
         
         # Keep only vector layers
         for k,v in maplayers.iteritems():
-            if v.type()!=QgsMapLayer.VectorLayer:
+            if v.type() != QgsMapLayer.VectorLayer:
                 del maplayers[k]
         
         maplayers = QgsMapLayerRegistry.instance().mapLayers()
@@ -275,7 +384,7 @@ class Project(object):
     
     def _updateLayerEditors(self, layer, type):
         '''
-        Update the layer's attributes editors
+        Update the layers attributes editors
         
         :param layer: The layer to update
         :type layer: QgsVectorLayer
@@ -297,6 +406,16 @@ class Project(object):
     fileFields = ['NOM_FICHIER','NOM_EC','NOM_GR']
         
     def _setupFieldEditor(self, field, layer):
+        '''
+        Update the field editor
+        
+        :param pagfield: XSD schema field
+        :type pagfield: PAGField
+        
+        :param layer: The layer to update
+        :type layer: QgsVectorLayer
+        '''
+        
         fieldIndex = layer.fieldNameIndex(field.name)
         
         if fieldIndex == -1:
