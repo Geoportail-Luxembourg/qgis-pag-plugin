@@ -17,7 +17,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>Créer un nouveau projet</string>
+   <string>Create a new project</string>
   </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
@@ -45,7 +45,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Nom du projet :</string>
+    <string>Project name</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="txtProjectName">
@@ -68,7 +68,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Répertoire :</string>
+    <string>Folder</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="txtProjectFolder">
@@ -104,7 +104,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Attention, la création d'un projet peut prendre plusieurs secondes.</string>
+    <string>Warning : the project creation may take several seconds.</string>
    </property>
    <property name="textFormat">
     <enum>Qt::AutoText</enum>

@@ -9,13 +9,32 @@
           <se:Name>Single symbol</se:Name>
           <se:PolygonSymbolizer>
             <se:Fill>
-              <se:SvgParameter name="fill">#a7c719</se:SvgParameter>
+              <se:SvgParameter name="fill">#badd69</se:SvgParameter>
             </se:Fill>
             <se:Stroke>
-              <se:SvgParameter name="stroke">#000000</se:SvgParameter>
+              <se:SvgParameter name="stroke">#809848</se:SvgParameter>
               <se:SvgParameter name="stroke-width">0.26</se:SvgParameter>
               <se:SvgParameter name="stroke-linejoin">bevel</se:SvgParameter>
             </se:Stroke>
+          </se:PolygonSymbolizer>
+          <se:PolygonSymbolizer>
+            <se:Fill>
+              <se:GraphicFill>
+                <se:Graphic>
+                  <se:Mark>
+                    <se:WellKnownName>line</se:WellKnownName>
+                    <se:Fill>
+                      <se:SvgParameter name="fill">#ff0000</se:SvgParameter>
+                    </se:Fill>
+                    <se:Stroke>
+                      <se:SvgParameter name="stroke">#576831</se:SvgParameter>
+                    </se:Stroke>
+                  </se:Mark>
+                  <se:Size>1</se:Size>
+                </se:Graphic>
+              </se:GraphicFill>
+            </se:Fill>
+            <VendorOption name="distance">2,2</VendorOption>
           </se:PolygonSymbolizer>
         </se:Rule>
       </se:FeatureTypeStyle>

@@ -13,6 +13,7 @@ from PyQt4.QtGui import QMessageBox
 
 import main
 from PagLuxembourg.schema import *
+from PagLuxembourg.widgets.stylize.stylize import *
 
 FILENAME = 'project.qgs'
 DATABASE = 'database.sqlite'
@@ -97,10 +98,14 @@ class Project(QObject):
         
     def isPagProject(self):
         '''
-        Indicates if this is a PAG project
+        Indicates whether this is a PAG project
         '''
         
         try:
+            # New project
+            if not os.path.isfile(self.filename):
+                return False
+            
             # Metadata table
             metadata_table = PAGType()
             metadata_table.name = 'Metadata'
@@ -336,6 +341,9 @@ class Project(QObject):
             
             # Update attributes editors
             self._updateLayerEditors(layer, type)
+        
+        # Updates layers style
+        StylizeProject().run()
                 
     def _addMapLayer(self, layer, type):
         '''

@@ -100,7 +100,7 @@ class PAGLuxembourg(object):
         :rtype: QString
         '''
         # noinspection PyTypeChecker,PyArgumentList,PyCallByClass
-        return QCoreApplication.translate('PagLuxembourg', message)
+        return QCoreApplication.translate('PAGLuxembourg', message)
 
 
     def add_action(
