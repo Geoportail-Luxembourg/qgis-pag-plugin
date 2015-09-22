@@ -43,7 +43,7 @@ class StylizeProject(object):
             uri = project.getTypeUri(type)
             found = False
             
-            # Check is a layer with type data source exists in the map
+            # Check whether a layer with type data source exists in the map
             for k,v in maplayers.iteritems():
                 if project.compareURIs(v.source(), uri):
                     found = True
