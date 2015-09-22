@@ -27,7 +27,7 @@ from PyQt4 import QtGui, uic
 from PyQt4.QtGui import QFileDialog, QMessageBox
 from PyQt4.QtCore import QCoreApplication
 
-from PagLuxembourg.project import *
+import PagLuxembourg.main
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'create_project_dialog.ui'))
@@ -69,6 +69,14 @@ class CreateProjectDialog(QtGui.QDialog, FORM_CLASS):
         
         self.txtProjectFolder.setText(selected_files[0])
         
+    def clear(self):
+        '''
+        Clears the text boxes
+        '''
+        
+        self.txtProjectName.setText('')
+        self.txtProjectFolder.setText('')
+        
     def accept(self):
         '''
         Dialog accept action (OK)
@@ -89,5 +97,6 @@ class CreateProjectDialog(QtGui.QDialog, FORM_CLASS):
                                  QCoreApplication.translate('CreateProject','Error'),
                                  QCoreApplication.translate('CreateProject','The folder does not exist'))
         
-        project = Project()
-        project.create(folder,name)
+        PagLuxembourg.main.current_project.create(folder,name)
+        
+        self.close()

@@ -7,7 +7,6 @@ Created on 17 sept. 2015
 import os
 
 from create_project_dialog import CreateProjectDialog
-from PagLuxembourg.project import *
 
 class CreateProject(object):
     '''
@@ -27,7 +26,5 @@ class CreateProject(object):
         Runs the widget
         '''
         
-        #self.dlg.show()
-        project = Project()
-        #project.create('C:/Users/arxit/Documents','Test')
-        project.open('C:/Users/arxit/Documents/Test/project.qgs')
+        self.dlg.clear()
+        self.dlg.show()

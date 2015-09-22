@@ -29,19 +29,22 @@ class Project(object):
         '''
         pass    
     
-    def open(self, filename):
+    def open(self):
         '''
         Called when a QGIS project is opened
-        
-        :param filename: Project filename
-        :type filename: str, QString
         '''
         
-        # Setting 
+        # Signal QgsInterface.projectRead seems to be emited twice
+        if QgsProject is None:
+            return
+        
+        # Setting
+        filename = QgsProject.instance().fileName()
         self.folder = os.path.normpath(os.path.dirname(filename))
         self.filename = os.path.normpath(filename)
         self.database = os.path.join(self.folder, DATABASE)
         
+        # If not PAG project return
         if not self.isPagProject():
             return
         

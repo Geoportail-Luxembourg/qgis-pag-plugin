@@ -30,15 +30,19 @@ import os.path
 from widgets.create_project.create_project import *
 # Schema
 from PagLuxembourg.schema import *
+from PagLuxembourg.project import *
 
 # Global variables
 PLUGIN_VERSION = 'v1.0'
 plugin_dir = os.path.dirname(__file__)
 xsd_schema = PAGSchema()
 qgis_interface = None
+current_project = Project()
 
 class PAGLuxembourg(object):
-    '''QGIS Plugin Implementation.'''
+    '''
+    QGIS Plugin Implementation.
+    '''
 
     def __init__(self, iface):
         '''Constructor.
@@ -72,9 +76,13 @@ class PAGLuxembourg(object):
         self.actions = []
         self.menu = self.tr(u'&PAG Luxembourg')
         
-        # TODO: We are going to let the user set this up in a future iteration
+        # Toolbar initialization
         self.toolbar = self.iface.addToolBar(u'PagLuxembourg')
         self.toolbar.setObjectName(u'PagLuxembourg')
+        
+        # QGIS interface hooks
+        #global project
+        self.iface.projectRead.connect(current_project.open)
 
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
