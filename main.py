@@ -28,6 +28,7 @@ import resources
 import os.path
 # Widgets
 from widgets.create_project.create_project import *
+from widgets.stylize.stylize import *
 # Schema
 from PagLuxembourg.schema import *
 from PagLuxembourg.project import *
@@ -74,6 +75,7 @@ class PAGLuxembourg(object):
 
         # Declare instance attributes
         self.actions = []
+        self.pag_actions = [] #PAG actions, disabled if the project is not PAG
         self.menu = self.tr(u'&PAG Luxembourg')
         
         # Toolbar initialization
@@ -81,8 +83,9 @@ class PAGLuxembourg(object):
         self.toolbar.setObjectName(u'PagLuxembourg')
         
         # QGIS interface hooks
-        #global project
         self.iface.projectRead.connect(current_project.open)
+        self.iface.newProjectCreated.connect(current_project.open)
+        current_project.ready.connect(self.updateGui)
 
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
@@ -188,6 +191,15 @@ class PAGLuxembourg(object):
             status_tip=self.tr(u'Creates a new PAG project'),
             parent=self.iface.mainWindow())
         
+        # Apply styles
+        self.stylize_project_widget = StylizeProject()
+        self.pag_actions.append(self.add_action(
+            ':/plugins/PagLuxembourg/widgets/stylize/icon.png',
+            text=self.tr(u'Apply styles'),
+            callback=self.stylize_project_widget.run,
+            status_tip=self.tr(u'Apply predefined styles to the project'),
+            parent=self.iface.mainWindow()))
+        
         # About
         self.add_action(
             ':/plugins/PagLuxembourg/icon.png',
@@ -195,6 +207,22 @@ class PAGLuxembourg(object):
             callback=None,
             status_tip=self.tr(u'About the PAG plugin'),
             parent=self.iface.mainWindow())
+        
+        # Update buttons availability
+        self.updateGui()
+    
+    def updateGui(self):
+        '''
+        Updates the plugin GUI
+        Disable buttons
+        '''
+        enabled = current_project.isPagProject()
+        
+        for action in self.pag_actions:
+            if enabled:
+                action.setEnabled(True)
+            else:
+                action.setEnabled(False)
     
     def unload(self):
         '''
