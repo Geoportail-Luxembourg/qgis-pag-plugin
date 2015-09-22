@@ -89,6 +89,38 @@ class PAGType(object):
                 pag_field.parse(element, ns)
                 self.fields.append(pag_field)
                 
+    def friendlyName(self):
+        '''
+        Gets the friendly name of the type aka table name
+        E.g. BIOTOPE_LIGNE for PAG.ARTIKEL17.BIOTOPE_LIGNE
+        '''
+        
+        if self.name is None:
+            return ''
+        
+        split = self.name.split('.')
+        
+        if len(split)==1:
+            return split[0]
+        else:
+            return split[-1]
+        
+    def topic(self):
+        '''
+        Gets the topic of the type
+        E.g. ARTIKEL17 for PAG.ARTIKEL17.BIOTOPE_LIGNE
+        '''
+        
+        if self.name is None:
+            return ''
+        
+        split = self.name.split('.')
+        
+        if len(split)==1:
+            return split[0]
+        else:
+            return split[len(split)-2]
+    
     def _getGeometry(self, xml_element, ns):
         '''
         Returns the geometry of the type

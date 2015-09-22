@@ -133,12 +133,12 @@ class Project(object):
         # Check and update tables
         for type in xsd_schema.types:
             uri = self._getTypeUri(type)
-            layer = QgsVectorLayer(uri, type.name, 'spatialite')
+            layer = QgsVectorLayer(uri, type.friendlyName(), 'spatialite')
             
             # Create layer if not valid
             if not layer.isValid():
                 self._createTable(conn, type)
-                layer = QgsVectorLayer(uri, type.name, 'spatialite')
+                layer = QgsVectorLayer(uri, type.friendlyName(), 'spatialite')
                 
             self._updateTable(type, layer)
             
@@ -230,12 +230,12 @@ class Project(object):
         metadata_table.fields.append(value_field)
         
         uri = self._getTypeUri(metadata_table)
-        layer = QgsVectorLayer(uri, metadata_table.name, 'spatialite')
+        layer = QgsVectorLayer(uri, metadata_table.friendlyName(), 'spatialite')
         
         # Create table if not valid
         if not layer.isValid():
             self._createTable(conn, metadata_table)
-            layer = QgsVectorLayer(uri, metadata_table.name, 'spatialite')
+            layer = QgsVectorLayer(uri, metadata_table.friendlyName(), 'spatialite')
         
         # Update fields
         self._updateTable(metadata_table, layer)
@@ -317,21 +317,44 @@ class Project(object):
             uri = self._getTypeUri(type)
             found = False
             
-            # Check is a layer with type data source exists in the TOC
+            # Check is a layer with type data source exists in the map
             for k,v in maplayers.iteritems():
                 if self._compareURIs(v.source(), uri):
                     found = True
                     layer = v
                     break
             
-            # If not found, add to the TOC
+            # If not found, add to the map
             if not found:
-                layer = QgsVectorLayer(uri, type.name, 'spatialite')
-                QgsMapLayerRegistry.instance().addMapLayer(layer)
+                layer = QgsVectorLayer(uri, type.friendlyName(), 'spatialite')
+                self._addMapLayer(layer, type)
             
             # Update attributes editors
             self._updateLayerEditors(layer, type)
                 
+    def _addMapLayer(self, layer, type):
+        '''
+        Adds a layer to the map
+        
+        :param layer: The layer to update
+        :type layer: QgsVectorLayer
+        
+        :param type: XSD schema type
+        :type type: PAGType
+        '''
+        
+        # Add to map
+        QgsMapLayerRegistry.instance().addMapLayer(layer)
+        
+        # Add to the correct topic group
+        legend = main.qgis_interface.legendInterface()
+        
+        if type.topic() not in legend.groups():
+            legend.addGroup(type.topic())
+        
+        group_index = legend.groups().index(type.topic())
+        legend.moveLayer(layer,group_index)
+        
     def _compareURIs(self, uri1, uri2):
         '''
         Compares 2 URIs
