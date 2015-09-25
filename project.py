@@ -14,6 +14,7 @@ from PyQt4.QtGui import QMessageBox
 import main
 from PagLuxembourg.schema import *
 from PagLuxembourg.widgets.stylize.stylize import *
+from PagLuxembourg.widgets.topology.topology import *
 
 FILENAME = 'project.qgs'
 DATABASE = 'database.sqlite'
@@ -30,7 +31,8 @@ class Project(QObject):
         '''
         Constructor
         '''
-        super(Project, self).__init__()    
+        super(Project, self).__init__()
+        self.creation_mode = False
     
     def open(self):
         '''
@@ -39,6 +41,10 @@ class Project(QObject):
         
         # Signal QgsInterface.projectRead seems to be emited twice
         if QgsProject is None:
+            return
+        
+        # QGIS emits projectRead when creating a new project
+        if self.creation_mode:
             return
         
         # Setting
@@ -73,6 +79,8 @@ class Project(QObject):
         :type name: str, QString
         '''
         
+        self.creation_mode = True
+        
         # Create project path
         self.folder = os.path.normpath(os.path.join(folder,name))
                 
@@ -84,6 +92,8 @@ class Project(QObject):
         main.qgis_interface.newProject(True)
         QgsProject.instance().setFileName(self.filename)
         
+        QgsProject.instance().write()
+        
         # Database
         self.database = os.path.join(self.folder, DATABASE)
         self._updateDatabase()
@@ -93,6 +103,8 @@ class Project(QObject):
         
         QgsProject.instance().write()
         
+        self.creation_mode = False
+        
         # Notify project is ready
         self.ready.emit()
         
@@ -100,7 +112,7 @@ class Project(QObject):
         '''
         Indicates whether this is a PAG project
         '''
-        
+        #return True
         try:
             # New project
             if not os.path.isfile(self.filename):
@@ -344,6 +356,9 @@ class Project(QObject):
         
         # Updates layers style
         StylizeProject().run()
+        
+        # Add topology rules
+        TopologyChecker(None).updateProjectRules()
                 
     def _addMapLayer(self, layer, type):
         '''
@@ -368,6 +383,25 @@ class Project(QObject):
         group_index = legend.groups().index(type.topic())
         legend.moveLayer(layer,group_index)
         
+    def getUriInfos(self, uri):
+        '''
+        Gets the database and table name from uri
+        
+        :param uri: URI
+        :type uri: QString
+        
+        :returns: Database and table name
+        :rtype: tuple(QString, QString)
+        '''
+        split = uri.split(' ')
+        for kv in split:
+            if kv.startswith('dbname'):
+                db = os.path.normpath(kv[8:-1])
+            if kv.startswith('table'):
+                table = kv[7:-1]
+                
+        return db,table
+                
     def compareURIs(self, uri1, uri2):
         '''
         Compares 2 URIs
@@ -383,22 +417,12 @@ class Project(QObject):
         '''
         
         # URI 1
-        split = uri1.split(' ')
-        for kv in split:
-            if kv.startswith('dbname'):
-                db1 = os.path.normpath(kv[8:-1])
-            if kv.startswith('table'):
-                table1 = kv[8:-1]
+        info1 = self.getUriInfos(uri1)
         
         # URI 2
-        split = uri2.split(' ')
-        for kv in split:
-            if kv.startswith('dbname'):
-                db2 = os.path.normpath(kv[8:-1])
-            if kv.startswith('table'):
-                table2 = kv[8:-1]
+        info2 = self.getUriInfos(uri2)
         
-        return db1 == db2 and table1 == table2
+        return info1 == info2
     
     def _updateLayerEditors(self, layer, type):
         '''
