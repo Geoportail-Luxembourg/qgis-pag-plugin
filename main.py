@@ -29,6 +29,7 @@ import os.path
 # Widgets
 from widgets.create_project.create_project import *
 from widgets.stylize.stylize import *
+from widgets.topology.topology import *
 # Schema
 from PagLuxembourg.schema import *
 from PagLuxembourg.project import *
@@ -199,6 +200,17 @@ class PAGLuxembourg(object):
             callback=self.stylize_project_widget.run,
             status_tip=self.tr(u'Apply predefined styles to the project'),
             parent=self.iface.mainWindow()))
+        
+        # Topology checker
+        for action in self.iface.vectorToolBar().actions():
+            if action.parent().objectName()==u'qgis_plugin_topolplugin':
+                self.topology_widget = TopologyChecker(action)
+                self.pag_actions.append(self.add_action(
+                    ':/plugins/PagLuxembourg/widgets/topology/icon.png',
+                    text=self.tr(u'Check topology'),
+                    callback=self.topology_widget.run,
+                    status_tip=self.tr(u'Check layers topology according to predefined rules'),
+                    parent=self.iface.mainWindow()))
         
         # About
         self.add_action(
