@@ -393,6 +393,8 @@ class Project(QObject):
         :returns: Database and table name
         :rtype: tuple(QString, QString)
         '''
+        db=''
+        table=''
         split = uri.split(' ')
         for kv in split:
             if kv.startswith('dbname'):
