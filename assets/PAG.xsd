@@ -1,0 +1,1270 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns="http://www.interlis.ch/INTERLIS2.3/GML32/PAG" targetNamespace="http://www.interlis.ch/INTERLIS2.3/GML32/PAG" elementFormDefault="qualified" attributeFormDefault="unqualified"
+  xmlns:gml="http://www.opengis.net/gml/3.2"
+  xmlns:INTERLIS="http://www.interlis.ch/INTERLIS2.3/GML32/INTERLIS"
+  xmlns:ili2c="http://www.interlis.ch/ili2c"
+  >
+<xsd:annotation>
+  <xsd:appinfo source="http://www.interlis.ch/ili2c/ili2cversion">4.4.14-20130831</xsd:appinfo>
+  <xsd:appinfo source="http://www.interlis.ch/ili2c">
+    <ili2c:model>PAG</ili2c:model>
+    <ili2c:modelVersion>2015-04-01</ili2c:modelVersion>
+    <ili2c:modelAt>mailto:david.hottua@mi.etat.lu</ili2c:modelAt>
+  </xsd:appinfo>
+</xsd:annotation>
+<xsd:import namespace="http://www.opengis.net/gml/3.2" schemaLocation="http://schemas.opengis.net/gml/3.2.1/gml.xsd"/>
+<xsd:import namespace="http://www.interlis.ch/INTERLIS2.3/GML32/INTERLIS" schemaLocation="iligml.xsd"/>
+<xsd:complexType name="LUREF">
+  <xsd:complexContent>
+    <xsd:restriction base="gml:PointPropertyType">
+      <xsd:sequence>
+        <xsd:element ref="gml:Point"/>
+      </xsd:sequence>
+    </xsd:restriction>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="Gestion" type="GestionType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="GestionType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="ID_COMMUNE">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:enumeration value="C001"/>
+              <xsd:enumeration value="C002"/>
+              <xsd:enumeration value="C003"/>
+              <xsd:enumeration value="C004"/>
+              <xsd:enumeration value="C005"/>
+              <xsd:enumeration value="C006"/>
+              <xsd:enumeration value="C007"/>
+              <xsd:enumeration value="C008"/>
+              <xsd:enumeration value="C009"/>
+              <xsd:enumeration value="C010"/>
+              <xsd:enumeration value="C011"/>
+              <xsd:enumeration value="C012"/>
+              <xsd:enumeration value="C013"/>
+              <xsd:enumeration value="C014"/>
+              <xsd:enumeration value="C015"/>
+              <xsd:enumeration value="C016"/>
+              <xsd:enumeration value="C017"/>
+              <xsd:enumeration value="C018"/>
+              <xsd:enumeration value="C019"/>
+              <xsd:enumeration value="C020"/>
+              <xsd:enumeration value="C022"/>
+              <xsd:enumeration value="C023"/>
+              <xsd:enumeration value="C024"/>
+              <xsd:enumeration value="C026"/>
+              <xsd:enumeration value="C027"/>
+              <xsd:enumeration value="C028"/>
+              <xsd:enumeration value="C029"/>
+              <xsd:enumeration value="C030"/>
+              <xsd:enumeration value="C031"/>
+              <xsd:enumeration value="C032"/>
+              <xsd:enumeration value="C033"/>
+              <xsd:enumeration value="C034"/>
+              <xsd:enumeration value="C037"/>
+              <xsd:enumeration value="C038"/>
+              <xsd:enumeration value="C039"/>
+              <xsd:enumeration value="C040"/>
+              <xsd:enumeration value="C041"/>
+              <xsd:enumeration value="C042"/>
+              <xsd:enumeration value="C043"/>
+              <xsd:enumeration value="C045"/>
+              <xsd:enumeration value="C046"/>
+              <xsd:enumeration value="C047"/>
+              <xsd:enumeration value="C048"/>
+              <xsd:enumeration value="C049"/>
+              <xsd:enumeration value="C050"/>
+              <xsd:enumeration value="C051"/>
+              <xsd:enumeration value="C052"/>
+              <xsd:enumeration value="C053"/>
+              <xsd:enumeration value="C054"/>
+              <xsd:enumeration value="C055"/>
+              <xsd:enumeration value="C056"/>
+              <xsd:enumeration value="C057"/>
+              <xsd:enumeration value="C058"/>
+              <xsd:enumeration value="C059"/>
+              <xsd:enumeration value="C060"/>
+              <xsd:enumeration value="C061"/>
+              <xsd:enumeration value="C062"/>
+              <xsd:enumeration value="C063"/>
+              <xsd:enumeration value="C064"/>
+              <xsd:enumeration value="C066"/>
+              <xsd:enumeration value="C067"/>
+              <xsd:enumeration value="C068"/>
+              <xsd:enumeration value="C069"/>
+              <xsd:enumeration value="C070"/>
+              <xsd:enumeration value="C071"/>
+              <xsd:enumeration value="C072"/>
+              <xsd:enumeration value="C074"/>
+              <xsd:enumeration value="C075"/>
+              <xsd:enumeration value="C076"/>
+              <xsd:enumeration value="C077"/>
+              <xsd:enumeration value="C078"/>
+              <xsd:enumeration value="C079"/>
+              <xsd:enumeration value="C080"/>
+              <xsd:enumeration value="C081"/>
+              <xsd:enumeration value="C082"/>
+              <xsd:enumeration value="C084"/>
+              <xsd:enumeration value="C085"/>
+              <xsd:enumeration value="C086"/>
+              <xsd:enumeration value="C087"/>
+              <xsd:enumeration value="C088"/>
+              <xsd:enumeration value="C089"/>
+              <xsd:enumeration value="C090"/>
+              <xsd:enumeration value="C092"/>
+              <xsd:enumeration value="C095"/>
+              <xsd:enumeration value="C096"/>
+              <xsd:enumeration value="C097"/>
+              <xsd:enumeration value="C098"/>
+              <xsd:enumeration value="C099"/>
+              <xsd:enumeration value="C101"/>
+              <xsd:enumeration value="C103"/>
+              <xsd:enumeration value="C104"/>
+              <xsd:enumeration value="C105"/>
+              <xsd:enumeration value="C107"/>
+              <xsd:enumeration value="C109"/>
+              <xsd:enumeration value="C110"/>
+              <xsd:enumeration value="C111"/>
+              <xsd:enumeration value="C112"/>
+              <xsd:enumeration value="C113"/>
+              <xsd:enumeration value="C114"/>
+              <xsd:enumeration value="C115"/>
+              <xsd:enumeration value="C116"/>
+              <xsd:enumeration value="C120"/>
+              <xsd:enumeration value="C121"/>
+              <xsd:enumeration value="C122"/>
+              <xsd:enumeration value="C125"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="NOM_BUR_ET">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="50"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="DATE">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:date">
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="GESTIONMemberType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureMemberType">
+      <xsd:sequence>
+        <xsd:choice>
+          <xsd:element ref="Gestion"/>
+        </xsd:choice>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="GESTION" type="GESTIONType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType name="GESTIONType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="member" type="GESTIONMemberType" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attributeGroup ref="gml:AggregationAttributeGroup"/>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="BIOTOPE_LIGNE" type="BIOTOPE_LIGNEType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="BIOTOPE_LIGNEType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="GEOMETRIE" type="gml:CurvePropertyType">
+        </xsd:element>
+        <xsd:element name="CATEGORIE" minOccurs="0">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:enumeration value="Tm"/>
+              <xsd:enumeration value="uW"/>
+              <xsd:enumeration value="Wma"/>
+              <xsd:enumeration value="FHe"/>
+              <xsd:enumeration value="SHe"/>
+              <xsd:enumeration value="BG"/>
+              <xsd:enumeration value="BR"/>
+              <xsd:enumeration value="FFH8160"/>
+              <xsd:enumeration value="FFH8210"/>
+              <xsd:enumeration value="FFH8150"/>
+              <xsd:enumeration value="FFH8220"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="BIOTOPE_POINT" type="BIOTOPE_POINTType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="BIOTOPE_POINTType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="GEOMETRIE" type="LUREF"/>
+        <xsd:element name="CATEGORIE" minOccurs="0">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:enumeration value="BK05"/>
+              <xsd:enumeration value="FFH8220"/>
+              <xsd:enumeration value="FFH7220"/>
+              <xsd:enumeration value="FFH8210"/>
+              <xsd:enumeration value="EB"/>
+              <xsd:enumeration value="FFH8150"/>
+              <xsd:enumeration value="FFH8160"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="BIOTOPE_POLY" type="BIOTOPE_POLYType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="BIOTOPE_POLYType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="GEOMETRIE" type="gml:SurfacePropertyType">
+        </xsd:element>
+        <xsd:element name="CATEGORIE" minOccurs="0">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:enumeration value="FFH3260"/>
+              <xsd:enumeration value="FFH7140"/>
+              <xsd:enumeration value="BK06"/>
+              <xsd:enumeration value="BK04"/>
+              <xsd:enumeration value="FFH3150"/>
+              <xsd:enumeration value="FFH3140"/>
+              <xsd:enumeration value="FFH3130"/>
+              <xsd:enumeration value="BK08"/>
+              <xsd:enumeration value="Gb"/>
+              <xsd:enumeration value="Gbf"/>
+              <xsd:enumeration value="EC"/>
+              <xsd:enumeration value="BK11"/>
+              <xsd:enumeration value="FFH8310"/>
+              <xsd:enumeration value="FFH6410"/>
+              <xsd:enumeration value="FFH8160"/>
+              <xsd:enumeration value="FFH6110"/>
+              <xsd:enumeration value="FFH8230"/>
+              <xsd:enumeration value="BK07"/>
+              <xsd:enumeration value="BK10"/>
+              <xsd:enumeration value="FFH6510"/>
+              <xsd:enumeration value="FFH6210"/>
+              <xsd:enumeration value="FFH5130"/>
+              <xsd:enumeration value="FFH4030"/>
+              <xsd:enumeration value="FFH6230"/>
+              <xsd:enumeration value="FFH6430"/>
+              <xsd:enumeration value="EHWtS"/>
+              <xsd:enumeration value="BK09"/>
+              <xsd:enumeration value="EHWms"/>
+              <xsd:enumeration value="PBuW"/>
+              <xsd:enumeration value="HBuW"/>
+              <xsd:enumeration value="SchW"/>
+              <xsd:enumeration value="AuWS"/>
+              <xsd:enumeration value="AuW"/>
+              <xsd:enumeration value="BruW"/>
+              <xsd:enumeration value="Sukzl"/>
+              <xsd:enumeration value="Auf"/>
+              <xsd:enumeration value="FFH8150"/>
+              <xsd:enumeration value="FFH8210"/>
+              <xsd:enumeration value="FFH8220"/>
+              <xsd:enumeration value="FHe"/>
+              <xsd:enumeration value="SHe"/>
+              <xsd:enumeration value="Wma"/>
+              <xsd:enumeration value="BG"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="ARTIKEL17MemberType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureMemberType">
+      <xsd:sequence>
+        <xsd:choice>
+          <xsd:element ref="BIOTOPE_LIGNE"/>
+          <xsd:element ref="BIOTOPE_POINT"/>
+          <xsd:element ref="BIOTOPE_POLY"/>
+          <xsd:element ref="BIOTOPE_POLY.GEOMETRIE"/>
+        </xsd:choice>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="ARTIKEL17" type="ARTIKEL17Type" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType name="ARTIKEL17Type">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="member" type="ARTIKEL17MemberType" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attributeGroup ref="gml:AggregationAttributeGroup"/>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="ALIGN_A_RESP" type="ALIGN_A_RESPType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="ALIGN_A_RESPType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="CATEGORIE" minOccurs="0">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="100"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="NOM_FICHIER">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="100"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="GEOMETRIE" type="gml:CurvePropertyType">
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="BATIMENT" type="BATIMENTType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="BATIMENTType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="GEOMETRIE" type="gml:SurfacePropertyType">
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="CONST_A_CONS_POINT" type="CONST_A_CONS_POINTType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="CONST_A_CONS_POINTType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="CATEGORIE" minOccurs="0">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="100"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="NOM_FICHIER">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="100"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="GEOMETRIE" type="LUREF"/>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="CONST_A_CONS_POLY" type="CONST_A_CONS_POLYType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="CONST_A_CONS_POLYType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="CATEGORIE" minOccurs="0">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="100"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="NOM_FICHIER">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="100"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="GEOMETRIE" type="gml:SurfacePropertyType">
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="COULOIRS_ET_ESP_RES" type="COULOIRS_ET_ESP_RESType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="COULOIRS_ET_ESP_RESType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="CODE">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:enumeration value="CPR"/>
+              <xsd:enumeration value="CPF"/>
+              <xsd:enumeration value="CPMD"/>
+              <xsd:enumeration value="CP_EU"/>
+              <xsd:enumeration value="CP_R_EP"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="NOM_FICHIER">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="100"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="LARGEUR">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:decimal">
+              <xsd:minInclusive value="0.0"/>
+              <xsd:maxInclusive value="100.0"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="GEOMETRIE" type="gml:CurvePropertyType">
+        </xsd:element>
+        <xsd:element name="GENRE" minOccurs="0">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="10"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="EMPLAC_STAT" type="EMPLAC_STATType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="EMPLAC_STATType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="NOM_FICHIER">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="100"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="GEOMETRIE" type="gml:SurfacePropertyType">
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="GABARIT_A_SAUV_POINT" type="GABARIT_A_SAUV_POINTType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="GABARIT_A_SAUV_POINTType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="CATEGORIE" minOccurs="0">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="100"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="NOM_FICHIER">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="100"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="GEOMETRIE" type="LUREF"/>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="GABARIT_A_SAUV_POLY" type="GABARIT_A_SAUV_POLYType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="GABARIT_A_SAUV_POLYType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="CATEGORIE" minOccurs="0">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="100"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="NOM_FICHIER">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="100"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="GEOMETRIE" type="gml:SurfacePropertyType">
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="MODIFICATION_PAG" type="MODIFICATION_PAGType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="MODIFICATION_PAGType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="DATE_MODIF" minOccurs="0">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:date">
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="GEOMETRIE" minOccurs="0" type="gml:SurfacePropertyType">
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="NQ_PAP" type="NQ_PAPType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="NQ_PAPType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="COS_MIN" minOccurs="0">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:decimal">
+              <xsd:minInclusive value="0.0"/>
+              <xsd:maxInclusive value="1.0"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="COS_MAX">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:decimal">
+              <xsd:minInclusive value="0.0"/>
+              <xsd:maxInclusive value="1.0"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="CUS_MIN" minOccurs="0">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:decimal">
+              <xsd:minInclusive value="0.0"/>
+              <xsd:maxInclusive value="10.0"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="CUS_MAX">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:decimal">
+              <xsd:minInclusive value="0.0"/>
+              <xsd:maxInclusive value="10.0"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="CSS_MAX">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:decimal">
+              <xsd:minInclusive value="0.0"/>
+              <xsd:maxInclusive value="1.0"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="DL_MIN" minOccurs="0">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:integer">
+              <xsd:minInclusive value="0"/>
+              <xsd:maxInclusive value="1000"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="DL_MAX" minOccurs="0">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:integer">
+              <xsd:minInclusive value="0"/>
+              <xsd:maxInclusive value="1000"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="GEOMETRIE" type="gml:SurfacePropertyType">
+        </xsd:element>
+        <xsd:element name="DENOMINATION" minOccurs="0">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="100"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="NOM_FICHIER_SD_EC" minOccurs="0">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="100"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="NOM_FICHIER_EC">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="100"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="NOM_FICHIER_SD_GR" minOccurs="0">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="100"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="PAP_APPROUVE" type="PAP_APPROUVEType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="PAP_APPROUVEType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="NOM_FICHIER_EC" minOccurs="0">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="100"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="NOM_FICHIER_GR" minOccurs="0">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="100"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="GEOMETRIE" type="gml:SurfacePropertyType">
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="PCN" type="PCNType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="PCNType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="NUM_CADAST">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="20"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="GEOMETRIE" type="gml:SurfacePropertyType">
+        </xsd:element>
+        <xsd:element name="DATE_MUTATION" minOccurs="0">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:date">
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="PERIMETRE" type="PERIMETREType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="PERIMETREType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="GEOMETRIE" type="gml:SurfacePropertyType">
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="ZAD" type="ZADType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="ZADType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="GEOMETRIE" type="gml:SurfacePropertyType">
+        </xsd:element>
+        <xsd:element name="NOM_FICHIER">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="100"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="ZONAGE" type="ZONAGEType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="ZONAGEType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="CATEGORIE">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:enumeration value="HAB_1"/>
+              <xsd:enumeration value="HAB_2"/>
+              <xsd:enumeration value="MIX_c"/>
+              <xsd:enumeration value="MIX_u"/>
+              <xsd:enumeration value="MIX_v"/>
+              <xsd:enumeration value="MIX_r"/>
+              <xsd:enumeration value="BEP"/>
+              <xsd:enumeration value="ECO_c1"/>
+              <xsd:enumeration value="ECO_c2"/>
+              <xsd:enumeration value="ECO_r1"/>
+              <xsd:enumeration value="ECO_r2"/>
+              <xsd:enumeration value="ECO_n"/>
+              <xsd:enumeration value="SP_n"/>
+              <xsd:enumeration value="COM"/>
+              <xsd:enumeration value="MIL"/>
+              <xsd:enumeration value="SPEC"/>
+              <xsd:enumeration value="AERO"/>
+              <xsd:enumeration value="GARE"/>
+              <xsd:enumeration value="REC"/>
+              <xsd:enumeration value="JAR"/>
+              <xsd:enumeration value="AGR"/>
+              <xsd:enumeration value="FOR"/>
+              <xsd:enumeration value="VIT"/>
+              <xsd:enumeration value="HOR"/>
+              <xsd:enumeration value="PARC"/>
+              <xsd:enumeration value="VERD"/>
+              <xsd:enumeration value="AGRI"/>
+              <xsd:enumeration value="PORT_p"/>
+              <xsd:enumeration value="PORT_m"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="NOM_FICHIER">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="100"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="GEOMETRIE" type="gml:SurfacePropertyType">
+        </xsd:element>
+        <xsd:element name="GENRE" minOccurs="0">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="10"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="ZONE_SERV_ECO" type="ZONE_SERV_ECOType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="ZONE_SERV_ECOType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="CODE">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="20"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="LIB" minOccurs="0">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="100"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="NOM_FICHIER">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="100"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="GEOMETRIE" type="gml:SurfacePropertyType">
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="ZONE_SERV_URB" type="ZONE_SERV_URBType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="ZONE_SERV_URBType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="CODE">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="20"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="LIB" minOccurs="0">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="100"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="NOM_FICHIER">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="100"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="GEOMETRIE" type="gml:SurfacePropertyType">
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="ZONES_QE" type="ZONES_QEType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="ZONES_QEType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="NOM_FICHIER_EC_GEN" minOccurs="0">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="100"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="NOM_FICHIER_EC">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="100"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="NOM_FICHIER_GR" minOccurs="0">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="100"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="GEOMETRIE" type="gml:SurfacePropertyType">
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="ZONES_SUPERPOSEES" type="ZONES_SUPERPOSEESType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="ZONES_SUPERPOSEESType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="CATEGORIE" type="gml:CodeWithAuthorityType"/>
+        <xsd:element name="NOM_FICHIER">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="100"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="GEOMETRIE" type="gml:SurfacePropertyType">
+        </xsd:element>
+        <xsd:element name="GENRE" minOccurs="0">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="10"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="PAGMemberType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureMemberType">
+      <xsd:sequence>
+        <xsd:choice>
+          <xsd:element ref="ALIGN_A_RESP"/>
+          <xsd:element ref="BATIMENT"/>
+          <xsd:element ref="CONST_A_CONS_POINT"/>
+          <xsd:element ref="CONST_A_CONS_POLY"/>
+          <xsd:element ref="COULOIRS_ET_ESP_RES"/>
+          <xsd:element ref="EMPLAC_STAT"/>
+          <xsd:element ref="GABARIT_A_SAUV_POINT"/>
+          <xsd:element ref="GABARIT_A_SAUV_POLY"/>
+          <xsd:element ref="MODIFICATION_PAG"/>
+          <xsd:element ref="NQ_PAP"/>
+          <xsd:element ref="PAP_APPROUVE"/>
+          <xsd:element ref="PCN"/>
+          <xsd:element ref="PERIMETRE"/>
+          <xsd:element ref="ZAD"/>
+          <xsd:element ref="ZONAGE"/>
+          <xsd:element ref="ZONE_SERV_ECO"/>
+          <xsd:element ref="ZONE_SERV_URB"/>
+          <xsd:element ref="ZONES_QE"/>
+          <xsd:element ref="ZONES_SUPERPOSEES"/>
+          <xsd:element ref="BATIMENT.GEOMETRIE"/>
+          <xsd:element ref="CONST_A_CONS_POLY.GEOMETRIE"/>
+          <xsd:element ref="EMPLAC_STAT.GEOMETRIE"/>
+          <xsd:element ref="GABARIT_A_SAUV_POLY.GEOMETRIE"/>
+          <xsd:element ref="MODIFICATION_PAG.GEOMETRIE"/>
+          <xsd:element ref="NQ_PAP.GEOMETRIE"/>
+          <xsd:element ref="PAP_APPROUVE.GEOMETRIE"/>
+          <xsd:element ref="PCN.GEOMETRIE"/>
+          <xsd:element ref="PERIMETRE.GEOMETRIE"/>
+          <xsd:element ref="ZAD.GEOMETRIE"/>
+          <xsd:element ref="ZONAGE.GEOMETRIE"/>
+          <xsd:element ref="ZONE_SERV_ECO.GEOMETRIE"/>
+          <xsd:element ref="ZONE_SERV_URB.GEOMETRIE"/>
+          <xsd:element ref="ZONES_QE.GEOMETRIE"/>
+          <xsd:element ref="ZONES_SUPERPOSEES.GEOMETRIE"/>
+        </xsd:choice>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="PAG" type="PAGType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType name="PAGType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="member" type="PAGMemberType" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attributeGroup ref="gml:AggregationAttributeGroup"/>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="BIOTOPE_POLY.GEOMETRIE" type="BIOTOPE_POLY.GEOMETRIEType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="BIOTOPE_POLY.GEOMETRIEType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="mainTable" type="gml:ReferenceType">
+          <xsd:annotation>
+            <xsd:appinfo>
+              <gml:targetElement>BIOTOPE_POLY</gml:targetElement>
+            </xsd:appinfo>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="geometry" type="gml:CurvePropertyType"/>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="BATIMENT.GEOMETRIE" type="BATIMENT.GEOMETRIEType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="BATIMENT.GEOMETRIEType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="mainTable" type="gml:ReferenceType">
+          <xsd:annotation>
+            <xsd:appinfo>
+              <gml:targetElement>BATIMENT</gml:targetElement>
+            </xsd:appinfo>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="geometry" type="gml:CurvePropertyType"/>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="CONST_A_CONS_POLY.GEOMETRIE" type="CONST_A_CONS_POLY.GEOMETRIEType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="CONST_A_CONS_POLY.GEOMETRIEType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="mainTable" type="gml:ReferenceType">
+          <xsd:annotation>
+            <xsd:appinfo>
+              <gml:targetElement>CONST_A_CONS_POLY</gml:targetElement>
+            </xsd:appinfo>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="geometry" type="gml:CurvePropertyType"/>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="EMPLAC_STAT.GEOMETRIE" type="EMPLAC_STAT.GEOMETRIEType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="EMPLAC_STAT.GEOMETRIEType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="mainTable" type="gml:ReferenceType">
+          <xsd:annotation>
+            <xsd:appinfo>
+              <gml:targetElement>EMPLAC_STAT</gml:targetElement>
+            </xsd:appinfo>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="geometry" type="gml:CurvePropertyType"/>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="GABARIT_A_SAUV_POLY.GEOMETRIE" type="GABARIT_A_SAUV_POLY.GEOMETRIEType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="GABARIT_A_SAUV_POLY.GEOMETRIEType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="mainTable" type="gml:ReferenceType">
+          <xsd:annotation>
+            <xsd:appinfo>
+              <gml:targetElement>GABARIT_A_SAUV_POLY</gml:targetElement>
+            </xsd:appinfo>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="geometry" type="gml:CurvePropertyType"/>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="MODIFICATION_PAG.GEOMETRIE" type="MODIFICATION_PAG.GEOMETRIEType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="MODIFICATION_PAG.GEOMETRIEType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="mainTable" type="gml:ReferenceType">
+          <xsd:annotation>
+            <xsd:appinfo>
+              <gml:targetElement>MODIFICATION_PAG</gml:targetElement>
+            </xsd:appinfo>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="geometry" type="gml:CurvePropertyType"/>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="NQ_PAP.GEOMETRIE" type="NQ_PAP.GEOMETRIEType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="NQ_PAP.GEOMETRIEType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="mainTable" type="gml:ReferenceType">
+          <xsd:annotation>
+            <xsd:appinfo>
+              <gml:targetElement>NQ_PAP</gml:targetElement>
+            </xsd:appinfo>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="geometry" type="gml:CurvePropertyType"/>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="PAP_APPROUVE.GEOMETRIE" type="PAP_APPROUVE.GEOMETRIEType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="PAP_APPROUVE.GEOMETRIEType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="mainTable" type="gml:ReferenceType">
+          <xsd:annotation>
+            <xsd:appinfo>
+              <gml:targetElement>PAP_APPROUVE</gml:targetElement>
+            </xsd:appinfo>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="geometry" type="gml:CurvePropertyType"/>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="PCN.GEOMETRIE" type="PCN.GEOMETRIEType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="PCN.GEOMETRIEType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="mainTable" type="gml:ReferenceType">
+          <xsd:annotation>
+            <xsd:appinfo>
+              <gml:targetElement>PCN</gml:targetElement>
+            </xsd:appinfo>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="geometry" type="gml:CurvePropertyType"/>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="PERIMETRE.GEOMETRIE" type="PERIMETRE.GEOMETRIEType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="PERIMETRE.GEOMETRIEType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="mainTable" type="gml:ReferenceType">
+          <xsd:annotation>
+            <xsd:appinfo>
+              <gml:targetElement>PERIMETRE</gml:targetElement>
+            </xsd:appinfo>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="geometry" type="gml:CurvePropertyType"/>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="ZAD.GEOMETRIE" type="ZAD.GEOMETRIEType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="ZAD.GEOMETRIEType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="mainTable" type="gml:ReferenceType">
+          <xsd:annotation>
+            <xsd:appinfo>
+              <gml:targetElement>ZAD</gml:targetElement>
+            </xsd:appinfo>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="geometry" type="gml:CurvePropertyType"/>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="ZONAGE.GEOMETRIE" type="ZONAGE.GEOMETRIEType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="ZONAGE.GEOMETRIEType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="mainTable" type="gml:ReferenceType">
+          <xsd:annotation>
+            <xsd:appinfo>
+              <gml:targetElement>ZONAGE</gml:targetElement>
+            </xsd:appinfo>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="geometry" type="gml:CurvePropertyType"/>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="ZONE_SERV_ECO.GEOMETRIE" type="ZONE_SERV_ECO.GEOMETRIEType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="ZONE_SERV_ECO.GEOMETRIEType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="mainTable" type="gml:ReferenceType">
+          <xsd:annotation>
+            <xsd:appinfo>
+              <gml:targetElement>ZONE_SERV_ECO</gml:targetElement>
+            </xsd:appinfo>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="geometry" type="gml:CurvePropertyType"/>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="ZONE_SERV_URB.GEOMETRIE" type="ZONE_SERV_URB.GEOMETRIEType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="ZONE_SERV_URB.GEOMETRIEType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="mainTable" type="gml:ReferenceType">
+          <xsd:annotation>
+            <xsd:appinfo>
+              <gml:targetElement>ZONE_SERV_URB</gml:targetElement>
+            </xsd:appinfo>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="geometry" type="gml:CurvePropertyType"/>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="ZONES_QE.GEOMETRIE" type="ZONES_QE.GEOMETRIEType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="ZONES_QE.GEOMETRIEType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="mainTable" type="gml:ReferenceType">
+          <xsd:annotation>
+            <xsd:appinfo>
+              <gml:targetElement>ZONES_QE</gml:targetElement>
+            </xsd:appinfo>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="geometry" type="gml:CurvePropertyType"/>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="ZONES_SUPERPOSEES.GEOMETRIE" type="ZONES_SUPERPOSEES.GEOMETRIEType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="ZONES_SUPERPOSEES.GEOMETRIEType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="mainTable" type="gml:ReferenceType">
+          <xsd:annotation>
+            <xsd:appinfo>
+              <gml:targetElement>ZONES_SUPERPOSEES</gml:targetElement>
+            </xsd:appinfo>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="geometry" type="gml:CurvePropertyType"/>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:annotation>
+  <xsd:appinfo source="http://www.interlis.ch/ili2c">
+    <gml:Dictionary gml:id="o1">
+      <gml:identifier codeSpace="http://www.interlis.ch/INTERLIS2.3/GML32/PAG">ZONES_SUPERPOSEES.CATEGORIE</gml:identifier>
+      <gml:dictionaryEntry>
+        <gml:Definition gml:id="o2">
+          <gml:identifier codeSpace="http://www.interlis.ch/INTERLIS2.3/GML32/PAG/ZONES_SUPERPOSEES.CATEGORIE">ZUP_1</gml:identifier>
+        </gml:Definition>
+      </gml:dictionaryEntry>
+      <gml:dictionaryEntry>
+        <gml:Definition gml:id="o3">
+          <gml:identifier codeSpace="http://www.interlis.ch/INTERLIS2.3/GML32/PAG/ZONES_SUPERPOSEES.CATEGORIE">ZUP_2</gml:identifier>
+        </gml:Definition>
+      </gml:dictionaryEntry>
+      <gml:dictionaryEntry>
+        <gml:Definition gml:id="o4">
+          <gml:identifier codeSpace="http://www.interlis.ch/INTERLIS2.3/GML32/PAG/ZONES_SUPERPOSEES.CATEGORIE">SPI_EC</gml:identifier>
+        </gml:Definition>
+      </gml:dictionaryEntry>
+      <gml:dictionaryEntry>
+        <gml:Definition gml:id="o5">
+          <gml:identifier codeSpace="http://www.interlis.ch/INTERLIS2.3/GML32/PAG/ZONES_SUPERPOSEES.CATEGORIE">SPI_ENP</gml:identifier>
+        </gml:Definition>
+      </gml:dictionaryEntry>
+      <gml:dictionaryEntry>
+        <gml:Definition gml:id="o6">
+          <gml:identifier codeSpace="http://www.interlis.ch/INTERLIS2.3/GML32/PAG/ZONES_SUPERPOSEES.CATEGORIE">ZRNP_G</gml:identifier>
+        </gml:Definition>
+      </gml:dictionaryEntry>
+      <gml:dictionaryEntry>
+        <gml:Definition gml:id="o7">
+          <gml:identifier codeSpace="http://www.interlis.ch/INTERLIS2.3/GML32/PAG/ZONES_SUPERPOSEES.CATEGORIE">ZRNP_M</gml:identifier>
+        </gml:Definition>
+      </gml:dictionaryEntry>
+      <gml:dictionaryEntry>
+        <gml:Definition gml:id="o8">
+          <gml:identifier codeSpace="http://www.interlis.ch/INTERLIS2.3/GML32/PAG/ZONES_SUPERPOSEES.CATEGORIE">ZRNP_I</gml:identifier>
+        </gml:Definition>
+      </gml:dictionaryEntry>
+      <gml:dictionaryEntry>
+        <gml:Definition gml:id="o9">
+          <gml:identifier codeSpace="http://www.interlis.ch/INTERLIS2.3/GML32/PAG/ZONES_SUPERPOSEES.CATEGORIE">ZR_SD</gml:identifier>
+        </gml:Definition>
+      </gml:dictionaryEntry>
+      <gml:dictionaryEntry>
+        <gml:Definition gml:id="o10">
+          <gml:identifier codeSpace="http://www.interlis.ch/INTERLIS2.3/GML32/PAG/ZONES_SUPERPOSEES.CATEGORIE">ZB</gml:identifier>
+        </gml:Definition>
+      </gml:dictionaryEntry>
+      <gml:dictionaryEntry>
+        <gml:Definition gml:id="o11">
+          <gml:identifier codeSpace="http://www.interlis.ch/INTERLIS2.3/GML32/PAG/ZONES_SUPERPOSEES.CATEGORIE">ZE</gml:identifier>
+        </gml:Definition>
+      </gml:dictionaryEntry>
+    </gml:Dictionary>
+  </xsd:appinfo>
+</xsd:annotation>
+</xsd:schema>
