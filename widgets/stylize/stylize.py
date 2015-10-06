@@ -53,8 +53,21 @@ class StylizeProject(object):
             if not found:
                 continue
             
-            qml = os.path.join(PagLuxembourg.main.plugin_dir,
+            self.stylizeLayer(layer, type)
+    
+    def stylizeLayer(self, layer, type):
+        '''
+        Stylize the current layer
+        
+        :param layer: The layer to update
+        :type layer: QgsVectorLayer
+        
+        :param type: XSD schema type
+        :type type: PAGType
+        '''
+        
+        qml = os.path.join(PagLuxembourg.main.plugin_dir,
                                'styles',
                                '%s.qml'%type.name)
             
-            layer.loadNamedStyle(qml)
+        layer.loadNamedStyle(qml)
