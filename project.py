@@ -339,7 +339,7 @@ class Project(QObject):
             uri = self.getTypeUri(type)
             found = False
             
-            # Check is a layer with type data source exists in the map
+            # Check whether a layer with type data source exists in the map
             for k,v in maplayers.iteritems():
                 if self.compareURIs(v.source(), uri):
                     found = True
