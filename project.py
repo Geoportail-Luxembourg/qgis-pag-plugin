@@ -334,12 +334,14 @@ class Project(QObject):
         # Map layers in the TOC
         maplayers = QgsMapLayerRegistry.instance().mapLayers()
         
+        stylize = StylizeProject()
+        
         # Iterates through XSD types
         for type in main.xsd_schema.types:
             uri = self.getTypeUri(type)
             found = False
             
-            # Check is a layer with type data source exists in the map
+            # Check whether a layer with type data source exists in the map
             for k,v in maplayers.iteritems():
                 if self.compareURIs(v.source(), uri):
                     found = True
@@ -351,11 +353,11 @@ class Project(QObject):
                 layer = QgsVectorLayer(uri, type.friendlyName(), 'spatialite')
                 self._addMapLayer(layer, type)
             
+            # Updates layers style
+            stylize.stylizeLayer(layer,type)
+            
             # Update attributes editors
             self._updateLayerEditors(layer, type)
-        
-        # Updates layers style
-        StylizeProject().run()
         
         # Add topology rules
         TopologyChecker(None).updateProjectRules()
@@ -480,9 +482,16 @@ class Project(QObject):
             # Enumeration
             if field.listofvalues is not None:
                 editor = 'ValueMap'
+                
+                # Invert key, value of currentConfig
+                currentConfig = dict((v, k) for k, v in currentConfig.iteritems())
+                
+                # Keep current values and add new ones
                 for element in field.listofvalues:
-                    split = element.split(',')
-                    config[split[0]]=split[0] #split1
+                    if element in currentConfig:
+                        config[currentConfig[element]]=element # Config is in the form, description, value
+                    else:
+                        config[element]=element
             
         # Integer
         elif field.type == DataType.INTEGER:
