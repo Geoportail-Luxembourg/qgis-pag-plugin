@@ -6,6 +6,8 @@ Created on 17 sept. 2015
 
 import os.path
 import xml.etree.ElementTree as ET
+from PyQt4.QtCore import QFile, QIODevice
+from qgis.core import *
 
 import main
 
@@ -28,7 +30,14 @@ class PAGSchema(object):
         xsd_path = os.path.join(
             main.plugin_dir,
             'assets',
-            'PAGschema.xsd')
+            'PAG.xsd')
+        
+        file = QFile(xsd_path)
+        file.open(QIODevice.ReadOnly)
+        xsd = file.readAll()
+        
+        schema = QgsGmlSchema()
+        schema.parseXSD(xsd)
         
         # XSD namespace
         ns = {'xsd': 'http://www.w3.org/2001/XMLSchema'}
