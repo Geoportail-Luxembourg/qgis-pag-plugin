@@ -484,6 +484,7 @@ class Project(QObject):
                 editor = 'ValueMap'
                 
                 # Invert key, value of currentConfig
+                currentConfig = layer.editorWidgetV2Config(fieldIndex)
                 currentConfig = dict((v, k) for k, v in currentConfig.iteritems())
                 
                 # Keep current values and add new ones

@@ -68,6 +68,6 @@ class StylizeProject(object):
         
         qml = os.path.join(PagLuxembourg.main.plugin_dir,
                                'styles',
-                               '%s.qml'%type.name)
+                               '{}.qml'.format(type.name))
             
         layer.loadNamedStyle(qml)
