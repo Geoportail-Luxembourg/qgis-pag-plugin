@@ -30,7 +30,7 @@ class PAGSchema(object):
         xsd_path = os.path.join(
             main.plugin_dir,
             'assets',
-            'PAG.xsd')
+            'PAGschema.xsd')
         
         # Parse as QgsGmlSchema
         file = QFile(xsd_path)
