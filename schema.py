@@ -262,10 +262,6 @@ class PAGField(object):
         # XSD restriction element
         restriction = xml_element.find('.//xsd:restriction',ns)
         
-        if restriction is None:
-            type = DataType.STRING
-            return type, None, None, None, None
-        
         # Data type
         type = datatypes[restriction.get('base')]
         
