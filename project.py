@@ -90,6 +90,7 @@ class Project(QObject):
         # Create project filename
         self.filename = os.path.join(self.folder, FILENAME)
         main.qgis_interface.newProject(True)
+        main.qgis_interface.mapCanvas().setDestinationCrs(QgsCoordinateReferenceSystem(2169, QgsCoordinateReferenceSystem.EpsgCrsId))
         QgsProject.instance().setFileName(self.filename)
         
         QgsProject.instance().write()
