@@ -881,9 +881,6 @@ VERSION "2015-04-01"  =
         /** Art.28  Zone de verdure
          */
         VERD,
-        /** Art.28  Zone agricole
-         */
-        AGRI,
         /** Art.21 Zones portuaires
          * port de plaisance
          */
@@ -960,7 +957,7 @@ VERSION "2015-04-01"  =
     CLASS ZONES_SUPERPOSEES =
       /** type de zone
        */
-      CATEGORIE : MANDATORY (
+      CATEGORIE (FINAL) : MANDATORY (
         /** Art.30 Zone urbanisation prioritaire type 1
          */
         ZUP_1,
@@ -990,7 +987,10 @@ VERSION "2015-04-01"  =
         ZB,
         /** Zone d'extraction
          */
-        ZE
+        ZE,
+        /** Art.30 Zone urbanisation prioritaire type
+         */
+        ZUP
       );
       /** Nom du fichier word contenant la partie écrite du PAG de l'article concernée
        */
