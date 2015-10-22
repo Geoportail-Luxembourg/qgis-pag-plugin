@@ -862,7 +862,23 @@
   <xsd:complexContent>
     <xsd:extension base="gml:AbstractFeatureType">
       <xsd:sequence>
-        <xsd:element name="CATEGORIE" type="gml:CodeWithAuthorityType"/>
+        <xsd:element name="CATEGORIE">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:enumeration value="ZUP_1"/>
+              <xsd:enumeration value="ZUP_2"/>
+              <xsd:enumeration value="SPI_EC"/>
+              <xsd:enumeration value="SPI_ENP"/>
+              <xsd:enumeration value="ZRNP_G"/>
+              <xsd:enumeration value="ZRNP_M"/>
+              <xsd:enumeration value="ZRNP_I"/>
+              <xsd:enumeration value="ZR_SD"/>
+              <xsd:enumeration value="ZB"/>
+              <xsd:enumeration value="ZE"/>
+              <xsd:enumeration value="ZUP"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
         <xsd:element name="NOM_FICHIER">
           <xsd:simpleType>
             <xsd:restriction base="xsd:normalizedString">
@@ -1210,61 +1226,4 @@
     </xsd:extension>
   </xsd:complexContent>
 </xsd:complexType>
-<xsd:annotation>
-  <xsd:appinfo source="http://www.interlis.ch/ili2c">
-    <gml:Dictionary gml:id="o1">
-      <gml:identifier codeSpace="http://www.interlis.ch/INTERLIS2.3/GML32/PAG">ZONES_SUPERPOSEES.CATEGORIE</gml:identifier>
-      <gml:dictionaryEntry>
-        <gml:Definition gml:id="o2">
-          <gml:identifier codeSpace="http://www.interlis.ch/INTERLIS2.3/GML32/PAG/ZONES_SUPERPOSEES.CATEGORIE">ZUP_1</gml:identifier>
-        </gml:Definition>
-      </gml:dictionaryEntry>
-      <gml:dictionaryEntry>
-        <gml:Definition gml:id="o3">
-          <gml:identifier codeSpace="http://www.interlis.ch/INTERLIS2.3/GML32/PAG/ZONES_SUPERPOSEES.CATEGORIE">ZUP_2</gml:identifier>
-        </gml:Definition>
-      </gml:dictionaryEntry>
-      <gml:dictionaryEntry>
-        <gml:Definition gml:id="o4">
-          <gml:identifier codeSpace="http://www.interlis.ch/INTERLIS2.3/GML32/PAG/ZONES_SUPERPOSEES.CATEGORIE">SPI_EC</gml:identifier>
-        </gml:Definition>
-      </gml:dictionaryEntry>
-      <gml:dictionaryEntry>
-        <gml:Definition gml:id="o5">
-          <gml:identifier codeSpace="http://www.interlis.ch/INTERLIS2.3/GML32/PAG/ZONES_SUPERPOSEES.CATEGORIE">SPI_ENP</gml:identifier>
-        </gml:Definition>
-      </gml:dictionaryEntry>
-      <gml:dictionaryEntry>
-        <gml:Definition gml:id="o6">
-          <gml:identifier codeSpace="http://www.interlis.ch/INTERLIS2.3/GML32/PAG/ZONES_SUPERPOSEES.CATEGORIE">ZRNP_G</gml:identifier>
-        </gml:Definition>
-      </gml:dictionaryEntry>
-      <gml:dictionaryEntry>
-        <gml:Definition gml:id="o7">
-          <gml:identifier codeSpace="http://www.interlis.ch/INTERLIS2.3/GML32/PAG/ZONES_SUPERPOSEES.CATEGORIE">ZRNP_M</gml:identifier>
-        </gml:Definition>
-      </gml:dictionaryEntry>
-      <gml:dictionaryEntry>
-        <gml:Definition gml:id="o8">
-          <gml:identifier codeSpace="http://www.interlis.ch/INTERLIS2.3/GML32/PAG/ZONES_SUPERPOSEES.CATEGORIE">ZRNP_I</gml:identifier>
-        </gml:Definition>
-      </gml:dictionaryEntry>
-      <gml:dictionaryEntry>
-        <gml:Definition gml:id="o9">
-          <gml:identifier codeSpace="http://www.interlis.ch/INTERLIS2.3/GML32/PAG/ZONES_SUPERPOSEES.CATEGORIE">ZR_SD</gml:identifier>
-        </gml:Definition>
-      </gml:dictionaryEntry>
-      <gml:dictionaryEntry>
-        <gml:Definition gml:id="o10">
-          <gml:identifier codeSpace="http://www.interlis.ch/INTERLIS2.3/GML32/PAG/ZONES_SUPERPOSEES.CATEGORIE">ZB</gml:identifier>
-        </gml:Definition>
-      </gml:dictionaryEntry>
-      <gml:dictionaryEntry>
-        <gml:Definition gml:id="o11">
-          <gml:identifier codeSpace="http://www.interlis.ch/INTERLIS2.3/GML32/PAG/ZONES_SUPERPOSEES.CATEGORIE">ZE</gml:identifier>
-        </gml:Definition>
-      </gml:dictionaryEntry>
-    </gml:Dictionary>
-  </xsd:appinfo>
-</xsd:annotation>
 </xsd:schema>
