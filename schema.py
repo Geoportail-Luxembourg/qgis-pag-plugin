@@ -187,6 +187,20 @@ class PAGType(object):
         
         return split[0]
     
+    def getField(self, fieldname):
+        '''
+        Get a field from the name
+        
+        :param fieldname: The field name (ex : CODE)
+        :type fieldname: str, QString
+        '''
+        
+        for field in self.fields:
+            if field.name == fieldname:
+                return field
+        
+        return None
+    
     def _getGeometry(self, xml_element, ns):
         '''
         Returns the geometry of the type
@@ -331,3 +345,7 @@ XSD_QGIS_DATATYPE_MAP = {DataType.STRING:QVariant.String,
                DataType.INTEGER:QVariant.Int,
                DataType.DOUBLE:QVariant.Double,
                DataType.DATE:QVariant.String}
+
+XSD_QGIS_GEOMETRYTYPE_MAP = {GeometryType.POINT:QGis.Point,
+                             GeometryType.POLYLINE:QGis.Line,
+                             GeometryType.POLYGON:QGis.Polygon}
