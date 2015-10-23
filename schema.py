@@ -6,7 +6,7 @@ Created on 17 sept. 2015
 
 import os.path
 import xml.etree.ElementTree as ET
-from PyQt4.QtCore import QFile, QIODevice
+from PyQt4.QtCore import QFile, QIODevice, QVariant
 from qgis.core import *
 
 import main
@@ -326,3 +326,8 @@ class DataType:
     INTEGER='integer'
     DOUBLE='double'
     DATE='date'
+
+XSD_QGIS_DATATYPE_MAP = {DataType.STRING:QVariant.String,
+               DataType.INTEGER:QVariant.Int,
+               DataType.DOUBLE:QVariant.Double,
+               DataType.DATE:QVariant.String}

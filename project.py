@@ -327,10 +327,7 @@ class Project(QObject):
         layer.updateFields()
         
     # Mapping between XSD datatype and QGIS datatype
-    datatypeMap = {DataType.STRING:QVariant.String,
-               DataType.INTEGER:QVariant.Int,
-               DataType.DOUBLE:QVariant.Double,
-               DataType.DATE:QVariant.String}
+    datatypeMap = XSD_QGIS_DATATYPE_MAP
 
     def _getField(self, pagfield):
         '''
