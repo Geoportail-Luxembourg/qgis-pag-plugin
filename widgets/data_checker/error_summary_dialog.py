@@ -24,7 +24,7 @@
 import os
 
 from PyQt4 import QtGui, uic
-from PyQt4.QtGui import QFileDialog, QMessageBox, QTableWidgetItem, QHeaderView
+from PyQt4.QtGui import QFileDialog, QMessageBox, QTableWidgetItem, QHeaderView, QColor
 from PyQt4.QtCore import QCoreApplication
 
 import PagLuxembourg.main
@@ -40,7 +40,10 @@ class ErrorSummaryDialog(QtGui.QDialog, FORM_CLASS):
         '''
         
         self.schema_errors = schema_errors
-        self.data_errors = data_errors
+        self.data_errors = list()
+        for layer, errors in data_errors:
+            for feature, field, message in errors:
+                self.data_errors.append((layer, feature, field, message))
         
         super(ErrorSummaryDialog, self).__init__(parent)
         # Set up the user interface from Designer.
@@ -62,6 +65,7 @@ class ErrorSummaryDialog(QtGui.QDialog, FORM_CLASS):
                                                       QCoreApplication.translate('ErrorSummaryDialog','Field name'),
                                                       QCoreApplication.translate('ErrorSummaryDialog','Error')])
         self.tabDataErrors.horizontalHeader().setResizeMode(QHeaderView.Stretch);
+        self.tabDataErrors.currentCellChanged.connect(self._tabDataErrorsCellChanged)
         
         self._loadSchemaErrors()
         self._loadDataErrors()
@@ -79,21 +83,23 @@ class ErrorSummaryDialog(QtGui.QDialog, FORM_CLASS):
             rowindex +=  1
     
     def _loadDataErrors(self):
-        rowcount = 0
-        
-        for layer, errors in self.data_errors:
-            rowcount = rowcount + len(errors)
-        
-        self.tabDataErrors.setRowCount(rowcount)
+        self.tabDataErrors.setRowCount(len(self.data_errors))
         
         rowindex = 0
         
-        for layer, errors in self.data_errors:
-            layer_item = QTableWidgetItem(layer.name())
-            for feature, field, message in errors:
-                self.tabDataErrors.setItem(rowindex,0,layer_item.clone()) # Layer name
-                self.tabDataErrors.setItem(rowindex,1,QTableWidgetItem(str(feature.id()))) # Feature id
-                self.tabDataErrors.setItem(rowindex,2,QTableWidgetItem(field.name)) # Field name
-                self.tabDataErrors.setItem(rowindex,3,QTableWidgetItem(message)) # Message
-                
-                rowindex +=  1
+        for layer, feature, field, message in self.data_errors:
+            self.tabDataErrors.setItem(rowindex,0,QTableWidgetItem(layer.name())) # Layer name
+            self.tabDataErrors.setItem(rowindex,1,QTableWidgetItem(str(feature.id()))) # Feature id
+            self.tabDataErrors.setItem(rowindex,2,QTableWidgetItem(field.name)) # Field name
+            self.tabDataErrors.setItem(rowindex,3,QTableWidgetItem(message)) # Message
+            
+            rowindex +=  1
+    
+    def _tabDataErrorsCellChanged(self, currentRow, currentColumn, previousRow, previousColumn):
+        # Deselect
+        layer, feature, field, message = self.data_errors[previousRow]
+        layer.setSelectedFeatures([])
+        
+        layer, feature, field, message = self.data_errors[currentRow]
+        layer.setSelectedFeatures([feature.id()])
+        PagLuxembourg.main.qgis_interface.mapCanvas().zoomToSelected(layer)
