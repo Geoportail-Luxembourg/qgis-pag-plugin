@@ -13,6 +13,8 @@ from PyQt4.QtCore import QCoreApplication
 from PagLuxembourg.schema import *
 import PagLuxembourg.main
 
+from error_summary_dialog import ErrorSummaryDialog
+
 class DataChecker(object):
     '''
     Main class for the data checker widget
@@ -50,9 +52,10 @@ class DataChecker(object):
                 continue
             
             layer_data_errors = self.checkLayerData(layer, type)
-            data_errors = data_errors + layer_data_errors
+            data_errors.append(layer_data_errors)
         
-        pass
+        self.dlg = ErrorSummaryDialog(layer_structure_errors, data_errors)
+        self.dlg.show()
         
     def checkLayerStructure(self, layer, xsd_type):
         '''
@@ -111,6 +114,9 @@ class DataChecker(object):
         
         :param type: XSD schema type
         :type type: PAGType
+        
+        :returns: A list of data error
+        :rtype: Tuples : Layer (QgsVectorLayer), list of tuple Feature (QgsFeature), field (PAGField), message (str, QString)
         '''
         
         errors = list()
@@ -118,7 +124,7 @@ class DataChecker(object):
         for feature in layer.dataProvider().getFeatures():
             errors = errors + self.checkFeatureData(feature, xsd_type)
         
-        return errors
+        return layer, errors
     
     def checkFeatureData(self, feature, xsd_type):
         '''
