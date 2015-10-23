@@ -90,8 +90,11 @@ class Project(QObject):
         # Create project filename
         self.filename = os.path.join(self.folder, FILENAME)
         main.qgis_interface.newProject(True)
-        main.qgis_interface.mapCanvas().setDestinationCrs(QgsCoordinateReferenceSystem(2169, QgsCoordinateReferenceSystem.EpsgCrsId))
-        QgsProject.instance().setFileName(self.filename)
+        main.qgis_interface.mapCanvas().setDestinationCrs(QgsCoordinateReferenceSystem(2169, QgsCoordinateReferenceSystem.EpsgCrsId)) # SRS 2169
+        QgsProject.instance().setTopologicalEditing(True) # Topological editing
+        #main.qgis_interface.mapCanvas().snappingUtils().setDefaultSettings(QgsPointLocator.All,10,QgsTolerance.Pixels)
+        #main.qgis_interface.mapCanvas().snappingUtils().setSnapToMapMode(QgsSnappingUtils.SnapCurrentLayer)
+        QgsProject.instance().setFileName(self.filename) # Project filename
         
         QgsProject.instance().write()
         
@@ -377,7 +380,22 @@ class Project(QObject):
             
             # Update attributes editors
             self._updateLayerEditors(layer, type)
+            
+            # Update snapping settings
+            if type.geometry_type is not None:
+                QgsProject.instance().setSnapSettingsForLayer(layer.id(),
+                                                              True,
+                                                              QgsSnapper.SnapToVertexAndSegment,
+                                                              QgsTolerance.Pixels,
+                                                              10,
+                                                              True)
         
+        
+        #main.qgis_interface.mapCanvas().snappingUtils().setSnapToMapMode(QgsSnappingUtils.SnapAdvanced)
+        QgsProject.instance().writeEntry("Digitizing", "SnappingMode", "advanced")
+        QgsProject.instance().write()
+        main.qgis_interface.mapCanvas().snappingUtils().readConfigFromProject()    
+
         # Add topology rules
         TopologyChecker(None).updateProjectRules()
                 
