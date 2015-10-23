@@ -144,6 +144,27 @@ class Project(QObject):
         except AttributeError:
             return False
             
+    def getLayer(self, type):
+        '''
+        Get the map layer corresponding to the type
+        
+        :param type: XSD schema type
+        :type type: PAGType
+        '''
+        
+        # Map layers in the TOC
+        maplayers = QgsMapLayerRegistry.instance().mapLayers()
+        
+        # Iterates through XSD types
+        uri = self.getTypeUri(type)
+        
+        # Check whether a layer with type data source exists in the map
+        for k,v in maplayers.iteritems():
+            if self.compareURIs(v.source(), uri):
+                return v
+            
+        return None
+            
     def _updateDatabase(self):
         '''
         Updates the project database

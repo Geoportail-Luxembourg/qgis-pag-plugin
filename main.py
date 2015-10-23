@@ -28,6 +28,7 @@ import resources
 import os.path
 # Widgets
 from widgets.create_project.create_project import *
+from widgets.import_data.import_data import *
 from widgets.stylize.stylize import *
 from widgets.topology.topology import *
 # Schema
@@ -192,6 +193,15 @@ class PAGLuxembourg(object):
             status_tip=self.tr(u'Creates a new PAG project'),
             parent=self.iface.mainWindow())
         
+        # Import data
+        self.import_data_widget = ImportData()
+        self.pag_actions.append(self.add_action(
+            ':/plugins/PagLuxembourg/widgets/import_data/icon.png',
+            text=self.tr(u'Import data'),
+            callback=self.import_data_widget.run,
+            status_tip=self.tr(u'Import data from files (GML, SHP, DXF)'),
+            parent=self.iface.mainWindow()))
+        
         # Apply styles
         self.stylize_project_widget = StylizeProject()
         self.pag_actions.append(self.add_action(
@@ -229,12 +239,10 @@ class PAGLuxembourg(object):
         Disable buttons
         '''
         enabled = current_project.isPagProject()
+        enabled = True
         
         for action in self.pag_actions:
-            if enabled:
-                action.setEnabled(True)
-            else:
-                action.setEnabled(False)
+                action.setEnabled(enabled)
     
     def unload(self):
         '''

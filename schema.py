@@ -78,6 +78,20 @@ class PAGSchema(object):
                         type.name = '{}.{}'.format(topic,member)
                         break
     
+    def getType(self, typename):
+        '''
+        Get a type from the name
+        
+        :param typename: The type name (ex : BIOTOPE_LIGNE)
+        :type typename: str, QString
+        '''
+        
+        for type in self.types:
+            if type.friendlyName() == typename:
+                return type
+        
+        return None
+    
     def _getTopicMembers(self, typename, xml_root, ns):
         '''
         Parse XML node

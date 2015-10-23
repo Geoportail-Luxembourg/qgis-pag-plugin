@@ -2,8 +2,8 @@
     <qresource prefix="/plugins/PagLuxembourg" >
         <file>icon.png</file>
         <file>widgets/create_project/icon.png</file>
+        <file>widgets/import_data/icon.png</file>
         <file>widgets/stylize/icon.png</file>
         <file>widgets/topology/icon.png</file>
-        <file>widgets/topology/topol.png</file>
     </qresource>
 </RCC>
