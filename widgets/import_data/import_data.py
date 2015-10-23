@@ -81,6 +81,8 @@ class ImportData(object):
         
         unknowntypes = list()
         
+        # Check schema structure table and datatypes
+        
         # Loop GML types
         for gmltype in gmlschema.typeNames():
             xsdtype = xsdschema.getType(gmltype)
@@ -89,35 +91,35 @@ class ImportData(object):
                 continue
             
             gmllayer = QgsVectorLayer('{}|layername={}'.format(filename,gmltype), gmltype, "ogr")
-            #QgsMapLayerRegistry.instance().addMapLayer(gmllayer)
             self._importGmlLayer(gmllayer, xsdtype)
     
-    def _importGmlLayer(self, gmllayer, xsdtype):
+    def _importGmlLayer(self, gml_layer, xsdtype):
         '''
         Import a GML layer
         
-        :param gmllayer: The GML layer to import
-        :type gmllayer: QgsVectorLayer
+        :param gml_layer: The GML layer to import
+        :type gml_layer: QgsVectorLayer
         
         :param xsdtype: XSD schema type
         :type xsdtype: PAGType
         '''
         
-        project_layer = PagLuxembourg.main.current_project.getLayer(xsdtype)
+        xsd_layer = PagLuxembourg.main.current_project.getLayer(xsdtype)
         
-        if project_layer is None:
+        if xsd_layer is None:
             return
         
-        gml_dp = gmllayer.dataProvider()
-        xsd_dp = project_layer.dataProvider()
+        gml_dp = gml_layer.dataProvider()
+        xsd_dp = xsd_layer.dataProvider()
         xsd_layer_fields = xsd_dp.fields()
-        gml_xsd_fieldindexmap = self._getFieldMap(gmllayer, project_layer)
+        gml_xsd_fieldindexmap = self._getFieldMap(gml_layer, project_layer)
         newfeatures = list()
         
         # Iterate GML features
         for gmlfeature in gml_dp.getFeatures():
             feature = QgsFeature(xsd_layer_fields)
             for gmlindex, xsdindex in gml_xsd_fieldindexmap.iteritems():
+                # Validate field length, enumeration, nullable
                 feature.setAttribute(xsdindex,gmlfeature[gmlindex])
             feature.setGeometry(gmlfeature.geometry())
             newfeatures.append(feature)
