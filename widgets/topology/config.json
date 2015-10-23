@@ -2,169 +2,169 @@
   "_AvailableRules": "http://docs.qgis.org/2.8/en/docs/user_manual/plugins/plugins_topology_checker.html",
   "Rules": [
     {
-      "Layer1": "PAG.ARTIKEL17.BIOTOPE_POLY",
+      "Layer1": "ARTIKEL17.BIOTOPE_POLY",
       "Layer2": "",
       "Rule": "Must not overlap",
       "Tolerance": 0
     },
     {
-      "Layer1": "PAG.ARTIKEL17.BIOTOPE_POLY",
+      "Layer1": "ARTIKEL17.BIOTOPE_POLY",
       "Layer2": "",
       "Rule": "Must not have gaps",
       "Tolerance": 0
     },
     {
-      "Layer1": "PAG.PAG.BATIMENT",
+      "Layer1": "PAG.BATIMENT",
       "Layer2": "",
       "Rule": "Must not overlap",
       "Tolerance": 0
     },
     {
-      "Layer1": "PAG.PAG.BATIMENT",
+      "Layer1": "PAG.BATIMENT",
       "Layer2": "",
       "Rule": "Must not have gaps",
       "Tolerance": 0
     },
     {
-      "Layer1": "PAG.PAG.CONST_A_CONS_POLY",
+      "Layer1": "PAG.CONST_A_CONS_POLY",
       "Layer2": "",
       "Rule": "Must not overlap",
       "Tolerance": 0
     },
     {
-      "Layer1": "PAG.PAG.CONST_A_CONS_POLY",
+      "Layer1": "PAG.CONST_A_CONS_POLY",
       "Layer2": "",
       "Rule": "Must not have gaps",
       "Tolerance": 0
     },
     {
-      "Layer1": "PAG.PAG.EMPLAC_STAT",
+      "Layer1": "PAG.EMPLAC_STAT",
       "Layer2": "",
       "Rule": "Must not overlap",
       "Tolerance": 0
     },
     {
-      "Layer1": "PAG.PAG.EMPLAC_STAT",
+      "Layer1": "PAG.EMPLAC_STAT",
       "Layer2": "",
       "Rule": "Must not have gaps",
       "Tolerance": 0
     },
     {
-      "Layer1": "PAG.PAG.GABARIT_A_SAUV_POLY",
+      "Layer1": "PAG.GABARIT_A_SAUV_POLY",
       "Layer2": "",
       "Rule": "Must not overlap",
       "Tolerance": 0
     },
     {
-      "Layer1": "PAG.PAG.GABARIT_A_SAUV_POLY",
+      "Layer1": "PAG.GABARIT_A_SAUV_POLY",
       "Layer2": "",
       "Rule": "Must not have gaps",
       "Tolerance": 0
     },
     {
-      "Layer1": "PAG.PAG.NQ_PAP",
+      "Layer1": "PAG.NQ_PAP",
       "Layer2": "",
       "Rule": "Must not overlap",
       "Tolerance": 0
     },
     {
-      "Layer1": "PAG.PAG.NQ_PAP",
+      "Layer1": "PAG.NQ_PAP",
       "Layer2": "",
       "Rule": "Must not have gaps",
       "Tolerance": 0
     },
     {
-      "Layer1": "PAG.PAG.NQ_ZAD",
+      "Layer1": "PAG.NQ_ZAD",
       "Layer2": "",
       "Rule": "Must not overlap",
       "Tolerance": 0
     },
     {
-      "Layer1": "PAG.PAG.NQ_ZAD",
+      "Layer1": "PAG.NQ_ZAD",
       "Layer2": "",
       "Rule": "Must not have gaps",
       "Tolerance": 0
     },
     {
-      "Layer1": "PAG.PAG.PAP_APPROUVE",
+      "Layer1": "PAG.PAP_APPROUVE",
       "Layer2": "",
       "Rule": "Must not overlap",
       "Tolerance": 0
     },
     {
-      "Layer1": "PAG.PAG.PAP_APPROUVE",
+      "Layer1": "PAG.PAP_APPROUVE",
       "Layer2": "",
       "Rule": "Must not have gaps",
       "Tolerance": 0
     },
     {
-      "Layer1": "PAG.PAG.PCN",
+      "Layer1": "PAG.PCN",
       "Layer2": "",
       "Rule": "Must not overlap",
       "Tolerance": 0
     },
     {
-      "Layer1": "PAG.PAG.PCN",
+      "Layer1": "PAG.PCN",
       "Layer2": "",
       "Rule": "Must not have gaps",
       "Tolerance": 0
     },
     {
-      "Layer1": "PAG.PAG.PERIMETRE",
+      "Layer1": "PAG.PERIMETRE",
       "Layer2": "",
       "Rule": "Must not overlap",
       "Tolerance": 0
     },
     {
-      "Layer1": "PAG.PAG.PERIMETRE",
+      "Layer1": "PAG.PERIMETRE",
       "Layer2": "",
       "Rule": "Must not have gaps",
       "Tolerance": 0
     },
     {
-      "Layer1": "PAG.PAG.ZONAGE",
+      "Layer1": "PAG.ZONAGE",
       "Layer2": "",
       "Rule": "Must not overlap",
       "Tolerance": 0
     },
     {
-      "Layer1": "PAG.PAG.ZONAGE",
+      "Layer1": "PAG.ZONAGE",
       "Layer2": "",
       "Rule": "Must not have gaps",
       "Tolerance": 0
     },
     {
-      "Layer1": "PAG.PAG.ZONE_SERV_URB",
+      "Layer1": "PAG.ZONE_SERV_URB",
       "Layer2": "",
       "Rule": "Must not overlap",
       "Tolerance": 0
     },
     {
-      "Layer1": "PAG.PAG.ZONE_SERV_URB",
+      "Layer1": "PAG.ZONE_SERV_URB",
       "Layer2": "",
       "Rule": "Must not have gaps",
       "Tolerance": 0
     },
     {
-      "Layer1": "PAG.PAG.ZONES_QE",
+      "Layer1": "PAG.ZONES_QE",
       "Layer2": "",
       "Rule": "Must not overlap",
       "Tolerance": 0
     },
     {
-      "Layer1": "PAG.PAG.ZONES_QE",
+      "Layer1": "PAG.ZONES_QE",
       "Layer2": "",
       "Rule": "Must not have gaps",
       "Tolerance": 0
     },
     {
-      "Layer1": "PAG.PAG.ZONES_SUPERPOSEES",
+      "Layer1": "PAG.ZONES_SUPERPOSEES",
       "Layer2": "",
       "Rule": "Must not overlap",
       "Tolerance": 0
     },
     {
-      "Layer1": "PAG.PAG.ZONES_SUPERPOSEES",
+      "Layer1": "PAG.ZONES_SUPERPOSEES",
       "Layer2": "",
       "Rule": "Must not have gaps",
       "Tolerance": 0

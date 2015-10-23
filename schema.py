@@ -6,6 +6,8 @@ Created on 17 sept. 2015
 
 import os.path
 import xml.etree.ElementTree as ET
+from PyQt4.QtCore import QFile, QIODevice, QVariant
+from qgis.core import *
 
 import main
 
@@ -30,22 +32,89 @@ class PAGSchema(object):
             'assets',
             'PAGschema.xsd')
         
-        # XSD namespace
-        ns = {'xsd': 'http://www.w3.org/2001/XMLSchema'}
+        # Parse as QgsGmlSchema
+        file = QFile(xsd_path)
+        file.open(QIODevice.ReadOnly)
+        xsdcontent = file.readAll()
         
-        # Parse XSD and get all complex types = tables
+        schema = QgsGmlSchema()
+        schema.parseXSD(xsdcontent)
+        
+        #Parse as XML
+        ns = {'xsd': 'http://www.w3.org/2001/XMLSchema'} # XSD namespace
         xsd = ET.parse(xsd_path)
-        xsd_types = xsd.getroot().findall('xsd:complexType',ns)
+        
+        topics = list() # Topics : PAG, ARTIKEL17, GESTION
+        concrete_typenames = list()
+        
+        # Loop GML schema type names
+        for typename in schema.typeNames():
+            # Remove GEOMETRIE types
+            if typename.endswith('.GEOMETRIE'):
+                continue
+            
+            # Topics ILI
+            if len(schema.fields(typename))==1 and schema.fields(typename)[0].name() == 'member':
+                topics.append((typename,self._getTopicMembers(schema.fields(typename)[0].typeName(), xsd.getroot(), ns)))
+                continue
+            
+            # Concretes types
+            concrete_typenames.append(typename)
         
         self.types = list()
         
-        for type in xsd_types:
-            # Filtering types to keep those starting with PAG. and having 2 dots (remove PAG.GESTION for example)
-            if type.get('name').startswith('PAG.') and type.get('name').count('.')==2:
-                pag_type = PAGType()
-                pag_type.parse(type, ns)
-                self.types.append(pag_type)
+        # Loop concrete type names and parse to PAGType
+        for typename in concrete_typenames:
+            xml_element = xsd.getroot().find('xsd:complexType[@name="{}Type"]'.format(typename),ns)
+            pag_type = PAGType()
+            pag_type.parse(typename, xml_element, ns)
+            self.types.append(pag_type)
 
+        # Add topic to types
+        for topic, members in topics:
+            for member in members:
+                for type in self.types:
+                    if type.name == member:
+                        type.name = '{}.{}'.format(topic,member)
+                        break
+    
+    def getType(self, typename):
+        '''
+        Get a type from the name
+        
+        :param typename: The type name (ex : BIOTOPE_LIGNE)
+        :type typename: str, QString
+        '''
+        
+        for type in self.types:
+            if type.friendlyName() == typename:
+                return type
+        
+        return None
+    
+    def _getTopicMembers(self, typename, xml_root, ns):
+        '''
+        Parse XML node
+        
+        :param typename: The type name of the topic (ex : PAGMemberType)
+        :type typename: str, QString
+        
+        :param ns: XSD namespaces
+        :type ns: dict
+        '''
+        
+        xml_element = xml_root.find('xsd:complexType[@name="{}"]'.format(typename), ns)
+        members_elements = xml_element.findall('.//xsd:choice/xsd:element', ns)
+        
+        members = list()
+        
+        for element in members_elements:
+            name = element.get('ref')
+            if not name.endswith('.GEOMETRIE'):
+                members.append(name)
+        
+        return members
+    
 class PAGType(object):
     '''
     A PAG XSD type
@@ -59,9 +128,12 @@ class PAGType(object):
         self.geometry_type = None        
         self.fields = list()
     
-    def parse(self, xml_element, ns):
+    def parse(self, name, xml_element, ns):
         '''
         Parse XML node
+        
+        :param name: The name of the type
+        :type name: str, QString
         
         :param xml_element: The root XML node of the type (xsd:complexType)
         :type xml_element: Element
@@ -71,12 +143,12 @@ class PAGType(object):
         '''
         
         # Type name
-        self.name = xml_element.get('name')
+        self.name = name
         self.geometry_type = None
         
         self.fields = list()
         
-        sequence = xml_element.find('xsd:sequence',ns)
+        sequence = xml_element.find('.//xsd:sequence',ns)
         elements = sequence.findall('xsd:element',ns)
         
         for element in elements:
@@ -92,7 +164,7 @@ class PAGType(object):
     def friendlyName(self):
         '''
         Gets the friendly name of the type aka table name
-        E.g. BIOTOPE_LIGNE for PAG.ARTIKEL17.BIOTOPE_LIGNE
+        E.g. BIOTOPE_LIGNE for ARTIKEL17.BIOTOPE_LIGNE
         '''
         
         if self.name is None:
@@ -100,15 +172,12 @@ class PAGType(object):
         
         split = self.name.split('.')
         
-        if len(split)==1:
-            return split[0]
-        else:
-            return split[-1]
+        return split[-1]
         
     def topic(self):
         '''
         Gets the topic of the type
-        E.g. ARTIKEL17 for PAG.ARTIKEL17.BIOTOPE_LIGNE
+        E.g. ARTIKEL17 for ARTIKEL17.BIOTOPE_LIGNE
         '''
         
         if self.name is None:
@@ -116,10 +185,21 @@ class PAGType(object):
         
         split = self.name.split('.')
         
-        if len(split)==1:
-            return split[0]
-        else:
-            return split[len(split)-2]
+        return split[0]
+    
+    def getField(self, fieldname):
+        '''
+        Get a field from the name
+        
+        :param fieldname: The field name (ex : CODE)
+        :type fieldname: str, QString
+        '''
+        
+        for field in self.fields:
+            if field.name == fieldname:
+                return field
+        
+        return None
     
     def _getGeometry(self, xml_element, ns):
         '''
@@ -132,18 +212,11 @@ class PAGType(object):
         :type ns: dict
         '''
         
-        geometries = {'PAG.LUREF':GeometryType.POINT,
-                      'POLYLINE':GeometryType.POLYLINE,
-                      'SURFACE':GeometryType.POLYGON}
+        geometries = {'LUREF':GeometryType.POINT,
+                      'gml:CurvePropertyType':GeometryType.POLYLINE,
+                      'gml:SurfacePropertyType':GeometryType.POLYGON}
         
-        geom_element = xml_element.find('.//xsd:element',ns)
-        
-        if geom_element is None:
-            # Point = PAG.LUREF
-            return geometries[xml_element.get('type')]
-        else:
-            # Polyline, surface
-            return geometries[geom_element.get('name')]
+        return geometries[xml_element.get('type')]
     
 class PAGField(object):
     '''
@@ -211,6 +284,7 @@ class PAGField(object):
                      'xsd:normalizedString':DataType.STRING,
                      'xsd:integer':DataType.INTEGER,
                      'xsd:double':DataType.DOUBLE,
+                     'xsd:decimal':DataType.DOUBLE,
                      'xsd:date':DataType.DATE}
         
         # XSD restriction element
@@ -266,3 +340,12 @@ class DataType:
     INTEGER='integer'
     DOUBLE='double'
     DATE='date'
+
+XSD_QGIS_DATATYPE_MAP = {DataType.STRING:QVariant.String,
+               DataType.INTEGER:QVariant.Int,
+               DataType.DOUBLE:QVariant.Double,
+               DataType.DATE:QVariant.String}
+
+XSD_QGIS_GEOMETRYTYPE_MAP = {GeometryType.POINT:QGis.Point,
+                             GeometryType.POLYLINE:QGis.Line,
+                             GeometryType.POLYGON:QGis.Polygon}

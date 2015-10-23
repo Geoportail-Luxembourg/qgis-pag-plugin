@@ -90,7 +90,11 @@ class Project(QObject):
         # Create project filename
         self.filename = os.path.join(self.folder, FILENAME)
         main.qgis_interface.newProject(True)
-        QgsProject.instance().setFileName(self.filename)
+        main.qgis_interface.mapCanvas().setDestinationCrs(QgsCoordinateReferenceSystem(2169, QgsCoordinateReferenceSystem.EpsgCrsId)) # SRS 2169
+        QgsProject.instance().setTopologicalEditing(True) # Topological editing
+        #main.qgis_interface.mapCanvas().snappingUtils().setDefaultSettings(QgsPointLocator.All,10,QgsTolerance.Pixels)
+        #main.qgis_interface.mapCanvas().snappingUtils().setSnapToMapMode(QgsSnappingUtils.SnapCurrentLayer)
+        QgsProject.instance().setFileName(self.filename) # Project filename
         
         QgsProject.instance().write()
         
@@ -142,6 +146,27 @@ class Project(QObject):
         
         except AttributeError:
             return False
+            
+    def getLayer(self, type):
+        '''
+        Get the map layer corresponding to the type
+        
+        :param type: XSD schema type
+        :type type: PAGType
+        '''
+        
+        # Map layers in the TOC
+        maplayers = QgsMapLayerRegistry.instance().mapLayers()
+        
+        # Iterates through XSD types
+        uri = self.getTypeUri(type)
+        
+        # Check whether a layer with type data source exists in the map
+        for k,v in maplayers.iteritems():
+            if self.compareURIs(v.source(), uri):
+                return v
+            
+        return None
             
     def _updateDatabase(self):
         '''
@@ -305,10 +330,7 @@ class Project(QObject):
         layer.updateFields()
         
     # Mapping between XSD datatype and QGIS datatype
-    datatypeMap = {DataType.STRING:QVariant.String,
-               DataType.INTEGER:QVariant.Int,
-               DataType.DOUBLE:QVariant.Double,
-               DataType.DATE:QVariant.String}
+    datatypeMap = XSD_QGIS_DATATYPE_MAP
 
     def _getField(self, pagfield):
         '''
@@ -334,12 +356,14 @@ class Project(QObject):
         # Map layers in the TOC
         maplayers = QgsMapLayerRegistry.instance().mapLayers()
         
+        stylize = StylizeProject()
+        
         # Iterates through XSD types
         for type in main.xsd_schema.types:
             uri = self.getTypeUri(type)
             found = False
             
-            # Check is a layer with type data source exists in the map
+            # Check whether a layer with type data source exists in the map
             for k,v in maplayers.iteritems():
                 if self.compareURIs(v.source(), uri):
                     found = True
@@ -351,12 +375,27 @@ class Project(QObject):
                 layer = QgsVectorLayer(uri, type.friendlyName(), 'spatialite')
                 self._addMapLayer(layer, type)
             
+            # Updates layers style
+            stylize.stylizeLayer(layer,type)
+            
             # Update attributes editors
             self._updateLayerEditors(layer, type)
+            
+            # Update snapping settings
+            if type.geometry_type is not None:
+                QgsProject.instance().setSnapSettingsForLayer(layer.id(),
+                                                              True,
+                                                              QgsSnapper.SnapToVertexAndSegment,
+                                                              QgsTolerance.Pixels,
+                                                              10,
+                                                              True)
         
-        # Updates layers style
-        StylizeProject().run()
         
+        #main.qgis_interface.mapCanvas().snappingUtils().setSnapToMapMode(QgsSnappingUtils.SnapAdvanced)
+        QgsProject.instance().writeEntry("Digitizing", "SnappingMode", "advanced")
+        QgsProject.instance().write()
+        main.qgis_interface.mapCanvas().snappingUtils().readConfigFromProject()    
+
         # Add topology rules
         TopologyChecker(None).updateProjectRules()
                 
@@ -480,9 +519,17 @@ class Project(QObject):
             # Enumeration
             if field.listofvalues is not None:
                 editor = 'ValueMap'
+                
+                # Invert key, value of currentConfig
+                currentConfig = layer.editorWidgetV2Config(fieldIndex)
+                currentConfig = dict((v, k) for k, v in currentConfig.iteritems())
+                
+                # Keep current values and add new ones
                 for element in field.listofvalues:
-                    split = element.split(',')
-                    config[split[0]]=split[0] #split1
+                    if element in currentConfig:
+                        config[currentConfig[element]]=element # Config is in the form, description, value
+                    else:
+                        config[element]=element
             
         # Integer
         elif field.type == DataType.INTEGER:
