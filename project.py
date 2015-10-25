@@ -147,6 +147,27 @@ class Project(QObject):
         except AttributeError:
             return False
             
+    def getLayer(self, type):
+        '''
+        Get the map layer corresponding to the type
+        
+        :param type: XSD schema type
+        :type type: PAGType
+        '''
+        
+        # Map layers in the TOC
+        maplayers = QgsMapLayerRegistry.instance().mapLayers()
+        
+        # Iterates through XSD types
+        uri = self.getTypeUri(type)
+        
+        # Check whether a layer with type data source exists in the map
+        for k,v in maplayers.iteritems():
+            if self.compareURIs(v.source(), uri):
+                return v
+            
+        return None
+            
     def _updateDatabase(self):
         '''
         Updates the project database
@@ -309,10 +330,7 @@ class Project(QObject):
         layer.updateFields()
         
     # Mapping between XSD datatype and QGIS datatype
-    datatypeMap = {DataType.STRING:QVariant.String,
-               DataType.INTEGER:QVariant.Int,
-               DataType.DOUBLE:QVariant.Double,
-               DataType.DATE:QVariant.String}
+    datatypeMap = XSD_QGIS_DATATYPE_MAP
 
     def _getField(self, pagfield):
         '''
