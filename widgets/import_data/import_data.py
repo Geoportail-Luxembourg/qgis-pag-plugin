@@ -154,7 +154,13 @@ class ImportData(object):
         for gmlfeature in gml_dp.getFeatures():
             feature = QgsFeature(xsd_layer_fields)
             for gmlindex, xsdindex in gml_xsd_fieldindexmap.iteritems():
-                feature.setAttribute(xsdindex,gmlfeature[gmlindex])
+                # Check if numeric value needs to be casted
+                if gmlfeature[gmlindex] == NULL:
+                    feature.setAttribute(xsdindex, NULL)
+                elif feature.fields()[xsdindex].type() == QVariant.String and not isinstance(gmlfeature[gmlindex], basestring):
+                    feature.setAttribute(xsdindex, str(gmlfeature[gmlindex]))
+                else:
+                    feature.setAttribute(xsdindex, gmlfeature[gmlindex])
             
             if xsdtype.geometry_type is not None:
                 feature.setGeometry(gmlfeature.geometry())
