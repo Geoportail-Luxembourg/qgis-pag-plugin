@@ -29,6 +29,7 @@ import os.path
 # Widgets
 from widgets.create_project.create_project import *
 from widgets.import_data.import_data import *
+from widgets.export_gml.export_gml import *
 from widgets.stylize.stylize import *
 from widgets.data_checker.data_checker import *
 from widgets.topology.topology import *
@@ -201,6 +202,15 @@ class PAGLuxembourg(object):
             text=self.tr(u'Import data'),
             callback=self.import_data_widget.run,
             status_tip=self.tr(u'Import data from files (GML, SHP, DXF)'),
+            parent=self.iface.mainWindow()))
+        
+        # Export GML
+        self.export_gml_widget = ExportGML()
+        self.pag_actions.append(self.add_action(
+            ':/plugins/PagLuxembourg/widgets/export_gml/icon.png',
+            text=self.tr(u'Export GML'),
+            callback=self.export_gml_widget.run,
+            status_tip=self.tr(u'Export the current project to a GML file'),
             parent=self.iface.mainWindow()))
         
         # Apply styles

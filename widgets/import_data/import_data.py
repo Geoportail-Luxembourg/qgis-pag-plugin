@@ -33,7 +33,7 @@ class ImportData(object):
         '''
         
         if not PagLuxembourg.main.current_project.isPagProject():
-            pass#return
+            return
         
         # Select file to import
         dialog = QFileDialog()
