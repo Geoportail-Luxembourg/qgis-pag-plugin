@@ -90,7 +90,7 @@ class ErrorSummaryDialog(QtGui.QDialog, FORM_CLASS):
         for layer, feature, field, message in self.data_errors:
             self.tabDataErrors.setItem(rowindex,0,QTableWidgetItem(layer.name())) # Layer name
             self.tabDataErrors.setItem(rowindex,1,QTableWidgetItem(str(feature.id()))) # Feature id
-            self.tabDataErrors.setItem(rowindex,2,QTableWidgetItem(field.name)) # Field name
+            self.tabDataErrors.setItem(rowindex,2,QTableWidgetItem(field.name if field is not None else '')) # Field name
             self.tabDataErrors.setItem(rowindex,3,QTableWidgetItem(message)) # Message
             
             rowindex +=  1
