@@ -59,6 +59,9 @@ class DataChecker(object):
         
     # Datatype mapping allowed while checking. For a given XSD type, several QGIS type may be allowed or compatible
     XSD_QGIS_ALLOWED_DATATYPE_MAP = [(DataType.STRING, QVariant.String),
+                                     (DataType.STRING, QVariant.LongLong),
+                                     (DataType.STRING, QVariant.Int),
+                                     (DataType.STRING, QVariant.Double),
                                      (DataType.INTEGER, QVariant.LongLong),
                                      (DataType.INTEGER, QVariant.Int),
                                      (DataType.DOUBLE, QVariant.Double),
