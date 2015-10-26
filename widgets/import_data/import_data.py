@@ -58,6 +58,10 @@ class ImportData(object):
         
         extension = os.path.splitext(selected_file[0])[1][1:]
         importer[extension](selected_file[0])
+        
+        # Success message
+        PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('ImportData','Success'), 
+                                                                   QCoreApplication.translate('ImportData','Importation was successful'))
     
     def importGml(self, filename):
         '''
@@ -112,7 +116,7 @@ class ImportData(object):
         gml_dp = gml_layer.dataProvider()
         xsd_dp = xsd_layer.dataProvider()
         xsd_layer_fields = xsd_dp.fields()
-        gml_xsd_fieldindexmap = self._getFieldMap(gml_layer, project_layer)
+        gml_xsd_fieldindexmap = self._getFieldMap(gml_layer, xsd_layer)
         newfeatures = list()
         
         # Iterate GML features
@@ -125,7 +129,7 @@ class ImportData(object):
             newfeatures.append(feature)
             
         xsd_dp.addFeatures(newfeatures)
-        project_layer.reload()
+        xsd_layer.reload()
     
     def _getFieldMap(self, source_layer, destination_layer):
         '''
