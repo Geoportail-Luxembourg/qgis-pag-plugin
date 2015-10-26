@@ -12,12 +12,14 @@ from PyQt4.QtGui import QFileDialog, QMessageBox, QProgressBar
 from PyQt4.QtCore import *
 
 import PagLuxembourg.main
+from PagLuxembourg.widgets.data_checker.data_checker import *
 
 class ImportData(object):
     '''
     Main class for the import data widget
     '''
-
+    
+    data_checker = DataChecker()
 
     def __init__(self):
         '''
@@ -58,12 +60,19 @@ class ImportData(object):
                     }
         
         extension = os.path.splitext(selected_file[0])[1][1:]
-        importer[extension](selected_file[0])
+        layer_structure_errors = importer[extension](selected_file[0])
         
         # Success message
-        PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('ImportData','Success'), 
-                                                                   QCoreApplication.translate('ImportData','Importation was successful'))
-    
+        if len(layer_structure_errors) == 0:
+            PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('ImportData','Success'), 
+                                                                       QCoreApplication.translate('ImportData','Importation was successful'))
+        else:
+            PagLuxembourg.main.qgis_interface.messageBar().pushWarning(QCoreApplication.translate('ImportData','Warning'), 
+                                                                       QCoreApplication.translate('ImportData','Some errors encountered during importation'))
+            
+            self.dlg = ErrorSummaryDialog(layer_structure_errors, list())
+            self.dlg.show()
+        
     def importGml(self, filename):
         '''
         Import a GML file
@@ -87,6 +96,7 @@ class ImportData(object):
         unknowntypes = list()
         
         # Check schema structure table and datatypes
+        layer_structure_errors = list()
         
         # Progress bar
         progressMessageBar = PagLuxembourg.main.qgis_interface.messageBar().createMessage(QCoreApplication.translate('ImportData','Importing GML'))
@@ -104,10 +114,19 @@ class ImportData(object):
                 continue
             
             gmllayer = QgsVectorLayer('{}|layername={}'.format(filename,gmltype), gmltype, "ogr")
-            self._importGmlLayer(gmllayer, xsdtype)
+            
+            # Check schema structure table and datatypes
+            warn_errors, fatal_errors = self.data_checker.checkLayerStructure(gmllayer, xsdtype)
+            layer_structure_errors = layer_structure_errors + fatal_errors
+            
+            if len(fatal_errors) == 0:
+                self._importGmlLayer(gmllayer, xsdtype)
+            
             progress.setValue(progress.value() + 1)
-        
+            
         PagLuxembourg.main.qgis_interface.messageBar().clearWidgets()
+        
+        return layer_structure_errors
     
     def _importGmlLayer(self, gml_layer, xsdtype):
         '''
@@ -135,12 +154,26 @@ class ImportData(object):
         for gmlfeature in gml_dp.getFeatures():
             feature = QgsFeature(xsd_layer_fields)
             for gmlindex, xsdindex in gml_xsd_fieldindexmap.iteritems():
-                # Validate field length, enumeration, nullable
                 feature.setAttribute(xsdindex,gmlfeature[gmlindex])
-            feature.setGeometry(gmlfeature.geometry())
-            newfeatures.append(feature)
             
-        xsd_dp.addFeatures(newfeatures)
+            if xsdtype.geometry_type is not None:
+                feature.setGeometry(gmlfeature.geometry())
+            
+            newfeatures.append(feature)
+        
+        # Start editing session
+        if not xsd_layer.isEditable():
+            xsd_layer.startEditing()
+        
+        # Add features    
+        xsd_layer.addFeatures(newfeatures, False)
+        
+        # Commit    
+        if not xsd_layer.commitChanges():
+            xsd_layer.rollBack()
+            PagLuxembourg.main.qgis_interface.messageBar().pushCritical(QCoreApplication.translate('ImportData','Error'), 
+                                                                       QCoreApplication.translate('ImportData','Commit error on layer {}').format(xsd_layer.name()))
+        
         xsd_layer.reload()
     
     def _getFieldMap(self, source_layer, destination_layer):

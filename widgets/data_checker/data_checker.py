@@ -57,6 +57,15 @@ class DataChecker(object):
         self.dlg = ErrorSummaryDialog(layer_structure_errors, data_errors)
         self.dlg.show()
         
+    # Datatype mapping allowed while checking. For a given XSD type, several QGIS type may be allowed or compatible
+    XSD_QGIS_ALLOWED_DATATYPE_MAP = [(DataType.STRING, QVariant.String),
+                                     (DataType.INTEGER, QVariant.LongLong),
+                                     (DataType.INTEGER, QVariant.Int),
+                                     (DataType.DOUBLE, QVariant.Double),
+                                     (DataType.DOUBLE, QVariant.LongLong),
+                                     (DataType.DOUBLE, QVariant.Int),
+                                     (DataType.DATE, QVariant.String)]
+    
     def checkLayerStructure(self, layer, xsd_type):
         '''
         Checks a layer structure against the XSD type
@@ -88,14 +97,14 @@ class DataChecker(object):
                 if field.nullable:
                     warn_errors.append((layer, field, QCoreApplication.translate('DataChecker','Nullable field is missing')))
                 else:
-                    fatal_errors.append((layer, field, QCoreApplication.translate('DataChecker','Non nullable field is missing')))
+                    warn_errors.append((layer, field, QCoreApplication.translate('DataChecker','Non nullable field is missing')))
                 
                 continue
             
             # Check field datatype
             layer_field = layer_fields[layer_index]
             found = False
-            for xsd_type, qgis_type in XSD_QGIS_DATATYPE_MAP.iteritems():
+            for xsd_type, qgis_type in self.XSD_QGIS_ALLOWED_DATATYPE_MAP:
                 if layer_field.type() == qgis_type and field.type == xsd_type:
                     found = True
                     break
@@ -122,7 +131,7 @@ class DataChecker(object):
         errors = list()
         
         for feature in layer.dataProvider().getFeatures():
-            errors = errors + self.checkFeatureData(feature, xsd_type)
+            errors += self.checkFeatureData(feature, xsd_type)
         
         return layer, errors
     
@@ -149,7 +158,7 @@ class DataChecker(object):
             if xsd_field is None:
                 continue
             
-            errors = errors + self.checkFeatureFieldData(feature, xsd_field)
+            errors += self.checkFeatureFieldData(feature, xsd_field)
         
         return errors
     
@@ -209,5 +218,23 @@ class DataChecker(object):
             if xsd_field.listofvalues is not None:
                 if text_value not in xsd_field.listofvalues:
                     errors.append((feature, xsd_field, QCoreApplication.translate('DataChecker','Text ({}) not in field list of values'.format(text_value))))
+        
+        return errors
+    
+    def checkFeatureGeometry(self, feature):
+        '''
+        Checks the geometry of a feature
+        
+        :param feature: The feature to check
+        :type feature: QgsFeature
+        
+        :returns: A list of  error
+        :rtype: List of tuples : Feature (QgsFeature), field (PAGField), message (str, QString)
+        '''
+        
+        errors = list()
+        
+        if feature.geometry() is None:
+            errors.append((feature, None, QCoreApplication.translate('DataChecker','Geometry is empty')))
         
         return errors
