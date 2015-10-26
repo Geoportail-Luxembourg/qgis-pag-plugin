@@ -342,7 +342,7 @@ class DataType:
     DATE='date'
 
 XSD_QGIS_DATATYPE_MAP = {DataType.STRING:QVariant.String,
-               DataType.INTEGER:QVariant.Int,
+               DataType.INTEGER:QVariant.LongLong,
                DataType.DOUBLE:QVariant.Double,
                DataType.DATE:QVariant.String}
 
