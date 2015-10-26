@@ -249,7 +249,7 @@ class PAGLuxembourg(object):
         Disable buttons
         '''
         enabled = current_project.isPagProject()
-        enabled = True
+        #enabled = True
         
         for action in self.pag_actions:
                 action.setEnabled(enabled)
