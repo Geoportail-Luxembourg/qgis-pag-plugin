@@ -64,6 +64,9 @@ class Project(QObject):
         # Update map layers
         self._updateMapLayers()
         
+        # Topological settings
+        self._setupTopologicalSettings()
+        
         QgsProject.instance().write()
         
         self.ready.emit()
@@ -91,9 +94,6 @@ class Project(QObject):
         self.filename = os.path.join(self.folder, FILENAME)
         main.qgis_interface.newProject(True)
         main.qgis_interface.mapCanvas().setDestinationCrs(QgsCoordinateReferenceSystem(2169, QgsCoordinateReferenceSystem.EpsgCrsId)) # SRS 2169
-        QgsProject.instance().setTopologicalEditing(True) # Topological editing
-        #main.qgis_interface.mapCanvas().snappingUtils().setDefaultSettings(QgsPointLocator.All,10,QgsTolerance.Pixels)
-        #main.qgis_interface.mapCanvas().snappingUtils().setSnapToMapMode(QgsSnappingUtils.SnapCurrentLayer)
         QgsProject.instance().setFileName(self.filename) # Project filename
         
         QgsProject.instance().write()
@@ -106,6 +106,9 @@ class Project(QObject):
         self._updateMapLayers()
         
         QgsProject.instance().write()
+        
+        # Topological settings
+        self._setupTopologicalSettings()
         
         self.creation_mode = False
         
@@ -168,6 +171,18 @@ class Project(QObject):
             
         return None
             
+    def _setupTopologicalSettings(self):
+        # Topological editing
+        QgsProject.instance().setTopologicalEditing(True)
+        
+        # Update snapping settings
+        QgsProject.instance().writeEntry('Digitizing', '/SnappingMode', 'current_layer')
+        QgsProject.instance().writeEntry('Digitizing', '/DefaultSnapType', 'to vertex and segment' )
+        QgsProject.instance().writeEntry('Digitizing', '/DefaultSnapTolerance', 10.0)
+        QgsProject.instance().writeEntry('Digitizing', '/DefaultSnapToleranceUnit', QgsTolerance.Pixels)
+        
+        QgsProject.instance().snapSettingsChanged.emit()
+        
     def _updateDatabase(self):
         '''
         Updates the project database
@@ -380,21 +395,6 @@ class Project(QObject):
             
             # Update attributes editors
             self._updateLayerEditors(layer, type)
-            
-            # Update snapping settings
-            if type.geometry_type is not None:
-                QgsProject.instance().setSnapSettingsForLayer(layer.id(),
-                                                              True,
-                                                              QgsSnapper.SnapToVertexAndSegment,
-                                                              QgsTolerance.Pixels,
-                                                              10,
-                                                              True)
-        
-        
-        #main.qgis_interface.mapCanvas().snappingUtils().setSnapToMapMode(QgsSnappingUtils.SnapAdvanced)
-        QgsProject.instance().writeEntry("Digitizing", "SnappingMode", "advanced")
-        QgsProject.instance().write()
-        main.qgis_interface.mapCanvas().snappingUtils().readConfigFromProject()    
 
         # Add topology rules
         TopologyChecker(None).updateProjectRules()
