@@ -7,8 +7,9 @@ Created on 22 oct. 2015
 import os
 
 from qgis.core import *
-from PyQt4.QtGui import QFileDialog, QMessageBox
-from PyQt4.QtCore import QCoreApplication, QFile, QIODevice
+from qgis.gui import *
+from PyQt4.QtGui import QFileDialog, QMessageBox, QProgressBar
+from PyQt4.QtCore import *
 
 import PagLuxembourg.main
 
@@ -87,6 +88,14 @@ class ImportData(object):
         
         # Check schema structure table and datatypes
         
+        # Progress bar
+        progressMessageBar = PagLuxembourg.main.qgis_interface.messageBar().createMessage(QCoreApplication.translate('ImportData','Importing GML'))
+        progress = QProgressBar()
+        progress.setMaximum(len(gmlschema.typeNames()))
+        progress.setAlignment(Qt.AlignLeft|Qt.AlignVCenter)
+        progressMessageBar.layout().addWidget(progress)
+        PagLuxembourg.main.qgis_interface.messageBar().pushWidget(progressMessageBar, QgsMessageBar.INFO)
+
         # Loop GML types
         for gmltype in gmlschema.typeNames():
             xsdtype = xsdschema.getType(gmltype)
@@ -96,6 +105,9 @@ class ImportData(object):
             
             gmllayer = QgsVectorLayer('{}|layername={}'.format(filename,gmltype), gmltype, "ogr")
             self._importGmlLayer(gmllayer, xsdtype)
+            progress.setValue(progress.value() + 1)
+        
+        PagLuxembourg.main.qgis_interface.messageBar().clearWidgets()
     
     def _importGmlLayer(self, gml_layer, xsdtype):
         '''
