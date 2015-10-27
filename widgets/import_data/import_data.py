@@ -113,6 +113,9 @@ class ImportData(object):
                 unknowntypes.append(gmltype)
                 continue
             
+            # Progression message
+            progressMessageBar.setText(QCoreApplication.translate('ImportData','Importing {}').format(gmltype))
+            
             gmllayer = QgsVectorLayer('{}|layername={}'.format(filename,gmltype), gmltype, "ogr")
             
             # Check schema structure table and datatypes
