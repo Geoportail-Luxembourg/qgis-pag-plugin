@@ -94,7 +94,7 @@ class ExportGML(object):
                 continue
             
             # Progression message
-            progressMessageBar.setText('Exporting {}'.format(layer.name()))
+            progressMessageBar.setText(QCoreApplication.translate('ExportGML','Exporting {}').format(layer.name()))
             
             filename = os.path.join(temp_dir,
                                     '{}.gml'.format(type.friendlyName()))
