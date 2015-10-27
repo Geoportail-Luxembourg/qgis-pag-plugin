@@ -5,6 +5,7 @@ Created on 26 oct. 2015
 '''
 
 import os
+import shutil
 import uuid
 from xml.dom.minidom import *
 
@@ -40,10 +41,11 @@ class ExportGML(object):
         if not project.isPagProject():
             return
         
-        # Select file to import
+        # Select file to export
         dialog = QFileDialog()
-        dialog.setFileMode(QFileDialog.Directory)
-        dialog.setOption(QFileDialog.ShowDirsOnly)
+        dialog.setFileMode(QFileDialog.AnyFile)
+        dialog.setAcceptMode(QFileDialog.AcceptSave)
+        dialog.setNameFilter('GML file (*.gml)');
         dialog.setWindowTitle(QCoreApplication.translate('ExportGML','Select the gml location'))
         dialog.setSizeGripEnabled(False)
         result = dialog.exec_()
@@ -56,6 +58,12 @@ class ExportGML(object):
         if len(selected_files)==0:
             return
         
+        # GML filename and directory
+        gml_filename = selected_files[0]
+        gml_directory = os.path.dirname(gml_filename)
+        temp_dir = os.path.join(gml_directory, str(uuid.uuid1()))
+        os.makedirs(temp_dir)
+        
         # Progress bar
         progressMessageBar = PagLuxembourg.main.qgis_interface.messageBar().createMessage(QCoreApplication.translate('ExportGML','Exporting to GML'))
         progress = QProgressBar()
@@ -67,13 +75,13 @@ class ExportGML(object):
         # Create final GML document
         gml = getDOMImplementation().createDocument('http://www.interlis.ch/INTERLIS2.3/GML32/INTERLIS', 'ili:TRANSFER', None)
         gml_root = gml.documentElement
-        gml_root.setAttribute('xmlns:ili','http://www.interlis.ch/INTERLIS2.3/GML32/INTERLIS')
-        gml_root.setAttribute('xmlns:gml','http://www.opengis.net/gml/3.2')
-        gml_root.setAttribute('xmlns:xlink','http://www.w3.org/1999/xlink')
-        gml_root.setAttribute('xmlns:xsi','http://www.w3.org/2001/XMLSchema-instance')
-        gml_root.setAttribute('xmlns','http://www.interlis.ch/INTERLIS2.3/GML32/PAG')
-        gml_root.setAttribute('xsi:schemaLocation','http://www.interlis.ch/INTERLIS2.3/GML32/PAG PAG.xsd')
-        gml_root.setAttribute('gml:id',str(uuid.uuid1()))
+        gml_root.setAttribute('xmlns:ili', 'http://www.interlis.ch/INTERLIS2.3/GML32/INTERLIS')
+        gml_root.setAttribute('xmlns:gml', 'http://www.opengis.net/gml/3.2')
+        gml_root.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
+        gml_root.setAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance')
+        gml_root.setAttribute('xmlns', 'http://www.interlis.ch/INTERLIS2.3/GML32/PAG')
+        gml_root.setAttribute('xsi:schemaLocation', 'http://www.interlis.ch/INTERLIS2.3/GML32/PAG PAG.xsd')
+        gml_root.setAttribute('gml:id', str(uuid.uuid1()))
         
         # Baskets topic
         topic_baskets = dict()
@@ -88,8 +96,8 @@ class ExportGML(object):
             # Progression message
             progressMessageBar.setText('Exporting {}'.format(layer.name()))
             
-            filename = os.path.join(selected_files[0],
-                               '{}.gml'.format(type.friendlyName()))
+            filename = os.path.join(temp_dir,
+                                    '{}.gml'.format(type.friendlyName()))
             
             QgsVectorFileWriter.writeAsVectorFormat(layer, 
                                                     filename, 
@@ -120,6 +128,11 @@ class ExportGML(object):
                 topic_baskets[type.topic()].appendChild(member)
             
             progress.setValue(progress.value() + 1)
+        
+        file = open(gml_filename, 'wb')
+        file.write(gml.toxml('utf-8'))
+        file.close()
+        shutil.rmtree(temp_dir)
         
         PagLuxembourg.main.qgis_interface.messageBar().clearWidgets()
         PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('ExportGML','Success'),
