@@ -98,7 +98,7 @@ class ImportData(object):
         # Check schema structure table and datatypes
         layer_structure_errors = list()
         
-        # Progress bar
+        # Progress bar + message
         progressMessageBar = PagLuxembourg.main.qgis_interface.messageBar().createMessage(QCoreApplication.translate('ImportData','Importing GML'))
         progress = QProgressBar()
         progress.setMaximum(len(gmlschema.typeNames()))

@@ -15,6 +15,7 @@ from PyQt4.QtGui import QFileDialog, QMessageBox, QProgressBar
 from PyQt4.QtCore import *
 
 import PagLuxembourg.main
+import PagLuxembourg.project
 from PagLuxembourg.widgets.data_checker.data_checker import *
 
 class ExportGML(object):
@@ -130,7 +131,7 @@ class ExportGML(object):
             progress.setValue(progress.value() + 1)
         
         file = open(gml_filename, 'wb')
-        file.write(gml.toxml('utf-8'))
+        file.write(gml.toxml('utf-8').replace('\n\n','\n'))
         file.close()
         shutil.rmtree(temp_dir)
         
@@ -160,6 +161,12 @@ class ExportGML(object):
             # Tag name
             feature_member.tagName = 'member'
             geometry_elements = feature_member.getElementsByTagName('geometryProperty')
+            
+            # Remove PK OGC_FID
+            pk_elements = feature_member.getElementsByTagName(PagLuxembourg.project.PK)
+            for pk_element in pk_elements:
+                pk_element.parentNode.removeChild(pk_element)
+                pk_element.unlink()
             
             # Geometry
             for geometry_element in geometry_elements:
