@@ -113,7 +113,7 @@ class ExportGML(object):
                                                                          'STRIP_PREFIX=TRUE',
                                                                          'SPACE_INDENTATION=NO'])
             
-            members = self._getXsdCompliantGml(filename, gml)
+            members = self._getXsdCompliantGml(filename, gml, type)
             
             if type.topic() not in topic_baskets:
                 basket = gml.createElement('ili:baskets')
@@ -131,7 +131,7 @@ class ExportGML(object):
             progress.setValue(progress.value() + 1)
         
         file = open(gml_filename, 'wb')
-        file.write(gml.toxml('utf-8').replace('\n\n','\n'))
+        file.write(gml.toprettyxml('','\n','utf-8'))
         file.close()
         shutil.rmtree(temp_dir)
         
@@ -139,7 +139,7 @@ class ExportGML(object):
         PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('ExportGML','Success'),
                                                                    QCoreApplication.translate('ExportGML','GML export was successful'))
     
-    def _getXsdCompliantGml(self, filename, gml):
+    def _getXsdCompliantGml(self, filename, gml, xsdtype):
         '''
         Transform the OGR gml to a XSD compliant GML
         
@@ -158,28 +158,37 @@ class ExportGML(object):
         feature_members = xml_root.getElementsByTagName('featureMember')
         
         for feature_member in feature_members:
-            # Tag name
-            feature_member.tagName = 'member'
-            geometry_elements = feature_member.getElementsByTagName('geometryProperty')
+            #Create member element
+            member = gml.createElement('member')
+            feature_member_type = feature_member.getElementsByTagName(xsdtype.friendlyName())[0]
+            member.appendChild(feature_member_type.cloneNode(False))
+            member_type = member.firstChild
             
-            # Remove PK OGC_FID
-            pk_elements = feature_member.getElementsByTagName(PagLuxembourg.project.PK)
-            for pk_element in pk_elements:
-                pk_element.parentNode.removeChild(pk_element)
-                pk_element.unlink()
+            # Iterate XSD ordered fields
+            for fieldname in xsdtype.ordered_field_names:
+                element = None
+                elements = feature_member.getElementsByTagName(fieldname)
+                if len(elements)>0:
+                    element = elements[0]
+                
+                # Process geometry fields
+                if fieldname == xsdtype.geometry_fieldname:
+                    elements = feature_member.getElementsByTagName('geometryProperty')
+                    if len(elements)>0:
+                        element = elements[0]
+                        self._processGmlGeometry(element, gml, xsdtype)
+                        
+                if element is not None:
+                    member_type.appendChild(element)
             
-            # Geometry
-            for geometry_element in geometry_elements:
-                self._processGmlGeometry(geometry_element, gml)
-            
-            result.append(feature_member)
+            result.append(member)
             
         return result
     
-    def _processGmlGeometry(self, geometry_element, gml):
+    def _processGmlGeometry(self, geometry_element, gml, xsdtype):
         
         # Rename tag
-        geometry_element.tagName = 'GEOMETRIE'
+        geometry_element.tagName = xsdtype.geometry_fieldname
         
         first_child = geometry_element.firstChild
         

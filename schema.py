@@ -11,6 +11,38 @@ from qgis.core import *
 
 import main
 
+class GeometryType:
+    '''
+    Geometry types
+    '''
+    
+    POINT='POINT'
+    POLYLINE='LINESTRING'
+    POLYGON='POLYGON'
+    
+class DataType:
+    '''
+    Data types
+    '''
+    
+    STRING='string'
+    INTEGER='integer'
+    DOUBLE='double'
+    DATE='date'
+
+XSD_GEOMETRY_TYPES = {'LUREF':GeometryType.POINT,
+                      'gml:CurvePropertyType':GeometryType.POLYLINE,
+                      'gml:SurfacePropertyType':GeometryType.POLYGON}
+
+XSD_QGIS_DATATYPE_MAP = {DataType.STRING:QVariant.String,
+                         DataType.INTEGER:QVariant.LongLong,
+                         DataType.DOUBLE:QVariant.Double,
+                         DataType.DATE:QVariant.String}
+
+XSD_QGIS_GEOMETRYTYPE_MAP = {GeometryType.POINT:QGis.Point,
+                             GeometryType.POLYLINE:QGis.Line,
+                             GeometryType.POLYGON:QGis.Polygon}
+
 class PAGSchema(object):
     '''
     The PAG schema parsed from the XSD
@@ -50,7 +82,7 @@ class PAGSchema(object):
         # Loop GML schema type names
         for typename in schema.typeNames():
             # Remove GEOMETRIE types
-            if typename.endswith('.GEOMETRIE'):
+            if '.' in typename:
                 continue
             
             # Topics ILI
@@ -110,7 +142,7 @@ class PAGSchema(object):
         
         for element in members_elements:
             name = element.get('ref')
-            if not name.endswith('.GEOMETRIE'):
+            if '.' not in name: # Remove geometrie type
                 members.append(name)
         
         return members
@@ -145,21 +177,28 @@ class PAGType(object):
         # Type name
         self.name = name
         self.geometry_type = None
+        self.geometry_fieldname = None
         
         self.fields = list()
+        self.ordered_field_names = list()
         
         sequence = xml_element.find('.//xsd:sequence',ns)
         elements = sequence.findall('xsd:element',ns)
         
         for element in elements:
             # Process geometry
-            if element.get('name')=='GEOMETRIE':
-                self.geometry_type = self._getGeometry(element, ns)
+            element_type = element.get('type')
+            if element_type in XSD_GEOMETRY_TYPES:
+                self.geometry_type = XSD_GEOMETRY_TYPES[element_type]
+                self.geometry_fieldname = element.get('name')
+            
             # Process field
             else:
                 pag_field = PAGField()
                 pag_field.parse(element, ns)
                 self.fields.append(pag_field)
+            
+            self.ordered_field_names.append(element.get('name'))
                 
     def friendlyName(self):
         '''
@@ -200,23 +239,6 @@ class PAGType(object):
                 return field
         
         return None
-    
-    def _getGeometry(self, xml_element, ns):
-        '''
-        Returns the geometry of the type
-        
-        :param xml_element: The root XML node of the geometry (xsd:element)
-        :type xml_element: Element
-        
-        :param ns: XSD namespaces
-        :type ns: dict
-        '''
-        
-        geometries = {'LUREF':GeometryType.POINT,
-                      'gml:CurvePropertyType':GeometryType.POLYLINE,
-                      'gml:SurfacePropertyType':GeometryType.POLYGON}
-        
-        return geometries[xml_element.get('type')]
     
 class PAGField(object):
     '''
@@ -317,35 +339,6 @@ class PAGField(object):
         map = dict()
         
         for element in self.listofvalues:
-            split = element.split(',')
-            map[split[0]]=split[0] #split1
+            map[element]=element
             
         return map
-    
-class GeometryType:
-    '''
-    Geometry types
-    '''
-    
-    POINT='POINT'
-    POLYLINE='LINESTRING'
-    POLYGON='POLYGON'
-    
-class DataType:
-    '''
-    Data types
-    '''
-    
-    STRING='string'
-    INTEGER='integer'
-    DOUBLE='double'
-    DATE='date'
-
-XSD_QGIS_DATATYPE_MAP = {DataType.STRING:QVariant.String,
-               DataType.INTEGER:QVariant.LongLong,
-               DataType.DOUBLE:QVariant.Double,
-               DataType.DATE:QVariant.String}
-
-XSD_QGIS_GEOMETRYTYPE_MAP = {GeometryType.POINT:QGis.Point,
-                             GeometryType.POLYLINE:QGis.Line,
-                             GeometryType.POLYGON:QGis.Polygon}
