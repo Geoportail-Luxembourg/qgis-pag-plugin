@@ -82,7 +82,7 @@ class ExportGML(object):
         gml_root.setAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance')
         gml_root.setAttribute('xmlns', 'http://www.interlis.ch/INTERLIS2.3/GML32/PAG')
         gml_root.setAttribute('xsi:schemaLocation', 'http://www.interlis.ch/INTERLIS2.3/GML32/PAG PAG.xsd')
-        gml_root.setAttribute('gml:id', str(uuid.uuid1()))
+        gml_root.setAttribute('gml:id', 'x'+str(uuid.uuid1()))
         
         # Baskets topic
         topic_baskets = dict()
@@ -120,7 +120,7 @@ class ExportGML(object):
                 gml_root.appendChild(basket)
                 
                 topic = gml.createElement(type.topic())
-                topic.setAttribute('gml:id',str(uuid.uuid1()))
+                topic.setAttribute('gml:id','x'+str(uuid.uuid1()))
                 basket.appendChild(topic)
                 
                 topic_baskets[type.topic()] = topic
@@ -226,7 +226,7 @@ class ExportGML(object):
                 ring.appendChild(curve_member)
                 
                 curve = gml.createElement('gml:Curve')
-                curve.setAttribute('gml:id',str(uuid.uuid1()))
+                curve.setAttribute('gml:id','x'+str(uuid.uuid1()))
                 curve_member.appendChild(curve)
                 
                 segments = gml.createElement('gml:segments')
