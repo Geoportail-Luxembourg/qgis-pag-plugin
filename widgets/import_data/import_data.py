@@ -14,6 +14,8 @@ from PyQt4.QtCore import *
 import PagLuxembourg.main
 from PagLuxembourg.widgets.data_checker.data_checker import *
 
+from import_shp_dialog import ImportShpDialog
+
 class ImportData(object):
     '''
     Main class for the import data widget
@@ -55,23 +57,12 @@ class ImportData(object):
         # Dispatch to the right importer
         importer = {
                     'gml':self.importGml,
-                    'shp':None,
+                    'shp':self.importShp,
                     'dxf':None
                     }
         
         extension = os.path.splitext(selected_file[0])[1][1:]
-        layer_structure_errors = importer[extension](selected_file[0])
-        
-        # Success message
-        if len(layer_structure_errors) == 0:
-            PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('ImportData','Success'), 
-                                                                       QCoreApplication.translate('ImportData','Importation was successful'))
-        else:
-            PagLuxembourg.main.qgis_interface.messageBar().pushWarning(QCoreApplication.translate('ImportData','Warning'), 
-                                                                       QCoreApplication.translate('ImportData','Some errors encountered during importation'))
-            
-            self.dlg = ErrorSummaryDialog(layer_structure_errors, list())
-            self.dlg.show()
+        importer[extension](selected_file[0])
         
     def importGml(self, filename):
         '''
@@ -129,7 +120,16 @@ class ImportData(object):
             
         PagLuxembourg.main.qgis_interface.messageBar().clearWidgets()
         
-        return layer_structure_errors
+        # Success message
+        if len(layer_structure_errors) == 0:
+            PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('ImportData','Success'), 
+                                                                       QCoreApplication.translate('ImportData','Importation was successful'))
+        else:
+            PagLuxembourg.main.qgis_interface.messageBar().pushWarning(QCoreApplication.translate('ImportData','Warning'), 
+                                                                       QCoreApplication.translate('ImportData','Some errors encountered during importation'))
+            
+            self.dlg = ErrorSummaryDialog(layer_structure_errors, list())
+            self.dlg.show()
     
     def _importGmlLayer(self, gml_layer, xsdtype):
         '''
@@ -215,3 +215,15 @@ class ImportData(object):
             indexmap[source_fields.fieldNameIndex(source_field.name())] = destination_field_index
             
         return indexmap
+    
+    def importShp(self, filename):
+        '''
+        Import a shapefile
+        
+        :param filename: The SHP filename
+        :type filename: str, QString
+        '''
+    
+        self.dlg = ImportShpDialog(filename)
+        if self.dlg.valid:
+            self.dlg.show()
