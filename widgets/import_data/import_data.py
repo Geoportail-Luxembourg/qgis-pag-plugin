@@ -98,7 +98,7 @@ class ImportData(object):
         # Check schema structure table and datatypes
         layer_structure_errors = list()
         
-        # Progress bar
+        # Progress bar + message
         progressMessageBar = PagLuxembourg.main.qgis_interface.messageBar().createMessage(QCoreApplication.translate('ImportData','Importing GML'))
         progress = QProgressBar()
         progress.setMaximum(len(gmlschema.typeNames()))
@@ -150,7 +150,7 @@ class ImportData(object):
         gml_dp = gml_layer.dataProvider()
         xsd_dp = xsd_layer.dataProvider()
         xsd_layer_fields = xsd_dp.fields()
-        gml_xsd_fieldindexmap = self._getFieldMap(gml_layer, xsd_layer)
+        gml_xsd_fieldindexmap = self._getFieldMap(gml_layer, xsd_layer, xsdtype)
         newfeatures = list()
         
         # Iterate GML features
@@ -185,7 +185,7 @@ class ImportData(object):
         
         xsd_layer.reload()
     
-    def _getFieldMap(self, source_layer, destination_layer):
+    def _getFieldMap(self, source_layer, destination_layer, xsdtype):
         '''
         Get the field index map between the source layer and destination layer
         
@@ -201,7 +201,7 @@ class ImportData(object):
         indexmap = dict()
         
         for source_field in source_fields:
-            if source_field.name() == 'GEOMETRIE':
+            if source_field.name() == xsdtype.geometry_fieldname:
                 continue
             
             if source_field.name() == 'gml_id':

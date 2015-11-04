@@ -15,6 +15,7 @@ from PyQt4.QtGui import QFileDialog, QMessageBox, QProgressBar
 from PyQt4.QtCore import *
 
 import PagLuxembourg.main
+import PagLuxembourg.project
 from PagLuxembourg.widgets.data_checker.data_checker import *
 
 class ExportGML(object):
@@ -81,7 +82,7 @@ class ExportGML(object):
         gml_root.setAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance')
         gml_root.setAttribute('xmlns', 'http://www.interlis.ch/INTERLIS2.3/GML32/PAG')
         gml_root.setAttribute('xsi:schemaLocation', 'http://www.interlis.ch/INTERLIS2.3/GML32/PAG PAG.xsd')
-        gml_root.setAttribute('gml:id', str(uuid.uuid1()))
+        gml_root.setAttribute('gml:id', 'x'+str(uuid.uuid1()))
         
         # Baskets topic
         topic_baskets = dict()
@@ -112,14 +113,14 @@ class ExportGML(object):
                                                                          'STRIP_PREFIX=TRUE',
                                                                          'SPACE_INDENTATION=NO'])
             
-            members = self._getXsdCompliantGml(filename, gml)
+            members = self._getXsdCompliantGml(filename, gml, type)
             
             if type.topic() not in topic_baskets:
                 basket = gml.createElement('ili:baskets')
                 gml_root.appendChild(basket)
                 
                 topic = gml.createElement(type.topic())
-                topic.setAttribute('gml:id',str(uuid.uuid1()))
+                topic.setAttribute('gml:id','x'+str(uuid.uuid1()))
                 basket.appendChild(topic)
                 
                 topic_baskets[type.topic()] = topic
@@ -130,7 +131,7 @@ class ExportGML(object):
             progress.setValue(progress.value() + 1)
         
         file = open(gml_filename, 'wb')
-        file.write(gml.toxml('utf-8'))
+        file.write(gml.toprettyxml('','\n','utf-8'))
         file.close()
         shutil.rmtree(temp_dir)
         
@@ -138,7 +139,7 @@ class ExportGML(object):
         PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('ExportGML','Success'),
                                                                    QCoreApplication.translate('ExportGML','GML export was successful'))
     
-    def _getXsdCompliantGml(self, filename, gml):
+    def _getXsdCompliantGml(self, filename, gml, xsdtype):
         '''
         Transform the OGR gml to a XSD compliant GML
         
@@ -157,22 +158,37 @@ class ExportGML(object):
         feature_members = xml_root.getElementsByTagName('featureMember')
         
         for feature_member in feature_members:
-            # Tag name
-            feature_member.tagName = 'member'
-            geometry_elements = feature_member.getElementsByTagName('geometryProperty')
+            #Create member element
+            member = gml.createElement('member')
+            feature_member_type = feature_member.getElementsByTagName(xsdtype.friendlyName())[0]
+            member.appendChild(feature_member_type.cloneNode(False))
+            member_type = member.firstChild
             
-            # Geometry
-            for geometry_element in geometry_elements:
-                self._processGmlGeometry(geometry_element, gml)
+            # Iterate XSD ordered fields
+            for fieldname in xsdtype.ordered_field_names:
+                element = None
+                elements = feature_member.getElementsByTagName(fieldname)
+                if len(elements)>0:
+                    element = elements[0]
+                
+                # Process geometry fields
+                if fieldname == xsdtype.geometry_fieldname:
+                    elements = feature_member.getElementsByTagName('geometryProperty')
+                    if len(elements)>0:
+                        element = elements[0]
+                        self._processGmlGeometry(element, gml, xsdtype)
+                        
+                if element is not None:
+                    member_type.appendChild(element)
             
-            result.append(feature_member)
+            result.append(member)
             
         return result
     
-    def _processGmlGeometry(self, geometry_element, gml):
+    def _processGmlGeometry(self, geometry_element, gml, xsdtype):
         
         # Rename tag
-        geometry_element.tagName = 'GEOMETRIE'
+        geometry_element.tagName = xsdtype.geometry_fieldname
         
         first_child = geometry_element.firstChild
         
@@ -210,7 +226,7 @@ class ExportGML(object):
                 ring.appendChild(curve_member)
                 
                 curve = gml.createElement('gml:Curve')
-                curve.setAttribute('gml:id',str(uuid.uuid1()))
+                curve.setAttribute('gml:id','x'+str(uuid.uuid1()))
                 curve_member.appendChild(curve)
                 
                 segments = gml.createElement('gml:segments')
