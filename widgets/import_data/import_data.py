@@ -15,6 +15,7 @@ import PagLuxembourg.main
 
 from import_gml import ImportGML
 from import_shp import ImportSHP
+from import_dxf import ImportDXF
 
 class ImportData(object):
     '''
@@ -56,7 +57,7 @@ class ImportData(object):
         importers = {
                     'gml':ImportGML,
                     'shp':ImportSHP,
-                    'dxf':None
+                    'dxf':ImportDXF
                     }
         
         extension = os.path.splitext(selected_file[0])[1][1:]

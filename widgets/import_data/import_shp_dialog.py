@@ -65,8 +65,7 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         self.tabMapping.setHorizontalHeaderLabels([
                                                       QCoreApplication.translate('ImportShpDialog','SHP Field'),
                                                       QCoreApplication.translate('ImportShpDialog','QGIS Field'),
-                                                      QCoreApplication.translate('ImportShpDialog','Enabled'),
-                                                      QCoreApplication.translate('ImportShpDialog','Error')])
+                                                      QCoreApplication.translate('ImportShpDialog','Enabled')])
         self.tabMapping.horizontalHeader().setResizeMode(QHeaderView.Stretch);
         
         # Load shp layer
@@ -163,25 +162,6 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         
         self.is_loading_mapping = False
     
-    def _getCenteredCheckbox(self, checked = True):
-        '''
-        Get a centered checkbox to insert in a table widget
-        
-        :returns: A widget with a centered checkbox
-        :rtype: QWidget
-        '''
-        
-        widget = QWidget()
-        checkBox = QCheckBox()
-        checkBox.setChecked(checked)
-        layout = QHBoxLayout(widget)
-        layout.addWidget(checkBox);
-        layout.setAlignment(Qt.AlignCenter);
-        layout.setContentsMargins(0,0,0,0);
-        widget.setLayout(layout);
-        
-        return widget
-    
     def _getMappingRowEnabled(self, rowindex):
         '''
         Get the checked state of the checkbox at the given row
@@ -193,11 +173,7 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         :rtype: Boolean
         '''
         
-        for child in self.tabMapping.cellWidget(rowindex, 2).children():
-            if type(child) is QCheckBox:
-                return child.isChecked()
-        
-        raise TypeError('No checkbox found')
+        return self._isCheckboxChecked(self.tabMapping, rowindex, 2)
     
     def _getQgisFieldsCombobox(self, shpfield, selected_qgisfield = None):
         '''
@@ -270,11 +246,7 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         :rtype: QString, str
         '''
         
-        for child in self.tabMapping.cellWidget(rowindex, 1).children():
-            if type(child) is QComboBox:
-                return child.currentText()
-        
-        raise TypeError('No combobox found')
+        return self._getComboboxText(self.tabMapping, rowindex, 1)
     
     def _getMapping(self, export = False):
         '''

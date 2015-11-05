@@ -72,6 +72,71 @@ class Importer(object):
         PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('ImportShpDialog','Success'), 
                                                                    QCoreApplication.translate('ImportShpDialog','Importation was successful'))
         
+    def _getCenteredCheckbox(self, checked = True):
+        '''
+        Get a centered checkbox to insert in a table widget
+        
+        :returns: A widget with a centered checkbox
+        :rtype: QWidget
+        '''
+        
+        widget = QWidget()
+        checkBox = QCheckBox()
+        checkBox.setChecked(checked)
+        layout = QHBoxLayout(widget)
+        layout.addWidget(checkBox);
+        layout.setAlignment(Qt.AlignCenter);
+        layout.setContentsMargins(0,0,0,0);
+        widget.setLayout(layout);
+        
+        return widget
+    
+    def _isCheckboxChecked(self, table, row, column):
+        '''
+        Get the checked state of the checkbox at the given row for a given table
+        
+        :param table: The table
+        :type table: QTableWidget
+        
+        :param row: The row index
+        :type row: Int
+        
+        :param column: The column index
+        :type column: Int
+        
+        :returns: True if checked
+        :rtype: Boolean
+        '''
+        
+        for child in table.cellWidget(row, column).children():
+            if type(child) is QCheckBox:
+                return child.isChecked()
+        
+        raise TypeError('No checkbox found')
+    
+    def _getComboboxText(self, table, row, column):
+        '''
+        Get the selected combobox text
+        
+        :param table: The table
+        :type table: QTableWidget
+        
+        :param row: The row index
+        :type row: Int
+        
+        :param column: The column index
+        :type column: Int
+        
+        :returns: The selected QGIS field name
+        :rtype: QString, str
+        '''
+        
+        for child in table.cellWidget(row, column).children():
+            if type(child) is QComboBox:
+                return child.currentText()
+        
+        raise TypeError('No combobox found')
+    
 class Mapping(object):
     '''
     Defines a complete mapping
