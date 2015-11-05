@@ -29,7 +29,7 @@ class Importer(object):
         # Iterate source features
         for src_feature in src_dp.getFeatures():
             dst_feature = QgsFeature(dst_layer_fields)
-            for src_index, dst_index, constant_value in mapping.fieldMappings():
+            for src_index, dst_index, constant_value, enabled in mapping.fieldMappings():
                 value = constant_value if constant_value is not None else src_feature[src_index]
                 
                 # Check if numeric value needs to be casted
@@ -91,13 +91,15 @@ class Mapping(object):
     def addLayerMapping(self, mapping):
         self._mappings.append(mapping)
     
-    def json(self):
+    def writeJson(self, filename):
         mappings = list()
         
         for mapping in self._mappings:
-            mappings.append(mapping.json())
+            mappings.append(mapping.asDictionary())
         
-        return mappings
+        file = open(filename, 'wb')
+        file.write(json.dumps(mappings))
+        file.close()
     
     def parseJson(self, filename):
         f = open(filename, 'r')
@@ -152,8 +154,8 @@ class LayerMapping(object):
     def fieldMappings(self):
         return self._mapping['FieldMapping']
         
-    def addFieldMapping(self, source_index, destination_index, constant_value):
-        self._mapping['FieldMapping'].append((source_index, destination_index, constant_value))
+    def addFieldMapping(self, source_index, destination_index, constant_value, enabled):
+        self._mapping['FieldMapping'].append((source_index, destination_index, constant_value, enabled))
         
-    def json(self):
+    def asDictionary(self):
         return self._mapping

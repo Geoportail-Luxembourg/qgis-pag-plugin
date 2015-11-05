@@ -91,7 +91,7 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         
         # Adds the map layers with same geometry type to the combobox
         for layer in PagLuxembourg.main.qgis_interface.legendInterface().layers():
-            if layer.geometryType() == self.shplayer.geometryType():
+            if layer.geometryType() == self.shplayer.geometryType() and PagLuxembourg.main.current_project.isPagLayer(layer):
                 self.qgislayers.append(layer)
                 self.cbbLayers.addItem(layer.name(), layer.id())
     
@@ -227,24 +227,37 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         
         raise TypeError('No combobox found')
     
-    def _getMapping(self):
+    def _getMapping(self, export = False):
         '''
         Get the field mapping between the source layer and destination layer
+        
+        :param export: Gets the mapping for export, with enabled and field name instead of index
+        :type export: Boolean
         
         :returns: A list of tuples : SHP field index, QGIS field index, None (not a constant value)
         :rtype: List of tuples : int, int, None
         '''
         
+        qgis_layer = self.qgislayers[self.cbbLayers.currentIndex()]
+        
         mapping = LayerMapping()
+        mapping.setDestinationLayerName(PagLuxembourg.main.current_project.getLayerTableName(qgis_layer))
         
         source_fields = self.shpfields
-        destination_fields = self.qgislayers[self.cbbLayers.currentIndex()].dataProvider().fields()
+        destination_fields = qgis_layer.dataProvider().fields()
         
         for rowindex in range(self.tabMapping.rowCount()):
-            if self._getMappingRowEnabled(rowindex):
+            enabled = self._getMappingRowEnabled(rowindex)
+            if export:
+                mapping.addFieldMapping(self.tabMapping.item(rowindex, 0).text(),
+                                        self._getSelectedQgisField(rowindex),
+                                        None,
+                                        enabled)
+            elif enabled:
                 mapping.addFieldMapping(source_fields.fieldNameIndex(self.tabMapping.item(rowindex, 0).text()),
                                         destination_fields.fieldNameIndex(self._getSelectedQgisField(rowindex)),
-                                        None)
+                                        None,
+                                        enabled)
         
         return mapping
     
@@ -259,7 +272,7 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         mapping = self._getMapping().fieldMappings()
         unique_qgisfields = list()
         
-        for shpfield_index, qgisfield_index, constant_value in mapping:
+        for shpfield_index, qgisfield_index, constant_value, enabled in mapping:
             # Check whether QGIS field is empty
             if qgisfield_index < 0:
                 QMessageBox.critical(self, 
@@ -297,3 +310,38 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
                                                                        QCoreApplication.translate('ImportShpDialog','Importation was successful'))
         
         self.close()
+    
+    def _saveConfig(self):
+        '''
+        Save the configuration to JSON
+        '''
+        
+        # Select json file to save
+        dialog = QFileDialog()
+        dialog.setFileMode(QFileDialog.AnyFile)
+        dialog.setAcceptMode(QFileDialog.AcceptSave)
+        dialog.setNameFilter('Json file (*.json)');
+        dialog.setWindowTitle(QCoreApplication.translate('ImportShpDialog','Select the json location'))
+        dialog.setSizeGripEnabled(False)
+        result = dialog.exec_()
+        
+        if result == 0:
+            return
+        
+        selected_files = dialog.selectedFiles()
+        
+        if len(selected_files) == 0:
+            return
+        
+        filename = selected_files[0]
+        
+        if not filename.endswith('.json'):
+            filename += '.json'
+        
+        mapping = Mapping()
+        mapping.addLayerMapping(self._getMapping(True))
+        mapping.writeJson(filename)
+        
+        QMessageBox.information(self, 
+                                QCoreApplication.translate('ImportShpDialog','Success'),
+                                QCoreApplication.translate('ImportShpDialog','Mapping configuration saved'))
