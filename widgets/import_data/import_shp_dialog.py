@@ -55,6 +55,8 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         # Indicates the shapefile loading is valid 
         self.valid = True
         
+        self.is_loading_mapping = False
+        
         self.lblFilename.setText(filename)
         
         self.tabMapping.setHorizontalHeaderLabels([
@@ -103,7 +105,36 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         :type index: int
         '''
         
-        qgislayer = self.qgislayers[index]
+        if not self.is_loading_mapping:
+            self._loadMapping()
+    
+    def _loadMapping(self, mapping = None):
+        '''
+        Loads a mapping using an existing one or a default one
+        
+        :param mapping: An existing Mapping
+        :type mapping: LayerMapping
+        '''
+        
+        qgislayer = None
+        
+        if mapping is None:
+            mapping = LayerMapping()
+            qgislayer = self.qgislayers[self.cbbLayers.currentIndex()]
+        else:
+            for layer in self.qgislayers:
+                if PagLuxembourg.main.current_project.getLayerTableName(layer) == mapping.destinationLayerName():
+                    qgislayer = layer
+            
+            if qgislayer is None:
+                QMessageBox.critical(self, 
+                                     QCoreApplication.translate('ImportShpDialog','Error'),
+                                     QCoreApplication.translate('ImportShpDialog','Destination layer {} not found.').format(mapping.destinationLayerName()))
+                return
+            
+            self.is_loading_mapping = True
+            self.cbbLayers.setCurrentIndex(self.qgislayers.index(qgislayer))
+            
         qgislayer_fields = qgislayer.dataProvider().fields()
         
         self.tabMapping.clearContents()
@@ -113,13 +144,17 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         
         # Fill mapping
         for shpfield in self.shpfields:
+            source, destination, constant_value, enabled = mapping.getFieldMappingForSource(shpfield.name())
+            
             self.tabMapping.setItem(rowindex, 0, QTableWidgetItem(shpfield.name())) # SHP field name
-            self.tabMapping.setCellWidget(rowindex, 1, self._getQgisFieldsCombobox(shpfield)) # QGIS fields
-            self.tabMapping.setCellWidget(rowindex, 2, self._getCenteredCheckbox()) # Enabled checkbox
+            self.tabMapping.setCellWidget(rowindex, 1, self._getQgisFieldsCombobox(shpfield, destination)) # QGIS fields
+            self.tabMapping.setCellWidget(rowindex, 2, self._getCenteredCheckbox(enabled if enabled is not None else True)) # Enabled checkbox
             
             rowindex +=  1
+        
+        self.is_loading_mapping = False
     
-    def _getCenteredCheckbox(self, checked=True):
+    def _getCenteredCheckbox(self, checked = True):
         '''
         Get a centered checkbox to insert in a table widget
         
@@ -155,7 +190,7 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         
         raise TypeError('No checkbox found')
     
-    def _getQgisFieldsCombobox(self, shpfield):
+    def _getQgisFieldsCombobox(self, shpfield, selected_qgisfield=None):
         '''
         Get a combobox filled with the QGIS layer fields to insert in a table widget
         
@@ -201,7 +236,9 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
                 if shpfield.type() == shp_type and field.type() == qgis_type:
                     combobox.addItem(field.name())
                     # Select field if same name
-                    if field.name() == shpfield.name():
+                    if field.name() == shpfield.name() and selected_index == -1:
+                        selected_index = current_item_index
+                    if field.name() == selected_qgisfield:
                         selected_index = current_item_index
                     current_item_index += 1
                     break;
@@ -311,6 +348,39 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         
         self.close()
     
+    def _loadConfig(self):
+        '''
+        Load a JSON configuration
+        '''
+        
+        # Select config file to load
+        dialog = QFileDialog()
+        dialog.setFileMode(QFileDialog.ExistingFile)
+        dialog.setOption(QFileDialog.ReadOnly)
+        dialog.setNameFilter('Json file (*.json)');
+        dialog.setWindowTitle(QCoreApplication.translate('ImportShpDialog','Select the configuration file to load'))
+        dialog.setSizeGripEnabled(False)
+        result = dialog.exec_()
+        
+        if result == 0:
+            return
+        
+        selected_files = dialog.selectedFiles()
+        
+        if len(selected_files)==0:
+            return
+        
+        filename = selected_files[0]
+        
+        # Load mapping
+        mapping = Mapping()
+        mapping.parseJson(filename)
+        
+        if len(mapping.layerMappings()) != 1:
+            return
+        
+        self._loadMapping(mapping.layerMappings()[0])
+        
     def _saveConfig(self):
         '''
         Save the configuration to JSON
@@ -338,6 +408,7 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         if not filename.endswith('.json'):
             filename += '.json'
         
+        # Generates the mapping and save it
         mapping = Mapping()
         mapping.addLayerMapping(self._getMapping(True))
         mapping.writeJson(filename)

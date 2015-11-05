@@ -153,9 +153,16 @@ class LayerMapping(object):
     
     def fieldMappings(self):
         return self._mapping['FieldMapping']
+    
+    def getFieldMappingForSource(self, source_fieldname):
+        for source, destination, constant_value, enabled in self._mapping['FieldMapping']:
+            if source == source_fieldname:
+                return source, destination, constant_value, enabled
         
-    def addFieldMapping(self, source_index, destination_index, constant_value, enabled):
-        self._mapping['FieldMapping'].append((source_index, destination_index, constant_value, enabled))
+        return None, None, None, None
+        
+    def addFieldMapping(self, source, destination, constant_value, enabled):
+        self._mapping['FieldMapping'].append((source, destination, constant_value, enabled))
         
     def asDictionary(self):
         return self._mapping
