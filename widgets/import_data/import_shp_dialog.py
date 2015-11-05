@@ -55,10 +55,13 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         # Indicates the shapefile loading is valid 
         self.valid = True
         
+        # Don't trigger combobox index changed if loading from config file
         self.is_loading_mapping = False
         
+        # Filename
         self.lblFilename.setText(filename)
         
+        # Setup table
         self.tabMapping.setHorizontalHeaderLabels([
                                                       QCoreApplication.translate('ImportShpDialog','SHP Field'),
                                                       QCoreApplication.translate('ImportShpDialog','QGIS Field'),
@@ -66,8 +69,10 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
                                                       QCoreApplication.translate('ImportShpDialog','Error')])
         self.tabMapping.horizontalHeader().setResizeMode(QHeaderView.Stretch);
         
+        # Load shp layer
         self.shplayer = QgsVectorLayer(filename, filename, "ogr")
         
+        # If not valid, don't show the dialog
         if not self.shplayer.isValid():
             PagLuxembourg.main.qgis_interface.messageBar().pushCritical(QCoreApplication.translate('ImportShpDialog','Error'),
                                                                         QCoreApplication.translate('ImportShpDialog','Shapefile is not valid'))
@@ -93,7 +98,7 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         
         # Adds the map layers with same geometry type to the combobox
         for layer in PagLuxembourg.main.qgis_interface.legendInterface().layers():
-            if layer.geometryType() == self.shplayer.geometryType() and PagLuxembourg.main.current_project.isPagLayer(layer):
+            if layer.type() == QgsMapLayer.VectorLayer and layer.geometryType() == self.shplayer.geometryType() and PagLuxembourg.main.current_project.isPagLayer(layer):
                 self.qgislayers.append(layer)
                 self.cbbLayers.addItem(layer.name(), layer.id())
     
@@ -119,9 +124,11 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         qgislayer = None
         
         if mapping is None:
+            # Loads default mapping
             mapping = LayerMapping()
             qgislayer = self.qgislayers[self.cbbLayers.currentIndex()]
         else:
+            # Gets the mapping destination layer
             for layer in self.qgislayers:
                 if PagLuxembourg.main.current_project.getLayerTableName(layer) == mapping.destinationLayerName():
                     qgislayer = layer
@@ -132,11 +139,13 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
                                      QCoreApplication.translate('ImportShpDialog','Destination layer {} not found.').format(mapping.destinationLayerName()))
                 return
             
+            # Loads a config file mapping
             self.is_loading_mapping = True
             self.cbbLayers.setCurrentIndex(self.qgislayers.index(qgislayer))
             
         qgislayer_fields = qgislayer.dataProvider().fields()
         
+        # Clear the table
         self.tabMapping.clearContents()
         self.tabMapping.setRowCount(len(self.shpfields))
         
@@ -190,12 +199,15 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         
         raise TypeError('No checkbox found')
     
-    def _getQgisFieldsCombobox(self, shpfield, selected_qgisfield=None):
+    def _getQgisFieldsCombobox(self, shpfield, selected_qgisfield = None):
         '''
         Get a combobox filled with the QGIS layer fields to insert in a table widget
         
         :param shpfield: The SHP field
         :type shpfield: QgsField
+        
+        :param selected_qgisfield: The QGIS field to select
+        :type selected_qgisfield: QString, str
         
         :returns: A combobox with the QGIS layer fields
         :rtype: QWidget
@@ -338,6 +350,7 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         
         qgis_layer = self.qgislayers[self.cbbLayers.currentIndex()]        
         
+        # Import the layer, and get the imported extent
         imported_extent = self._importLayer(self.shplayer, qgis_layer, self._getMapping())
         
         # Zoom to selected
