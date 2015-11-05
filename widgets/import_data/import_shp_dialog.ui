@@ -173,9 +173,43 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>btnSaveConfig</sender>
+   <signal>clicked()</signal>
+   <receiver>Dialog</receiver>
+   <slot>_saveConfig()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>108</x>
+     <y>395</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>196</x>
+     <y>373</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnLoadConfig</sender>
+   <signal>clicked()</signal>
+   <receiver>Dialog</receiver>
+   <slot>_loadConfig()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>81</x>
+     <y>350</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>176</x>
+     <y>348</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>_selectedLayerIndexChanged(int)</slot>
   <slot>_launchImport()</slot>
+  <slot>_saveConfig()</slot>
+  <slot>_loadConfig()</slot>
  </slots>
 </ui>
