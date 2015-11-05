@@ -23,22 +23,22 @@ class ImportGML(Importer):
     
     data_checker = DataChecker()
 
-    def __init__(self):
+    def __init__(self, filename):
         '''
         Constructor
-        '''
-        pass
-    
-    def importGml(self, filename):
-        '''
-        Import a GML file
         
         :param filename: The GML filename
         :type filename: str, QString
         '''
+        self.filename = filename
+    
+    def runImport(self):
+        '''
+        Import a GML file
+        '''
         
         # Open GML
-        file = QFile(filename)
+        file = QFile(self.filename)
         file.open(QIODevice.ReadOnly)
         gmlcontent = file.readAll()
         
@@ -75,7 +75,7 @@ class ImportGML(Importer):
             # Progression message
             progressMessageBar.setText(QCoreApplication.translate('ImportData','Importing {}').format(gmltype))
             
-            gmllayer = QgsVectorLayer('{}|layername={}'.format(filename,gmltype), gmltype, "ogr")
+            gmllayer = QgsVectorLayer('{}|layername={}'.format(self.filename,gmltype), gmltype, "ogr")
             
             # Check schema structure table and datatypes
             warn_errors, fatal_errors = self.data_checker.checkLayerStructure(gmllayer, xsdtype)
