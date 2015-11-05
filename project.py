@@ -170,6 +170,34 @@ class Project(QObject):
                 return v
             
         return None
+    
+    def isPagLayer(self, layer):
+        '''
+        Checks if a layer is a PAG layer
+        
+        :param layer: Layer to check
+        :type layer: QgsVectorLayer
+        '''
+        
+        for type in main.xsd_schema.types:
+            uri = self.getTypeUri(type)
+            if self.compareURIs(layer.source(), uri):
+                return True
+            
+        return False
+    
+    def getLayerTableName(self, layer):
+        '''
+        Returns the table name of the layer, only if it is a PAG layer
+        
+        :param layer: Layer to check
+        :type layer: QgsVectorLayer
+        '''
+        
+        if not self.isPagLayer(layer):
+            return None
+        
+        return self.getUriInfos(layer.source())[1]
             
     def _setupTopologicalSettings(self):
         # Topological editing
@@ -441,7 +469,7 @@ class Project(QObject):
             if kv.startswith('table'):
                 table = kv[7:-1]
                 
-        return db,table
+        return db, table
                 
     def compareURIs(self, uri1, uri2):
         '''
