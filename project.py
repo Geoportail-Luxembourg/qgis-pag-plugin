@@ -194,6 +194,9 @@ class Project(QObject):
         :type layer: QgsVectorLayer
         '''
         
+        if layer is None:
+            return None
+        
         if not self.isPagLayer(layer):
             return None
         

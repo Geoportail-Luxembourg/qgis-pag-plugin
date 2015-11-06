@@ -255,8 +255,8 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         :param export: Gets the mapping for export, with enabled and field name instead of index
         :type export: Boolean
         
-        :returns: A list of tuples : SHP field index, QGIS field index, None (not a constant value)
-        :rtype: List of tuples : int, int, None
+        :returns: A list of tuples : SHP field index, QGIS field index, None, Enabled (not a constant value)
+        :rtype: List of tuples : int, int, None, Boolean
         '''
         
         qgis_layer = self.qgislayers[self.cbbLayers.currentIndex()]

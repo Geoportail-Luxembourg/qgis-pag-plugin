@@ -3,9 +3,11 @@ Created on 04 nov. 2015
 
 @author: arxit
 '''
+
 import json
 
-from PyQt4.QtCore import QCoreApplication, QVariant
+from PyQt4.QtCore import QCoreApplication, QVariant, Qt
+from PyQt4.QtGui import QCheckBox, QWidget, QHBoxLayout, QComboBox
 
 from qgis.core import *
 
@@ -114,6 +116,30 @@ class Importer(object):
         
         raise TypeError('No checkbox found')
     
+    def _getCombobox(self, values):
+        '''
+        Get a combobox filled with the given values
+        
+        :param values: The values
+        :type values: values
+        
+        :returns: A combobox
+        :rtype: QWidget
+        '''
+        
+        widget = QWidget()
+        combobox = QComboBox()
+        layout = QHBoxLayout(widget)
+        layout.addWidget(combobox, 1);
+        layout.setAlignment(Qt.AlignCenter);
+        layout.setContentsMargins(5,0,5,0);
+        widget.setLayout(layout);
+        
+        for value in values:
+            combobox.addItem(value)
+                
+        return widget
+    
     def _getComboboxText(self, table, row, column):
         '''
         Get the selected combobox text
@@ -152,6 +178,13 @@ class Mapping(object):
     
     def layerMappings(self):
         return self._mappings
+    
+    def getLayerMappingForSource(self, source_layer):
+        for mapping in self._mappings:
+            if mapping.sourceLayerName() == source_layer:
+                return mapping
+        
+        return None
         
     def addLayerMapping(self, mapping):
         self._mappings.append(mapping)
@@ -196,6 +229,7 @@ class LayerMapping(object):
         self.setSourceLayerName(None)
         self.setDestinationLayerName(None)
         self.setSourceLayerFilter(None)
+        self.setEnabled(True)
         self._mapping['FieldMapping'] = list()
     
     def sourceLayerName(self):
@@ -215,6 +249,12 @@ class LayerMapping(object):
         
     def setSourceLayerFilter(self, filter):
         self._mapping['SourceLayerFilter'] = filter
+        
+    def isEnabled(self):
+        return self._mapping['Enabled']
+        
+    def setEnabled(self, enabled):
+        self._mapping['Enabled'] = enabled
     
     def fieldMappings(self):
         return self._mapping['FieldMapping']
@@ -225,9 +265,19 @@ class LayerMapping(object):
                 return source, destination, constant_value, enabled
         
         return None, None, None, None
+    
+    def getFieldMappingForDestination(self, destination_fieldname):
+        for source, destination, constant_value, enabled in self._mapping['FieldMapping']:
+            if destination == destination_fieldname:
+                return source, destination, constant_value, enabled
+        
+        return None, None, None, None
         
     def addFieldMapping(self, source, destination, constant_value, enabled):
         self._mapping['FieldMapping'].append((source, destination, constant_value, enabled))
+    
+    def clearFieldMapping(self):
+        del self._mapping['FieldMapping'][:]
         
     def asDictionary(self):
         return self._mapping

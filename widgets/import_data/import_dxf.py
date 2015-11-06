@@ -31,6 +31,7 @@ class ImportDXF(object):
         '''
         
         self.dlg = ImportDxfDialog(self.filename)
+        
         if self.dlg.valid:
             self.dlg.show()
         else:
