@@ -173,7 +173,7 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         :rtype: Boolean
         '''
         
-        return self._isCheckboxChecked(self.tabMapping, rowindex, 2)
+        return self._getCellValue(self.tabMapping, rowindex, 2)
     
     def _getQgisFieldsCombobox(self, shpfield, selected_qgisfield = None):
         '''
@@ -246,7 +246,7 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         :rtype: QString, str
         '''
         
-        return self._getComboboxText(self.tabMapping, rowindex, 1)
+        return self._getCellValue(self.tabMapping, rowindex, 1)[0]
     
     def _getMapping(self, export = False):
         '''

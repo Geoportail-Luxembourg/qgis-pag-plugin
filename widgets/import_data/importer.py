@@ -6,8 +6,8 @@ Created on 04 nov. 2015
 
 import json
 
-from PyQt4.QtCore import QCoreApplication, QVariant, Qt
-from PyQt4.QtGui import QCheckBox, QWidget, QHBoxLayout, QComboBox
+from PyQt4.QtCore import QCoreApplication, QVariant, Qt, QDate
+from PyQt4.QtGui import QCheckBox, QWidget, QHBoxLayout, QComboBox, QDoubleSpinBox, QDateTimeEdit, QLineEdit
 
 from qgis.core import *
 
@@ -28,14 +28,23 @@ class Importer(object):
         dst_layer_fields = dst_dp.fields()
         newfeatures = list()
         
+        feature_request = None
+        
+        # Set layer filter if existing, for DXF
+        if mapping.sourceLayerFilter() is None:
+            feature_request = QgsFeatureRequest()
+        else:
+            expr = QgsExpression(mapping.sourceLayerFilter())
+            feature_request = QgsFeatureRequest(expr)
+        
         # Iterate source features
-        for src_feature in src_dp.getFeatures():
+        for src_feature in src_dp.getFeatures(feature_request):
             dst_feature = QgsFeature(dst_layer_fields)
             for src_index, dst_index, constant_value, enabled in mapping.fieldMappings():
-                value = constant_value if constant_value is not None else src_feature[src_index]
+                value = constant_value if src_index is None else src_feature[src_index]
                 
                 # Check if numeric value needs to be casted
-                if value == NULL:
+                if value == NULL or value is None:
                     dst_feature.setAttribute(dst_index, NULL)
                 elif dst_feature.fields()[dst_index].type() == QVariant.String and not isinstance(value, basestring):
                     dst_feature.setAttribute(dst_index, str(value))
@@ -43,8 +52,18 @@ class Importer(object):
                     dst_feature.setAttribute(dst_index, value)
             
             if dst_layer.hasGeometryType():
-                # TODO closed polylines
-                dst_feature.setGeometry(src_feature.geometry())
+                # Import closed polylines as polygon
+                if dst_layer.geometryType() == QGis.Polygon and src_layer.geometryType() == QGis.Line:
+                    src_polyline = src_feature.geometry().asPolyline()
+                    if src_polyline[0] == src_polyline[-1]:
+                        # It's a closed polyline
+                        dst_feature.setGeometry(QgsGeometry.fromPolygon([src_polyline]))
+                    else:
+                        # It's a classical polyline, skip
+                        del dst_feature
+                        continue
+                else:
+                    dst_feature.setGeometry(src_feature.geometry())
             
             newfeatures.append(dst_feature)
         
@@ -93,35 +112,12 @@ class Importer(object):
         
         return widget
     
-    def _isCheckboxChecked(self, table, row, column):
-        '''
-        Get the checked state of the checkbox at the given row for a given table
-        
-        :param table: The table
-        :type table: QTableWidget
-        
-        :param row: The row index
-        :type row: Int
-        
-        :param column: The column index
-        :type column: Int
-        
-        :returns: True if checked
-        :rtype: Boolean
-        '''
-        
-        for child in table.cellWidget(row, column).children():
-            if type(child) is QCheckBox:
-                return child.isChecked()
-        
-        raise TypeError('No checkbox found')
-    
-    def _getCombobox(self, values):
+    def _getCombobox(self, values, selected_value = None, currentindex_changed_callback = None):
         '''
         Get a combobox filled with the given values
         
-        :param values: The values
-        :type values: values
+        :param values: The values as key = value, value = description or text
+        :type values: Dict
         
         :returns: A combobox
         :rtype: QWidget
@@ -135,12 +131,104 @@ class Importer(object):
         layout.setContentsMargins(5,0,5,0);
         widget.setLayout(layout);
         
-        for value in values:
-            combobox.addItem(value)
+        current_item_index = 0
+        selected_index = -1
+        
+        for key, value in values.iteritems():
+            combobox.addItem(value, key)
+            
+            # Select layer
+            if key == selected_value:
+                selected_index = current_item_index
+                
+            current_item_index += 1
+        
+        if selected_value is not None:
+            combobox.setcurrentIndex(selected_index)
+            
+        if currentindex_changed_callback is not None:
+            combobox.currentIndexChanged.connect(currentindex_changed_callback)
                 
         return widget
     
-    def _getComboboxText(self, table, row, column):
+    def _getSpinbox(self, minvalue, maxvalue, step, value = 0):
+        '''
+        Get a combobox filled with the given values
+        
+        :param values: The values as key = value, value = description or text
+        :type values: Dict
+        
+        :returns: A combobox
+        :rtype: QWidget
+        '''
+        
+        widget = QWidget()
+        spinbox = QDoubleSpinBox()
+        spinbox.setMinimum(minvalue)
+        spinbox.setMaximum(maxvalue)
+        spinbox.setSingleStep(step)
+        spinbox.setDecimals(len(str(step).split('.')[1]) if len(str(step).split('.'))==2 else 0)
+        if value is not None:
+            spinbox.setValue(value)
+        layout = QHBoxLayout(widget)
+        layout.addWidget(spinbox, 1);
+        layout.setAlignment(Qt.AlignCenter);
+        layout.setContentsMargins(5,0,5,0);
+        widget.setLayout(layout);
+                
+        return widget
+    
+    def _getCalendar(self, display_format, value = None):
+        '''
+        Get a combobox filled with the given values
+        
+        :param values: The values as key = value, value = description or text
+        :type values: Dict
+        
+        :returns: A combobox
+        :rtype: QWidget
+        '''
+        
+        
+        widget = QWidget()
+        calendar = QDateTimeEdit()
+        calendar.setCalendarPopup(True)
+        calendar.setDisplayFormat(display_format)
+        if value is not None:
+            calendar.setDate(QDate.fromString(value, display_format))
+        else:
+            calendar.setDate(QDate.currentDate())
+        layout = QHBoxLayout(widget)
+        layout.addWidget(calendar, 1);
+        layout.setAlignment(Qt.AlignCenter);
+        layout.setContentsMargins(5,0,5,0);
+        widget.setLayout(layout);
+                
+        return widget
+    
+    def _getTextbox(self, value = None):
+        '''
+        Get a combobox filled with the given values
+        
+        :param values: The values as key = value, value = description or text
+        :type values: Dict
+        
+        :returns: A combobox
+        :rtype: QWidget
+        '''
+        
+        widget = QWidget()
+        textbox = QLineEdit()
+        textbox.setText(value)
+        layout = QHBoxLayout(widget)
+        layout.addWidget(textbox, 1);
+        layout.setAlignment(Qt.AlignCenter);
+        layout.setContentsMargins(5,0,5,0);
+        widget.setLayout(layout);
+                
+        return widget
+    
+    def _getCellValue(self, table, row, column):
         '''
         Get the selected combobox text
         
@@ -157,11 +245,26 @@ class Importer(object):
         :rtype: QString, str
         '''
         
-        for child in table.cellWidget(row, column).children():
-            if type(child) is QComboBox:
-                return child.currentText()
+        # Check whether it is an item
+        item = table.item(row, column)
+        if item is not None:
+            text = item.text()
+            return text if not text.isspace() else None
         
-        raise TypeError('No combobox found')
+        # It is a widget
+        for child in table.cellWidget(row, column).children():
+            if type(child) is QCheckBox:
+                return child.isChecked()
+            elif type(child) is QComboBox:
+                return child.currentText(), child.itemData(child.currentIndex())
+            elif type(child) is QLineEdit:
+                return child.text()
+            elif type(child) is QDoubleSpinBox:
+                return child.value()
+            elif type(child) is QDateTimeEdit:
+                return child.date().toString(child.displayFormat())
+        
+        raise TypeError('No widget found')
     
 class Mapping(object):
     '''
@@ -272,6 +375,18 @@ class LayerMapping(object):
                 return source, destination, constant_value, enabled
         
         return None, None, None, None
+    
+    def asIndexFieldMappings(self, destination_fields):
+        mapping = LayerMapping()
+        mapping.setSourceLayerName(self.sourceLayerName())
+        mapping.setDestinationLayerName(self.destinationLayerName())
+        mapping.setSourceLayerFilter(self.sourceLayerFilter())
+        mapping.setEnabled(self.isEnabled())
+        
+        for source, destination, constant_value, enabled in self.fieldMappings():
+            mapping.addFieldMapping(source, destination_fields.fieldNameIndex(destination), constant_value, enabled)
+        
+        return mapping
         
     def addFieldMapping(self, source, destination, constant_value, enabled):
         self._mapping['FieldMapping'].append((source, destination, constant_value, enabled))
