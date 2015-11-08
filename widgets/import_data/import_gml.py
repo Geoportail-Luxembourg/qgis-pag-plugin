@@ -158,6 +158,7 @@ class ImportGML(Importer):
             
             mapping.addFieldMapping(source_fields.fieldNameIndex(source_field.name()),
                                     destination_field_index,
-                                    None)
+                                    None,
+                                    True)
             
         return mapping

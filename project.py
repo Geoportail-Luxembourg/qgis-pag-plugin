@@ -5,6 +5,7 @@ Created on 18 sept. 2015
 '''
 
 import os.path
+from collections import OrderedDict
 from pyspatialite import dbapi2 as db
 
 from qgis.core import *
@@ -193,6 +194,9 @@ class Project(QObject):
         :param layer: Layer to check
         :type layer: QgsVectorLayer
         '''
+        
+        if layer is None:
+            return None
         
         if not self.isPagLayer(layer):
             return None
@@ -549,8 +553,8 @@ class Project(QObject):
                 editor = 'ValueMap'
                 
                 # Invert key, value of currentConfig
-                currentConfig = layer.editorWidgetV2Config(fieldIndex) if layer.editorWidgetV2(fieldIndex) == 'ValueMap' else dict()
-                currentConfig = dict((v, k) for k, v in currentConfig.iteritems())
+                currentConfig = layer.editorWidgetV2Config(fieldIndex) if layer.editorWidgetV2(fieldIndex) == 'ValueMap' else OrderedDict()
+                currentConfig = OrderedDict((v, k) for k, v in currentConfig.iteritems())
                 
                 # Keep current values and add new ones
                 for element in field.listofvalues:
