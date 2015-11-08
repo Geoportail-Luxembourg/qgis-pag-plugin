@@ -144,7 +144,7 @@ class Importer(object):
             current_item_index += 1
         
         if selected_value is not None:
-            combobox.setcurrentIndex(selected_index)
+            combobox.setCurrentIndex(selected_index)
             
         if currentindex_changed_callback is not None:
             combobox.currentIndexChanged.connect(currentindex_changed_callback)
@@ -258,7 +258,8 @@ class Importer(object):
             elif type(child) is QComboBox:
                 return child.currentText(), child.itemData(child.currentIndex())
             elif type(child) is QLineEdit:
-                return child.text()
+                text = child.text()
+                return text if not text.isspace() else None
             elif type(child) is QDoubleSpinBox:
                 return child.value()
             elif type(child) is QDateTimeEdit:
@@ -333,6 +334,7 @@ class LayerMapping(object):
         self.setDestinationLayerName(None)
         self.setSourceLayerFilter(None)
         self.setEnabled(True)
+        self.setValid(False)
         self._mapping['FieldMapping'] = list()
     
     def sourceLayerName(self):
@@ -358,6 +360,12 @@ class LayerMapping(object):
         
     def setEnabled(self, enabled):
         self._mapping['Enabled'] = enabled
+        
+    def isValid(self):
+        return self._mapping['Valid']
+        
+    def setValid(self, enabled):
+        self._mapping['Valid'] = enabled
     
     def fieldMappings(self):
         return self._mapping['FieldMapping']
@@ -382,6 +390,7 @@ class LayerMapping(object):
         mapping.setDestinationLayerName(self.destinationLayerName())
         mapping.setSourceLayerFilter(self.sourceLayerFilter())
         mapping.setEnabled(self.isEnabled())
+        mapping.setValid(self.isValid())
         
         for source, destination, constant_value, enabled in self.fieldMappings():
             mapping.addFieldMapping(source, destination_fields.fieldNameIndex(destination), constant_value, enabled)

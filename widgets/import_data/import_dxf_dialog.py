@@ -37,9 +37,6 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
         
-        # Don't trigger combobox index changed if loading from config file
-        self.is_loading_mapping = False
-        
         # Filename
         self.lblFilename.setText(filename)
         
@@ -66,8 +63,9 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
         self._loadQgisLayers()
         
         # Load the default mapping
-        self._generateDefaultMapping()
-        self._loadMapping()
+        self.mapping = Mapping()#self._generateDefaultMapping()
+        
+        self._loadLayersMapping()
             
     def _loadQgisLayers(self):
         '''
@@ -109,6 +107,7 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
         self._loadUniqueLayersNames(self.dxflayer_linestrings)
         self._loadUniqueLayersNames(self.dxflayer_polygons)
         
+        # Restore project settings
         settings.setValue( "/Projections/defaultBehaviour", oldProjValue )
     
     def _loadUniqueLayersNames(self, layer):
@@ -146,27 +145,27 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
             
         return self._getCombobox(layers, selected_layer, self._comboboxQgisLayersIndexChanged)
         
-    def _generateDefaultMapping(self):
-        '''
-        Gets the default mappings for the current DXF file
+    def _getLayerMappingFromSourceDxfLayer(self, dxf_layername):
         '''
         
-        self.mapping = Mapping()
+        '''
         
-        for layer_name in self.dxf_layernames:
-            layer_mapping = self.mapping.getLayerMappingForSource(layer_name)
-            if layer_mapping is None:
-                layer_mapping = LayerMapping()
-                layer_mapping.setSourceLayerName(layer_name)
-                layer_mapping.setSourceLayerFilter('Layer=\'{}\''.format(layer_name))
-                self.mapping.addLayerMapping(layer_mapping)
+        layer_mapping = self.mapping.getLayerMappingForSource(dxf_layername)
+        
+        if layer_mapping is None:
+            layer_mapping = LayerMapping()
+            layer_mapping.setSourceLayerName(dxf_layername)
+            layer_mapping.setSourceLayerFilter('Layer=\'{}\''.format(dxf_layername))
+            self.mapping.addLayerMapping(layer_mapping)
+        
+        return layer_mapping
     
-    def _loadMapping(self):
+    def _loadLayersMapping(self):
         '''
-        Loads the current mapping
+        Loads the layers mapping
         '''
         
-        self.is_loading_mapping = True
+        #self.is_loading_mapping = True
         
         # Clear the table
         self.tabLayersMapping.clearContents()
@@ -175,29 +174,27 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
         rowindex = 0
         
         # Fill layers mapping
-        for layername in self.dxf_layernames:
-            layer_mapping = self.mapping.getLayerMappingForSource(layername)
+        for dxf_layername in self.dxf_layernames:
+            layer_mapping = self._getLayerMappingFromSourceDxfLayer(dxf_layername)
             
-            self.tabLayersMapping.setItem(rowindex, 0, QTableWidgetItem(layername)) # DXF layer name
+            self.tabLayersMapping.setItem(rowindex, 0, QTableWidgetItem(dxf_layername)) # DXF layer name
             self.tabLayersMapping.setCellWidget(rowindex, 1, self._getQgisLayersCombobox(layer_mapping.destinationLayerName())) # QGIS layers
             self.tabLayersMapping.setCellWidget(rowindex, 2, self._getCenteredCheckbox(layer_mapping.isEnabled())) # Enabled checkbox
             
             rowindex +=  1
         
-        self.is_loading_mapping = False
+        #self.is_loading_mapping = False
     
     def _tabLayersMappingCellChanged(self, currentRow, currentColumn, previousRow, previousColumn):
         
         # Update mapping
         self._updateMappingFromUI(previousRow)
         
-        # Layer mapping corresponding to the selected row
-        layer_mapping = self._getCurrentLayersMapping()
-        
         # Load mapping into the table
         self._loadCurrentFieldMapping()
     
     def _comboboxQgisLayersIndexChanged(self, index):
+        # Get the row of the combobox which changed
         rowindex = 0
         
         for i in range(self.tabLayersMapping.rowCount()):
@@ -205,35 +202,29 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
                 rowindex = i
                 
         # Layer mapping corresponding to the selected row
-        self._getCurrentLayersMapping(rowindex)
+        self._updateAndGetFieldsMapping(rowindex)
         
         if rowindex == self.tabLayersMapping.currentRow():
             self._loadCurrentFieldMapping()
     
-    def _getCurrentLayersMapping(self, rowindex = None):
+    def _updateAndGetFieldsMapping(self, layersmapping_rowindex = None):
         '''
         Gets the current field mapping corresponding to the selected layers mapping
         '''
         
-        if rowindex is None:
-            rowindex = self.tabLayersMapping.currentRow()
+        if layersmapping_rowindex is None:
+            layersmapping_rowindex = self.tabLayersMapping.currentRow()
             
-        dxf_layername = self._getCellValue(self.tabLayersMapping, rowindex, 0)
-        qgis_layer = self._getLayerFromTableName(self._getCellValue(self.tabLayersMapping, rowindex, 1)[1])
+        dxf_layername = self._getCellValue(self.tabLayersMapping, layersmapping_rowindex, 0)
+        qgis_layer = self._getQgisLayerFromTableName(self._getCellValue(self.tabLayersMapping, layersmapping_rowindex, 1)[1])
         qgis_tablename = PagLuxembourg.main.current_project.getLayerTableName(qgis_layer)
         
-        layer_mapping = self.mapping.getLayerMappingForSource(dxf_layername)
-        
-        # Get or add current layer mapping
-        if layer_mapping is None:
-            layer_mapping = LayerMapping()
-            layer_mapping.setSourceLayerName(dxf_layername)
-            layer_mapping.setSourceLayerFilter('Layer=\'{}\''.format(dxf_layername))
-            self.mapping.addLayerMapping(layer_mapping)
+        layer_mapping = self._getLayerMappingFromSourceDxfLayer(dxf_layername)
         
         # Check whether the destination layer is the same
         if qgis_tablename is None or layer_mapping.destinationLayerName() != qgis_tablename:
             layer_mapping.clearFieldMapping()
+            layer_mapping.setValid(False)
         
         # Add or update field mapping
         if qgis_layer is not None:
@@ -252,7 +243,7 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
         
         return layer_mapping
         
-    def _getLayerFromLayerName(self, layername):
+    def _getQgisLayerFromLayerName(self, layername):
         '''
         Gets the layer from the layer name
         '''
@@ -263,7 +254,7 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
         
         return None    
     
-    def _getLayerFromTableName(self, tablename):
+    def _getQgisLayerFromTableName(self, tablename):
         '''
         Gets the layer from the table name
         '''
@@ -280,7 +271,7 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
         '''
         
         # Current field mapping
-        layer_mapping = self._getCurrentLayersMapping()
+        layer_mapping = self._updateAndGetFieldsMapping()
         
         # Clear the table
         self.tabFieldsMapping.clearContents()
@@ -290,11 +281,11 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
         if layer_mapping.destinationLayerName() is None:
             return
         
-        qgis_layer = self._getLayerFromTableName(layer_mapping.destinationLayerName())
+        qgis_layer = self._getQgisLayerFromTableName(layer_mapping.destinationLayerName())
         qgis_fields = qgis_layer.dataProvider().fields()
         
         # Update label
-        self.lblCurrentFieldMapping.setText(QCoreApplication.translate('ImportDxfDialog','Mapping for DXF layer {} to QGIS layer {}').format(layer_mapping.sourceLayerName(), qgis_layer.name()))
+        self.lblCurrentFieldMapping.setText(QCoreApplication.translate('ImportDxfDialog','Mapping for DXF layer "{}" to QGIS layer "{}"').format(layer_mapping.sourceLayerName(), qgis_layer.name()))
         
         
         self.tabFieldsMapping.setRowCount(len(layer_mapping.fieldMappings()))
@@ -310,14 +301,14 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
             source, destination, constant_value, enabled = layer_mapping.getFieldMappingForDestination(field.name())
             
             self.tabFieldsMapping.setItem(rowindex, 0, QTableWidgetItem(destination)) # QGIS field
-            self.tabFieldsMapping.setCellWidget(rowindex, 1, self._getTableItemWidget(qgis_layer, field, constant_value)) # Constant value
+            self.tabFieldsMapping.setCellWidget(rowindex, 1, self._getFieldsMappingTableItemWidget(qgis_layer, field, constant_value)) # Constant value
             self.tabFieldsMapping.setCellWidget(rowindex, 2, self._getCenteredCheckbox(enabled)) # Enabled checkbox
             
             rowindex +=  1
         
-        self.is_loading_mapping = False
+        layer_mapping.setValid(True)
     
-    def _getTableItemWidget(self, layer, field, value):
+    def _getFieldsMappingTableItemWidget(self, layer, field, value):
         '''
         Gets the table widget corresponding to the current field
         
@@ -349,23 +340,20 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
         # Other editors
         return self._getTextbox(value)
         
-    def _updateMappingFromUI(self, displayedMapping_rowindex = None):
+    def _updateMappingFromUI(self, layersmapping_rowindex = None):
         
-        if displayedMapping_rowindex is None:
-            displayedMapping_rowindex = self.tabLayersMapping.currentRow()
+        if layersmapping_rowindex is None:
+            layersmapping_rowindex = self.tabLayersMapping.currentRow()
             
         newmapping = Mapping()
         
-        for layer_rowindex in range(self.tabLayersMapping.rowCount()):
-            dxf_layername = self._getCellValue(self.tabLayersMapping, layer_rowindex, 0)
+        for layermapping_rowindex in range(self.tabLayersMapping.rowCount()):
+            dxf_layername = self._getCellValue(self.tabLayersMapping, layermapping_rowindex, 0)
             
             # Layer mapping
-            layer_mapping = self.mapping.getLayerMappingForSource(dxf_layername)
-            if layer_mapping is None:
-                layer_mapping = LayerMapping()
-                layer_mapping.setSourceLayerName(dxf_layername)
+            layer_mapping = self._getLayerMappingFromSourceDxfLayer(dxf_layername)
             
-            qgis_layer = self._getLayerFromTableName(self._getCellValue(self.tabLayersMapping, layer_rowindex, 1)[1])
+            qgis_layer = self._getQgisLayerFromTableName(self._getCellValue(self.tabLayersMapping, layermapping_rowindex, 1)[1])
             qgis_tablename = PagLuxembourg.main.current_project.getLayerTableName(qgis_layer)
         
             # Check whether the destination layer is the same
@@ -376,10 +364,10 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
             layer_mapping.setDestinationLayerName(qgis_tablename)
             
             # Set is enabled
-            layer_mapping.setEnabled(self._getCellValue(self.tabLayersMapping, layer_rowindex, 2))
+            layer_mapping.setEnabled(self._getCellValue(self.tabLayersMapping, layermapping_rowindex, 2))
             
             # If row is selected, update field mapping
-            if layer_rowindex == displayedMapping_rowindex:
+            if layermapping_rowindex == layersmapping_rowindex:
                 layer_mapping.clearFieldMapping()
                 for field_rowindex in range(self.tabFieldsMapping.rowCount()):
                     qgis_field = self._getCellValue(self.tabFieldsMapping, field_rowindex, 0)
@@ -400,27 +388,15 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
         :rtype: Boolean
         '''
         
-        return True
-    
-        mapping = self._getMapping().fieldMappings()
-        unique_qgisfields = list()
+        self._updateMappingFromUI()
         
-        for shpfield_index, qgisfield_index, constant_value, enabled in mapping:
-            # Check whether QGIS field is empty
-            if qgisfield_index < 0:
+        # Loop layer mappings to check whether it is valid
+        for layer_mapping in self.mapping.layerMappings():
+            if layer_mapping.isEnabled() and not layer_mapping.isValid():
                 QMessageBox.critical(self, 
-                                 QCoreApplication.translate('ImportShpDialog','Error'),
-                                 QCoreApplication.translate('ImportShpDialog','No QGIS field selected for SHP field {}.').format(self.shpfields[shpfield_index].name()))
+                                 QCoreApplication.translate('ImportDxfDialog','Error'),
+                                 QCoreApplication.translate('ImportDxfDialog','Mapping for DXF layer {} is not valid, please check it again.').format(layer_mapping.sourceLayerName()))
                 return False
-            
-            # Check whether QGIS field is unique
-            if qgisfield_index in unique_qgisfields:
-                QMessageBox.critical(self, 
-                                 QCoreApplication.translate('ImportShpDialog','Error'),
-                                 QCoreApplication.translate('ImportShpDialog','QGIS field {} is selected more than one time.').format(self.qgislayers[self.cbbLayers.currentIndex()].dataProvider().fields()[qgisfield_index].name()))
-                return False
-            
-            unique_qgisfields.append(qgisfield_index)
         
         return True
     
@@ -428,8 +404,6 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
         '''
         Launch the import
         '''
-        
-        self._updateMappingFromUI()
         
         if not self._validateMapping():
             return
@@ -443,7 +417,7 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
                 continue
             
             # QGIS layer
-            qgis_layer = self._getLayerFromTableName(layer_mapping.destinationLayerName())
+            qgis_layer = self._getQgisLayerFromTableName(layer_mapping.destinationLayerName())
             
             layer_indexmapping = layer_mapping.asIndexFieldMappings(qgis_layer.dataProvider().fields())
             
@@ -474,10 +448,64 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
         '''
         Load a JSON configuration
         '''
-        pass
+        
+        # Select config file to load
+        dialog = QFileDialog()
+        dialog.setFileMode(QFileDialog.ExistingFile)
+        dialog.setOption(QFileDialog.ReadOnly)
+        dialog.setNameFilter('Json file (*.json)');
+        dialog.setWindowTitle(QCoreApplication.translate('ImportDxfDialog','Select the configuration file to load'))
+        dialog.setSizeGripEnabled(False)
+        result = dialog.exec_()
+        
+        if result == 0:
+            return
+        
+        selected_files = dialog.selectedFiles()
+        
+        if len(selected_files)==0:
+            return
+        
+        filename = selected_files[0]
+        
+        # Load mapping
+        self.mapping.parseJson(filename)
+        
+        self._loadLayersMapping()
         
     def _saveConfig(self):
         '''
         Save the configuration to JSON
         '''
-        pass
+        
+        if not self._validateMapping():
+            return
+        
+        # Select json file to save
+        dialog = QFileDialog()
+        dialog.setFileMode(QFileDialog.AnyFile)
+        dialog.setAcceptMode(QFileDialog.AcceptSave)
+        dialog.setNameFilter('Json file (*.json)');
+        dialog.setWindowTitle(QCoreApplication.translate('ImportDxfDialog','Select the json location'))
+        dialog.setSizeGripEnabled(False)
+        result = dialog.exec_()
+        
+        if result == 0:
+            return
+        
+        selected_files = dialog.selectedFiles()
+        
+        if len(selected_files) == 0:
+            return
+        
+        filename = selected_files[0]
+        
+        if not filename.endswith('.json'):
+            filename += '.json'
+        
+        # Generates the mapping and save it
+        self.mapping.writeJson(filename)
+        
+        QMessageBox.information(self, 
+                                QCoreApplication.translate('ImportDxfDialog','Success'),
+                                QCoreApplication.translate('ImportDxfDialog','Mapping configuration saved'))

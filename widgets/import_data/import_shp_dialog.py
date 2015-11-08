@@ -371,6 +371,9 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         Save the configuration to JSON
         '''
         
+        if not self._validateMapping():
+            return
+        
         # Select json file to save
         dialog = QFileDialog()
         dialog.setFileMode(QFileDialog.AnyFile)
