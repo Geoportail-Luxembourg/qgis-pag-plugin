@@ -36,11 +36,6 @@
         <translation>Aucune erreur trouvée.</translation>
     </message>
     <message>
-        <location filename="data_checker.py" line="111"/>
-        <source>Geometry type mismatch</source>
-        <translation>Types de géometries différents</translation>
-    </message>
-    <message>
         <location filename="data_checker.py" line="119"/>
         <source>Nullable field is missing</source>
         <translation>Attribut facultatif manquant</translation>
@@ -51,11 +46,6 @@
         <translation>Attribut obligatoire manquant</translation>
     </message>
     <message>
-        <location filename="data_checker.py" line="134"/>
-        <source>Field datatype mismatch</source>
-        <translation>Type de l&apos;attribut différent</translation>
-    </message>
-    <message>
         <location filename="data_checker.py" line="207"/>
         <source>Null value in non nullable field</source>
         <translation>Valeur nulle dans un attribut obligatoire</translation>
@@ -64,6 +54,36 @@
         <location filename="data_checker.py" line="259"/>
         <source>Geometry is empty</source>
         <translation>Géometrie vide</translation>
+    </message>
+    <message>
+        <location filename="data_checker.py" line="111"/>
+        <source>Geometry type mismatch, expected : {}</source>
+        <translation>Géometrie différente, attendue : {}</translation>
+    </message>
+    <message>
+        <location filename="data_checker.py" line="134"/>
+        <source>Field datatype mismatch, expected : {}</source>
+        <translation>Type différent, attendu : {}</translation>
+    </message>
+    <message>
+        <location filename="data_checker.py" line="219"/>
+        <source>Value ({}) less than minimum value ({})</source>
+        <translation>Valeur ({}) inférieure à la valeur minimale ({})</translation>
+    </message>
+    <message>
+        <location filename="data_checker.py" line="225"/>
+        <source>Value ({}) greater than maximum value ({})</source>
+        <translation>Valeur ({}) supérieure à la valeur maximale ({})</translation>
+    </message>
+    <message>
+        <location filename="data_checker.py" line="236"/>
+        <source>Text length ({}) greater than field length ({})</source>
+        <translation>Longueur de texte ({}) supérieure ({})</translation>
+    </message>
+    <message>
+        <location filename="data_checker.py" line="241"/>
+        <source>Text ({}) not in field list of values</source>
+        <translation>Valeur ({}) absente de la liste de valeur</translation>
     </message>
 </context>
 <context>
@@ -197,22 +217,22 @@
 <context>
     <name>ErrorSummaryDialog</name>
     <message>
-        <location filename="error_summary_dialog.py" line="62"/>
+        <location filename="error_summary_dialog.py" line="63"/>
         <source>Layer</source>
         <translation>Couche</translation>
     </message>
     <message>
-        <location filename="error_summary_dialog.py" line="62"/>
+        <location filename="error_summary_dialog.py" line="63"/>
         <source>Field name</source>
         <translation>Attribut</translation>
     </message>
     <message>
-        <location filename="error_summary_dialog.py" line="62"/>
+        <location filename="error_summary_dialog.py" line="63"/>
         <source>Error</source>
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="error_summary_dialog.py" line="62"/>
+        <location filename="error_summary_dialog.py" line="63"/>
         <source>Feature ID</source>
         <translation>ID entité</translation>
     </message>
@@ -222,7 +242,7 @@
     <message>
         <location filename="export_gml.py" line="55"/>
         <source>Select the gml location</source>
-        <translation>Sélectionner le nom du ficher GML</translation>
+        <translation>Sélectionner le nom du fichier GML</translation>
     </message>
     <message>
         <location filename="export_gml.py" line="74"/>
@@ -263,7 +283,7 @@
     <message>
         <location filename="import_data.py" line="44"/>
         <source>Select the file to import</source>
-        <translation>Séelectionner le fichier à importer</translation>
+        <translation>Sélectionner le fichier à importer</translation>
     </message>
     <message>
         <location filename="import_gml.py" line="58"/>
@@ -374,7 +394,7 @@
     <message>
         <location filename="import_shp_dialog.py" line="331"/>
         <source>Importation was successful</source>
-        <translation>L'importation du Shapefile s'est déroulée avec succès</translation>
+        <translation>L&apos;importation du Shapefile s&apos;est déroulée avec succès</translation>
     </message>
     <message>
         <location filename="import_shp_dialog.py" line="65"/>
@@ -399,7 +419,7 @@
     <message>
         <location filename="import_shp_dialog.py" line="76"/>
         <source>Shapefile is not valid</source>
-        <translation>Le shapefile n'est pas valide</translation>
+        <translation>Le shapefile n&apos;est pas valide</translation>
     </message>
     <message>
         <location filename="import_shp_dialog.py" line="136"/>
@@ -409,12 +429,12 @@
     <message>
         <location filename="import_shp_dialog.py" line="299"/>
         <source>No QGIS field selected for SHP field {}.</source>
-        <translation>Aucun attribut QGIS sélectionné pour l'attribut SHP {}.</translation>
+        <translation>Aucun attribut QGIS sélectionné pour l&apos;attribut SHP {}.</translation>
     </message>
     <message>
         <location filename="import_shp_dialog.py" line="306"/>
         <source>QGIS field {} is selected more than one time.</source>
-        <translation>L'attribut QGIS {} est sélectionné plus d'une fois.</translation>
+        <translation>Plusieurs attributs SHP ne peuvent être reliés au même attribut QGIS {}.</translation>
     </message>
     <message>
         <location filename="import_shp_dialog.py" line="346"/>
@@ -530,12 +550,25 @@
     <message>
         <location filename="main.py" line="280"/>
         <source>The &quot;Topology Checker&quot; plugin is required by the &quot;PAG Luxembourg&quot;, please install it and restart QGIS.</source>
-        <translation>Le plugin &quot;Topology Checker&quot; est requis par le plugin &quot;PAG Luxembourg&quot;, merci de l'installer et de redémarrer QGIS.</translation>
+        <translation>Le plugin &quot;Topology Checker&quot; est requis par le plugin &quot;PAG Luxembourg&quot;, merci de l&apos;installer et de redémarrer QGIS.</translation>
     </message>
     <message>
         <location filename="main.py" line="282"/>
         <source>Show plugin manager</source>
         <translation>Afficher le gestionnaire de plugins</translation>
+    </message>
+</context>
+<context>
+    <name>StylizeProject</name>
+    <message>
+        <location filename="stylize.py" line="59"/>
+        <source>Success</source>
+        <translation>Succès</translation>
+    </message>
+    <message>
+        <location filename="stylize.py" line="59"/>
+        <source>The layers styling is finished.</source>
+        <translation>La symbolisation des couches est terminée.</translation>
     </message>
 </context>
 </TS>
