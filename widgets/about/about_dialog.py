@@ -24,8 +24,8 @@
 import os
 
 from PyQt4 import QtGui, uic
-from PyQt4.QtGui import QFileDialog, QMessageBox, QPixmap
-from PyQt4.QtCore import QCoreApplication
+from PyQt4.QtGui import QFileDialog, QMessageBox, QPixmap, QDesktopServices
+from PyQt4.QtCore import QCoreApplication, QUrl
 
 import PagLuxembourg.main
 
@@ -62,3 +62,11 @@ class AboutDialog(QtGui.QDialog, FORM_CLASS):
             'logo_arxit.png')
         pixmap = QPixmap(logo_path)
         self.lblLogoArxit.setPixmap(pixmap)
+    
+    def _showHelp(self):
+        help_path = os.path.join(
+            PagLuxembourg.main.plugin_dir,
+            'help',
+            'user',
+            'index.html')
+        QDesktopServices.openUrl(QUrl('file:///' + help_path, QUrl.TolerantMode))
