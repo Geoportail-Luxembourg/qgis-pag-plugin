@@ -108,7 +108,7 @@ class DataChecker(object):
         
         # Check geometry type
         if xsd_type.geometry_type is not None and XSD_QGIS_GEOMETRYTYPE_MAP[xsd_type.geometry_type] != layer.geometryType():
-            fatal_errors.append((layer, None, QCoreApplication.translate('DataChecker','Geometry type mismatch')))
+            fatal_errors.append((layer, None, QCoreApplication.translate('DataChecker','Geometry type mismatch, expected : {}').format(xsd_type.geometry_type)))
         
         # Check field structure
         for field in xsd_type.fields:
@@ -131,7 +131,7 @@ class DataChecker(object):
                     break
             
             if not found:
-                fatal_errors.append((layer, field, QCoreApplication.translate('DataChecker','Field datatype mismatch')))
+                fatal_errors.append((layer, field, QCoreApplication.translate('DataChecker','Field datatype mismatch, expected : {}').format(field.type)))
         
         return warn_errors, fatal_errors
     
@@ -216,13 +216,13 @@ class DataChecker(object):
             if xsd_field.minvalue is not None:
                 min_value = float(xsd_field.minvalue)
                 if numeric_value < min_value:
-                    errors.append((feature, xsd_field, QCoreApplication.translate('DataChecker','Value ({}) less than minimum value ({})'.format(numeric_value, min_value))))
+                    errors.append((feature, xsd_field, QCoreApplication.translate('DataChecker','Value ({}) less than minimum value ({})').format(numeric_value, min_value)))
             
             # Check max value
             if xsd_field.maxvalue is not None:
                 max_value = float(xsd_field.maxvalue)
                 if numeric_value > max_value:
-                    errors.append((feature, xsd_field, QCoreApplication.translate('DataChecker','Value ({}) greater than maximum value ({})'.format(numeric_value, max_value))))
+                    errors.append((feature, xsd_field, QCoreApplication.translate('DataChecker','Value ({}) greater than maximum value ({})').format(numeric_value, max_value)))
             
         # Check string values
         if xsd_field.type == DataType.STRING:
@@ -233,12 +233,12 @@ class DataChecker(object):
                 text_length = len(text_value)
                 max_length = int(xsd_field.length)
                 if text_length > max_length:
-                    errors.append((feature, xsd_field, QCoreApplication.translate('DataChecker','Text length ({}) greater than field length ({})'.format(text_length, max_length))))
+                    errors.append((feature, xsd_field, QCoreApplication.translate('DataChecker','Text length ({}) greater than field length ({})').format(text_length, max_length)))
             
             # Check enumeration
             if xsd_field.listofvalues is not None:
                 if text_value not in xsd_field.listofvalues:
-                    errors.append((feature, xsd_field, QCoreApplication.translate('DataChecker','Text ({}) not in field list of values'.format(text_value))))
+                    errors.append((feature, xsd_field, QCoreApplication.translate('DataChecker','Text ({}) not in field list of values').format(text_value)))
         
         return errors
     

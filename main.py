@@ -33,6 +33,7 @@ from widgets.export_gml.export_gml import *
 from widgets.stylize.stylize import *
 from widgets.data_checker.data_checker import *
 from widgets.topology.topology import *
+from widgets.about.about import *
 # Schema
 from PagLuxembourg.schema import *
 from PagLuxembourg.project import *
@@ -249,10 +250,11 @@ class PAGLuxembourg(object):
             self.iface.initializationCompleted.connect(self._showMissingTopolPluginMessage)
         
         # About
+        self.about_widget = About()
         self.add_action(
-            ':/plugins/PagLuxembourg/icon.png',
+            ':/plugins/PagLuxembourg/widgets/about/icon.png',
             text=self.tr(u'About'),
-            callback=None,
+            callback=self.about_widget.run,
             status_tip=self.tr(u'About the PAG plugin'),
             parent=self.iface.mainWindow())
         

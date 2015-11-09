@@ -9,6 +9,7 @@ import json
 
 from qgis.core import *
 from PyQt4.QtGui import QAction
+from PyQt4.QtCore import QCoreApplication
 
 import PagLuxembourg.main
 
@@ -65,10 +66,10 @@ class TopologyChecker(object):
         for rule in config['Rules']:
             config_rule = TopologyRule()
             config_rule.layer1 = str(rule['Layer1'])
-            config_rule.layer1 = config_rule.layer1 if config_rule.layer1 is not None and len(config_rule.layer1) >0 else 'No layer'
+            config_rule.layer1 = config_rule.layer1 if config_rule.layer1 is not None and len(config_rule.layer1) >0 else QCoreApplication.translate('rulesDialog','No layer')
             config_rule.layer2 = str(rule['Layer2'])
-            config_rule.layer2 = config_rule.layer2 if config_rule.layer2 is not None and len(config_rule.layer2) >0 else 'No layer'
-            config_rule.rule = str(rule['Rule']).lower()
+            config_rule.layer2 = config_rule.layer2 if config_rule.layer2 is not None and len(config_rule.layer2) >0 else QCoreApplication.translate('rulesDialog','No layer')
+            config_rule.rule = QCoreApplication.translate('topolTest',str(rule['Rule']).lower())
             config_rule.tolerance = str(rule['Tolerance'])
             
             if config_rule not in project_rules:
@@ -93,8 +94,8 @@ class TopologyChecker(object):
         layer2_table = current_project.getUriInfos(layer2.source())[1] if layer2 is not None else None
         
         result = TopologyRule()
-        result.layer1 = str(layer1_table) if layer1_table is not None and len(layer1_table)>0 else 'No layer'
-        result.layer2 = str(layer2_table) if layer2_table is not None and len(layer2_table)>0 else 'No layer'
+        result.layer1 = str(layer1_table) if layer1_table is not None and len(layer1_table)>0 else QCoreApplication.translate('rulesDialog','No layer')
+        result.layer2 = str(layer2_table) if layer2_table is not None and len(layer2_table)>0 else QCoreApplication.translate('rulesDialog','No layer')
         result.rule = str(rule) if rule is not None else None
         result.tolerance = str(tolerance) if tolerance is not None else None
         
@@ -117,7 +118,7 @@ class TopologyChecker(object):
                 rule.layer2=layerid
         
         # Write rule
-        project.writeEntry(TOPOL_SECTION, "/testname_" + project_rules_count, rule.rule)
+        project.writeEntry(TOPOL_SECTION, "/testname_" + project_rules_count, QCoreApplication.translate('topolTest',rule.rule))
         project.writeEntry(TOPOL_SECTION, "/tolerance_" + project_rules_count, rule.tolerance)
         project.writeEntry(TOPOL_SECTION, "/layer1_" + project_rules_count, rule.layer1)
         project.writeEntry(TOPOL_SECTION, "/layer2_" + project_rules_count, rule.layer2)
