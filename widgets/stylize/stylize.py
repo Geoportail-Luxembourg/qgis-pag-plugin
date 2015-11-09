@@ -7,6 +7,7 @@ Created on 22 sept. 2015
 import os
 
 from qgis.core import *
+from PyQt4.QtCore import QCoreApplication
 
 import PagLuxembourg.main
 
@@ -54,6 +55,9 @@ class StylizeProject(object):
                 continue
             
             self.stylizeLayer(layer, type)
+        
+        PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('StylizeProject','Success'), 
+                                                                   QCoreApplication.translate('StylizeProject','The layers styling is finished.'))
     
     def stylizeLayer(self, layer, type):
         '''

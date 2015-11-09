@@ -57,14 +57,17 @@ class ErrorSummaryDialog(QtGui.QDialog, FORM_CLASS):
                                                       QCoreApplication.translate('ErrorSummaryDialog','Layer'),
                                                       QCoreApplication.translate('ErrorSummaryDialog','Field name'),
                                                       QCoreApplication.translate('ErrorSummaryDialog','Error')])
-        self.tabSchemaErrors.horizontalHeader().setResizeMode(QHeaderView.Stretch);
+        self.tabSchemaErrors.setColumnWidth(0, 150)
+        self.tabSchemaErrors.setColumnWidth(1, 150)
         
         self.tabDataErrors.setHorizontalHeaderLabels([
                                                       QCoreApplication.translate('ErrorSummaryDialog','Layer'),
                                                       QCoreApplication.translate('ErrorSummaryDialog','Feature ID'),
                                                       QCoreApplication.translate('ErrorSummaryDialog','Field name'),
                                                       QCoreApplication.translate('ErrorSummaryDialog','Error')])
-        self.tabDataErrors.horizontalHeader().setResizeMode(QHeaderView.Stretch);
+        self.tabDataErrors.setColumnWidth(0, 150)
+        self.tabDataErrors.setColumnWidth(1, 60)
+        self.tabDataErrors.setColumnWidth(2, 150)
         self.tabDataErrors.currentCellChanged.connect(self._tabDataErrorsCellChanged)
         
         self._loadSchemaErrors()
