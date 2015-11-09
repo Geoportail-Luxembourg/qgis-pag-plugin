@@ -29,7 +29,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Fermer</string>
+    <string>Close</string>
    </property>
   </widget>
   <widget class="QGroupBox" name="gbSchemaErrors">
