@@ -21,7 +21,7 @@
  ***************************************************************************/
 '''
 from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication
-from PyQt4.QtGui import QAction, QIcon
+from PyQt4.QtGui import QAction, QIcon, QPushButton
 # Initialize Qt resources from file resources.py
 import resources
 # Import the code for the dialog
@@ -232,8 +232,10 @@ class PAGLuxembourg(object):
             parent=self.iface.mainWindow()))
         
         # Topology checker
+        found = False
         for action in self.iface.vectorToolBar().actions():
             if action.parent().objectName()==u'qgis_plugin_topolplugin':
+                found = True
                 self.topology_widget = TopologyChecker(action)
                 self.pag_actions.append(self.add_action(
                     ':/plugins/PagLuxembourg/widgets/topology/icon.png',
@@ -241,6 +243,10 @@ class PAGLuxembourg(object):
                     callback=self.topology_widget.run,
                     status_tip=self.tr(u'Check layers topology according to predefined rules'),
                     parent=self.iface.mainWindow()))
+        
+        # Topology checker plugin is not enabled, ask the user to install it
+        if not found:
+            self.iface.initializationCompleted.connect(self._showMissingTopolPluginMessage)
         
         # About
         self.add_action(
@@ -264,6 +270,18 @@ class PAGLuxembourg(object):
         for action in self.pag_actions:
                 action.setEnabled(enabled)
     
+    def _showMissingTopolPluginMessage(self):
+        '''
+        Display a message to prompt the user to install the topology checker plugin
+        '''
+        
+        widget = self.iface.messageBar().createMessage(self.tr(u'PAG Luxembourg'),self.tr(u'The "Topology Checker" plugin is required by the "PAG Luxembourg", please install it and restart QGIS.'))
+        button = QPushButton(widget)
+        button.setText(self.tr(u'Show plugin manager'),)
+        button.pressed.connect(self.iface.actionManagePlugins().trigger)
+        widget.layout().addWidget(button)
+        self.iface.messageBar().pushWidget(widget, QgsMessageBar.CRITICAL)
+            
     def unload(self):
         '''
         Removes the plugin menu item and icon from QGIS GUI.

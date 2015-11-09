@@ -23,7 +23,7 @@ class ExportGML(object):
     Main class for the export data widget
     '''
     
-    data_checker = DataChecker()
+    
 
     def __init__(self):
         '''
@@ -40,6 +40,11 @@ class ExportGML(object):
         project = PagLuxembourg.main.current_project
         
         if not project.isPagProject():
+            return
+        
+        # Check data before exporting
+        self.data_checker = DataChecker()
+        if not self.data_checker.run():
             return
         
         # Select file to export
