@@ -427,6 +427,20 @@ class Project(QObject):
             
             # Update attributes editors
             self._updateLayerEditors(layer, type)
+        
+        # Add WMS basemap layer
+        ortho_url = 'url=http://wsinspire.geoportail.lu/oi&SLegend=0&crs=EPSG:2169&dpiMode=7&featureCount=10&format=image/jpeg&layers=1&styles='
+        ortho_found = False
+        for k,v in maplayers.iteritems():
+            if v.source() == ortho_url:
+                ortho_found = True
+                break
+        
+        if not ortho_found:
+            ortho_layer = QgsRasterLayer(ortho_url, 'Ortho 2013', 'wms')
+            QgsMapLayerRegistry.instance().addMapLayer(ortho_layer, False)
+            QgsProject.instance().layerTreeRoot().addLayer(ortho_layer)
+            main.qgis_interface.mapCanvas().setExtent(ortho_layer.extent())
 
         # Add topology rules
         TopologyChecker(None).updateProjectRules()
