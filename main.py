@@ -271,6 +271,10 @@ class PAGLuxembourg(object):
                 action.setEnabled(enabled)
     
     def _showMissingTopolPluginMessage(self):
+        '''
+        Display a message to prompt the user to install the topology checker plugin
+        '''
+        
         widget = self.iface.messageBar().createMessage(self.tr(u'PAG Luxembourg'),self.tr(u'The "Topology Checker" plugin is required by the "PAG Luxembourg", please install it and restart QGIS.'))
         button = QPushButton(widget)
         button.setText(self.tr(u'Show plugin manager'),)

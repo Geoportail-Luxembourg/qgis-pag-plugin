@@ -28,6 +28,9 @@ class DataChecker(object):
     def run(self):
         '''
         Runs the widget
+        
+        :returns: True if there's no errors
+        :rtype: Boolean
         '''
         
         project = PagLuxembourg.main.current_project
@@ -54,8 +57,23 @@ class DataChecker(object):
             layer_data_errors = self.checkLayerData(layer, type)
             data_errors.append(layer_data_errors)
         
-        self.dlg = ErrorSummaryDialog(layer_structure_errors, data_errors)
-        self.dlg.show()
+        # Flatten data errors
+        data_errors_flat = list()
+        for layer, errors in data_errors:
+            for feature, field, message in errors:
+                data_errors_flat.append((layer, feature, field, message))
+        
+        valid = (len(layer_structure_errors) + len(data_errors_flat)) == 0
+        
+        if valid:
+            PagLuxembourg.main.qgis_interface.messageBar().clearWidgets()
+            PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('DataChecker','Success'),
+                                                                       QCoreApplication.translate('DataChecker','No errors found.'))
+        else:
+            self.dlg = ErrorSummaryDialog(layer_structure_errors, data_errors)
+            self.dlg.show()
+        
+        return valid 
         
     # Datatype mapping allowed while checking. For a given XSD type, several QGIS type may be allowed or compatible
     XSD_QGIS_ALLOWED_DATATYPE_MAP = [(DataType.STRING, QVariant.String),
