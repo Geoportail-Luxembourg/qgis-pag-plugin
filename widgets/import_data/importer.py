@@ -334,7 +334,7 @@ class LayerMapping(object):
         self.setSourceLayerName(None)
         self.setDestinationLayerName(None)
         self.setSourceLayerFilter(None)
-        self.setEnabled(True)
+        self.setEnabled(False)
         self.setValid(False)
         self._mapping['FieldMapping'] = list()
     

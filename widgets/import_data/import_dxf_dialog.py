@@ -155,7 +155,7 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
         if layer_mapping is None:
             layer_mapping = LayerMapping()
             layer_mapping.setSourceLayerName(dxf_layername)
-            layer_mapping.setSourceLayerFilter(u'Layer=\'{}\''.format(dxf_layername))
+            layer_mapping.setSourceLayerFilter(u'Layer=\'{}\''.format(dxf_layername.replace('\'','\'\'')))
             self.mapping.addLayerMapping(layer_mapping)
         
         return layer_mapping
