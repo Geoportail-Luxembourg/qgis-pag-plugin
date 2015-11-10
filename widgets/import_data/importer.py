@@ -27,6 +27,7 @@ class Importer(object):
         dst_dp = dst_layer.dataProvider()
         dst_layer_fields = dst_dp.fields()
         newfeatures = list()
+        imported_extent = None
         
         feature_request = None
         
@@ -64,6 +65,12 @@ class Importer(object):
                         continue
                 else:
                     dst_feature.setGeometry(src_feature.geometry())
+                
+                # Update imported extent
+                if imported_extent is None:
+                    imported_extent = src_feature.geometry().boundingBox()
+                else:
+                    imported_extent.combineExtentWith(src_feature.geometry().boundingBox())
             
             newfeatures.append(dst_feature)
         
@@ -85,13 +92,7 @@ class Importer(object):
         dst_layer.reload()
         
         # Return extent
-        return src_layer.extent()
-    
-        # Zoom to selected
-        PagLuxembourg.main.qgis_interface.mapCanvas().zoomToSelected(dst_layer)
-        
-        PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('ImportShpDialog','Success'), 
-                                                                   QCoreApplication.translate('ImportShpDialog','Importation was successful'))
+        return imported_extent
         
     def _getCenteredCheckbox(self, checked = True):
         '''
@@ -248,8 +249,8 @@ class Importer(object):
         # Check whether it is an item
         item = table.item(row, column)
         if item is not None:
-            text = item.text()
-            return text if not text.isspace() else None
+            text = item.text().strip()
+            return text if not text == '' else None
         
         # It is a widget
         for child in table.cellWidget(row, column).children():
@@ -258,8 +259,8 @@ class Importer(object):
             elif type(child) is QComboBox:
                 return child.currentText(), child.itemData(child.currentIndex())
             elif type(child) is QLineEdit:
-                text = child.text()
-                return text if not text.isspace() else None
+                text = child.text().strip()
+                return text if not text == '' else None
             elif type(child) is QDoubleSpinBox:
                 return child.value()
             elif type(child) is QDateTimeEdit:

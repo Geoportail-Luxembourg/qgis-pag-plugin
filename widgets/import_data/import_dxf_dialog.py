@@ -430,6 +430,7 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
                 extent = self._importLayer(self.dxflayer_linestrings, qgis_layer, layer_indexmapping)
                 extent = self._importLayer(self.dxflayer_polygons, qgis_layer, layer_indexmapping)
             
+            # Update imported extent
             if extent is not None:
                     if imported_extent is None:
                         imported_extent = extent
