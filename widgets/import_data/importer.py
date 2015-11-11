@@ -85,7 +85,10 @@ class Importer(object):
         if not dst_layer.commitChanges():
             dst_layer.rollBack()
             PagLuxembourg.main.qgis_interface.messageBar().pushCritical(QCoreApplication.translate('Importer','Error'), 
-                                                                        QCoreApplication.translate('Importer','Commit error on layer {}').format(qgis_layer.name()))
+                                                                        QCoreApplication.translate('Importer','Commit error on layer {}').format(dst_layer.name()))
+            errors = dst_layer.commitErrors()
+            for error in errors:
+                PagLuxembourg.main.qgis_interface.messageBar().pushCritical(QCoreApplication.translate('Importer','Error'), error)
             return None
         
         # Reload layer
