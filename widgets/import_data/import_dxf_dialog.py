@@ -325,7 +325,7 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
         if layer.editorWidgetV2(field_index) == 'ValueMap':
             config = layer.editorWidgetV2Config(field_index)
             config = dict((v, k) for k, v in config.iteritems())
-            return self._getCombobox(config)
+            return self._getCombobox(config, value)
         
         # Field editor is range
         elif layer.editorWidgetV2(field_index) == 'Range':
