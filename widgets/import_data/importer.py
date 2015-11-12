@@ -28,6 +28,7 @@ class Importer(object):
         dst_layer_fields = dst_dp.fields()
         newfeatures = list()
         imported_extent = None
+        import_errors = False
         
         feature_request = None
         
@@ -58,12 +59,29 @@ class Importer(object):
                     src_polyline = src_feature.geometry().asPolyline()
                     if src_polyline[0] == src_polyline[-1]:
                         # It's a closed polyline
-                        dst_feature.setGeometry(QgsGeometry.fromPolygon([src_polyline]))
+                        src_polygon = QgsGeometry.fromPolygon([src_polyline])
+                        if src_polygon is None:
+                            QgsMessageLog.logMessage(QCoreApplication.translate('Importer','Invalid geometry : Handle = {}').format(src_feature.attribute('EntityHandle')), 'PAG Luxembourg', QgsMessageLog.CRITICAL)
+                            # PagLuxembourg.main.qgis_interface.openMessageLog() QGIS 2.12
+                            import_errors = True
+                            del dst_feature
+                            continue
+                        
+                        dst_feature.setGeometry(src_polygon)
                     else:
                         # It's a classical polyline, skip
                         del dst_feature
                         continue
                 else:
+                    #geometry_errors = src_feature.geometry().validateGeometry()
+                    if not src_feature.geometry().isGeosValid():
+                            QgsMessageLog.logMessage(QCoreApplication.translate('Importer','Invalid geometry : FID = {}').format(src_feature.id()), 'PAG Luxembourg', QgsMessageLog.CRITICAL)
+                            #for geometry_error in geometry_errors:
+                            #    QgsMessageLog.logMessage(geometry_error.what(), 'PAG Luxembourg', QgsMessageLog.CRITICAL)
+                            # PagLuxembourg.main.qgis_interface.openMessageLog() QGIS 2.12
+                            import_errors = True
+                            del dst_feature
+                            continue
                     dst_feature.setGeometry(src_feature.geometry())
                 
                 # Update imported extent
@@ -88,8 +106,13 @@ class Importer(object):
                                                                         QCoreApplication.translate('Importer','Commit error on layer {}').format(dst_layer.name()))
             errors = dst_layer.commitErrors()
             for error in errors:
-                PagLuxembourg.main.qgis_interface.messageBar().pushCritical(QCoreApplication.translate('Importer','Error'), error)
+                QgsMessageLog.logMessage(error, 'PAG Luxembourg', QgsMessageLog.CRITICAL)
             return None
+        
+        # On error
+        if import_errors:
+            PagLuxembourg.main.qgis_interface.messageBar().pushCritical(QCoreApplication.translate('Importer','Error'), 
+                                                                        QCoreApplication.translate('Importer','Some features were not imported, open the message log (bubble on bottom right of the screen)'))
         
         # Reload layer
         dst_layer.reload()
