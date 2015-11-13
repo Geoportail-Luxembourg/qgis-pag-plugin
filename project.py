@@ -9,7 +9,7 @@ from collections import OrderedDict
 from pyspatialite import dbapi2 as db
 
 from qgis.core import *
-from PyQt4.QtCore import QFileInfo, QVariant, QObject, pyqtSignal
+from PyQt4.QtCore import QFileInfo, QVariant, QObject, pyqtSignal, QSettings
 from PyQt4.QtGui import QMessageBox
 
 import main
@@ -68,6 +68,9 @@ class Project(QObject):
         # Topological settings
         self._setupTopologicalSettings()
         
+        # Activate the auto Show feature form on feature creation
+        self._activateAutoShowForm()
+        
         QgsProject.instance().write()
         
         self.ready.emit()
@@ -110,6 +113,9 @@ class Project(QObject):
         
         # Topological settings
         self._setupTopologicalSettings()
+        
+        # Activate the auto Show feature form on feature creation
+        self._activateAutoShowForm()
         
         self.creation_mode = False
         
@@ -214,6 +220,10 @@ class Project(QObject):
         QgsProject.instance().writeEntry('Digitizing', '/DefaultSnapToleranceUnit', QgsTolerance.Pixels)
         
         QgsProject.instance().snapSettingsChanged.emit()
+        
+    def _activateAutoShowForm(self):
+        settings = QSettings()
+        settings.setValue("/Map/identifyAutoFeatureForm", True)
         
     def _updateDatabase(self):
         '''
