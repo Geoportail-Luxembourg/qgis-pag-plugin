@@ -66,7 +66,8 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
                                                       QCoreApplication.translate('ImportShpDialog','SHP Field'),
                                                       QCoreApplication.translate('ImportShpDialog','QGIS Field'),
                                                       QCoreApplication.translate('ImportShpDialog','Enabled')])
-        self.tabMapping.horizontalHeader().setResizeMode(QHeaderView.Stretch);
+        self.tabMapping.setColumnWidth(0, 245)
+        self.tabMapping.setColumnWidth(1, 245)
         
         # Load shp layer
         self.shplayer = QgsVectorLayer(filename, filename, "ogr")
