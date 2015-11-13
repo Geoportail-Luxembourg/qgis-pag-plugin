@@ -44,7 +44,7 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
         self.tabLayersMapping.setHorizontalHeaderLabels([QCoreApplication.translate('ImportDxfDialog','DXF Layer'),
                                                          QCoreApplication.translate('ImportDxfDialog','QGIS Layer'),
                                                          QCoreApplication.translate('ImportDxfDialog','Enabled')])
-        self.tabLayersMapping.setColumnWidth(0, 490)
+        self.tabLayersMapping.setColumnWidth(0, 470)
         self.tabLayersMapping.setColumnWidth(1, 200)
         self.tabFieldsMapping.setHorizontalHeaderLabels([QCoreApplication.translate('ImportDxfDialog','QGIS Field'),
                                                          QCoreApplication.translate('ImportDxfDialog','Value'),
