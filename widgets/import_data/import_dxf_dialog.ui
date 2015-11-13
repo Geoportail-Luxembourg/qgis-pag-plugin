@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>550</width>
+    <width>800</width>
     <height>650</height>
    </rect>
   </property>
@@ -19,6 +19,18 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>800</width>
+    <height>650</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>800</width>
+    <height>650</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>Import DXF file</string>
   </property>
@@ -27,7 +39,7 @@
     <rect>
      <x>60</x>
      <y>10</y>
-     <width>481</width>
+     <width>731</width>
      <height>20</height>
     </rect>
    </property>
@@ -38,7 +50,7 @@
   <widget class="QPushButton" name="btnImport">
    <property name="geometry">
     <rect>
-     <x>430</x>
+     <x>680</x>
      <y>580</y>
      <width>111</width>
      <height>51</height>
@@ -95,7 +107,7 @@
     <rect>
      <x>10</x>
      <y>40</y>
-     <width>531</width>
+     <width>781</width>
      <height>231</height>
     </rect>
    </property>
@@ -107,7 +119,7 @@
      <rect>
       <x>10</x>
       <y>20</y>
-      <width>511</width>
+      <width>761</width>
       <height>201</height>
      </rect>
     </property>
@@ -133,7 +145,7 @@
     <rect>
      <x>10</x>
      <y>280</y>
-     <width>531</width>
+     <width>781</width>
      <height>281</height>
     </rect>
    </property>
@@ -145,7 +157,7 @@
      <rect>
       <x>10</x>
       <y>25</y>
-      <width>511</width>
+      <width>761</width>
       <height>16</height>
      </rect>
     </property>
@@ -158,7 +170,7 @@
      <rect>
       <x>10</x>
       <y>60</y>
-      <width>511</width>
+      <width>761</width>
       <height>201</height>
      </rect>
     </property>
