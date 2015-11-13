@@ -124,6 +124,20 @@ class PAGSchema(object):
         
         return None
     
+    def getTypeFromTableName(self, tablename):
+        '''
+        Get a type from the table name
+        
+        :param tablename: The table name (ex : ARTIKEL17.BIOTOPE_LIGNE)
+        :type tablename: str, QString
+        '''
+        
+        for type in self.types:
+            if type.name == tablename:
+                return type
+        
+        return None
+    
     def _getTopicMembers(self, typename, xml_root, ns):
         '''
         Parse XML node

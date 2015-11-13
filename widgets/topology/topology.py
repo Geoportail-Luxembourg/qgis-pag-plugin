@@ -52,6 +52,7 @@ class TopologyChecker(object):
         f = open(config_path, 'r')
         config_file = f.read()
         config = json.loads(config_file)
+        f.close()
         
         # Get project rules
         project_rules_count,topol_section_exists = QgsProject.instance().readNumEntry(TOPOL_SECTION, "/testCount" );
