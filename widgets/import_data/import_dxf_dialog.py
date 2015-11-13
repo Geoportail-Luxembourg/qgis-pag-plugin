@@ -5,7 +5,6 @@ Created on 05 nov. 2015
 '''
 
 import os
-import collections
 
 from PyQt4 import QtGui, uic
 from PyQt4.QtGui import QFileDialog, QMessageBox, QTableWidgetItem, QHeaderView, QColor, QCheckBox, QWidget, QHBoxLayout, QComboBox
@@ -325,7 +324,8 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
         if layer.editorWidgetV2(field_index) == 'ValueMap':
             config = layer.editorWidgetV2Config(field_index)
             config = dict((v, k) for k, v in config.iteritems())
-            return self._getCombobox(config, value)
+            ordered_config = OrderedDict(sorted(config.items(), key=lambda t: t[1]))
+            return self._getCombobox(ordered_config, value)
         
         # Field editor is range
         elif layer.editorWidgetV2(field_index) == 'Range':
