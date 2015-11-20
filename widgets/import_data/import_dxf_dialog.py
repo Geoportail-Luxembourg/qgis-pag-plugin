@@ -51,6 +51,9 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
         self.tabFieldsMapping.setColumnWidth(0, 200)
         self.tabFieldsMapping.setColumnWidth(1, 490)
         
+        self.chkEnableAllLayersMapping.clicked.connect(self._toggleLayersMappingCheckboxes)
+        self.chkEnableAllFieldsMapping.clicked.connect(self._toggleFieldsMappingCheckboxes)
+        
         # Load dxf layers
         self._loadDxfLayers(filename)
         
@@ -66,6 +69,12 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
         
         self._loadLayersMapping()
             
+    def _toggleLayersMappingCheckboxes(self):
+        self._setTableCheckboxChecked(self.tabLayersMapping, 2, self.chkEnableAllLayersMapping.isChecked())
+    
+    def _toggleFieldsMappingCheckboxes(self):
+        self._setTableCheckboxChecked(self.tabFieldsMapping, 2, self.chkEnableAllFieldsMapping.isChecked())
+        
     def _loadQgisLayers(self):
         '''
         Loads the QGIS layers

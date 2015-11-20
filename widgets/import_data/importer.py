@@ -139,6 +139,27 @@ class Importer(object):
         
         return widget
     
+    def _setCheckboxChecked(self, table, row, column, checked = True):
+        '''
+        Set the checked status of a checkbox in a table
+        '''
+        
+        # It is a widget
+        for child in table.cellWidget(row, column).children():
+            if type(child) is QCheckBox:
+                child.setChecked(checked)
+                return
+        
+        raise TypeError('No widget found')
+    
+    def _setTableCheckboxChecked(self, table, column, checked = True):
+        '''
+        Set the checked status of all checkboxes in a table
+        '''
+        
+        for row in range(table.rowCount()):
+            self._setCheckboxChecked(table, row, column, checked)
+    
     def _getCombobox(self, values, selected_value = None, currentindex_changed_callback = None):
         '''
         Get a combobox filled with the given values
@@ -360,7 +381,7 @@ class LayerMapping(object):
         self.setSourceLayerName(None)
         self.setDestinationLayerName(None)
         self.setSourceLayerFilter(None)
-        self.setEnabled(False)
+        self.setEnabled(True)
         self.setValid(False)
         self._mapping['FieldMapping'] = list()
     
