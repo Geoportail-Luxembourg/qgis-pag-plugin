@@ -51,9 +51,6 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
         self.tabFieldsMapping.setColumnWidth(0, 200)
         self.tabFieldsMapping.setColumnWidth(1, 490)
         
-        self.chkEnableAllLayersMapping.clicked.connect(self._toggleLayersMappingCheckboxes)
-        self.chkEnableAllFieldsMapping.clicked.connect(self._toggleFieldsMappingCheckboxes)
-        
         # Load dxf layers
         self._loadDxfLayers(filename)
         

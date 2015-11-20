@@ -82,6 +82,9 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         self._loadShpFields()
         self._loadQgisLayers()
         
+    def _toggleFieldsMappingCheckboxes(self):
+        self._setTableCheckboxChecked(self.tabMapping, 2, self.chkEnableAllFieldsMapping.isChecked())
+        
     def _loadShpFields(self):
         '''
         Loads the SHP layer fields available to import
