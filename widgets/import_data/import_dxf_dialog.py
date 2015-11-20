@@ -5,7 +5,6 @@ Created on 05 nov. 2015
 '''
 
 import os
-import collections
 
 from PyQt4 import QtGui, uic
 from PyQt4.QtGui import QFileDialog, QMessageBox, QTableWidgetItem, QHeaderView, QColor, QCheckBox, QWidget, QHBoxLayout, QComboBox
@@ -44,13 +43,13 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
         self.tabLayersMapping.setHorizontalHeaderLabels([QCoreApplication.translate('ImportDxfDialog','DXF Layer'),
                                                          QCoreApplication.translate('ImportDxfDialog','QGIS Layer'),
                                                          QCoreApplication.translate('ImportDxfDialog','Enabled')])
-        self.tabLayersMapping.setColumnWidth(0, 200)
+        self.tabLayersMapping.setColumnWidth(0, 460)
         self.tabLayersMapping.setColumnWidth(1, 200)
         self.tabFieldsMapping.setHorizontalHeaderLabels([QCoreApplication.translate('ImportDxfDialog','QGIS Field'),
                                                          QCoreApplication.translate('ImportDxfDialog','Value'),
                                                          QCoreApplication.translate('ImportDxfDialog','Enabled')])
         self.tabFieldsMapping.setColumnWidth(0, 200)
-        self.tabFieldsMapping.setColumnWidth(1, 200)
+        self.tabFieldsMapping.setColumnWidth(1, 490)
         
         # Load dxf layers
         self._loadDxfLayers(filename)
@@ -155,7 +154,7 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
         if layer_mapping is None:
             layer_mapping = LayerMapping()
             layer_mapping.setSourceLayerName(dxf_layername)
-            layer_mapping.setSourceLayerFilter('Layer=\'{}\''.format(dxf_layername))
+            layer_mapping.setSourceLayerFilter(u'Layer=\'{}\''.format(dxf_layername.replace('\'','\'\'')))
             self.mapping.addLayerMapping(layer_mapping)
         
         return layer_mapping
@@ -325,7 +324,8 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
         if layer.editorWidgetV2(field_index) == 'ValueMap':
             config = layer.editorWidgetV2Config(field_index)
             config = dict((v, k) for k, v in config.iteritems())
-            return self._getCombobox(config)
+            ordered_config = OrderedDict(sorted(config.items(), key=lambda t: t[1]))
+            return self._getCombobox(ordered_config, value)
         
         # Field editor is range
         elif layer.editorWidgetV2(field_index) == 'Range':
@@ -430,6 +430,7 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
                 extent = self._importLayer(self.dxflayer_linestrings, qgis_layer, layer_indexmapping)
                 extent = self._importLayer(self.dxflayer_polygons, qgis_layer, layer_indexmapping)
             
+            # Update imported extent
             if extent is not None:
                     if imported_extent is None:
                         imported_extent = extent

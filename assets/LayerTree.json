@@ -1,0 +1,128 @@
+{
+  "Name": "Root",
+  "IsGroup": true,
+  "TableName": "",
+  "Nodes": [
+    {
+      "Name": "PAP_APPROUVE",
+      "IsGroup": false,
+      "TableName": "PAG.PAP_APPROUVE",
+      "Nodes": []
+    },
+    {
+      "Name": "ZONES_QE",
+      "IsGroup": false,
+      "TableName": "PAG.ZONES_QE",
+      "Nodes": []
+    },
+    {
+      "Name": "Group1",
+      "IsGroup": true,
+      "TableName": "",
+      "Nodes": [
+        {
+          "Name": "GABARIT_A_SAUV_POINT",
+          "IsGroup": false,
+          "TableName": "PAG.GABARIT_A_SAUV_POINT",
+          "Nodes": []
+        },
+        {
+          "Name": "CONST_A_CONS_POINT",
+          "IsGroup": false,
+          "TableName": "PAG.CONST_A_CONS_POINT",
+          "Nodes": []
+        },
+        {
+          "Name": "BIOTOPE_POINT",
+          "IsGroup": false,
+          "TableName": "ARTIKEL17.BIOTOPE_POINT",
+          "Nodes": []
+        },
+        {
+          "Name": "ALIGN_A_RESP",
+          "IsGroup": false,
+          "TableName": "PAG.ALIGN_A_RESP",
+          "Nodes": []
+        },
+        {
+          "Name": "BIOTOPE_LIGNE",
+          "IsGroup": false,
+          "TableName": "ARTIKEL17.BIOTOPE_LIGNE",
+          "Nodes": []
+        },
+        {
+          "Name": "BIOTOPE_POLY",
+          "IsGroup": false,
+          "TableName": "ARTIKEL17.BIOTOPE_POLY",
+          "Nodes": []
+        },
+        {
+          "Name": "ZONE_SERV_URB",
+          "IsGroup": false,
+          "TableName": "PAG.ZONE_SERV_URB",
+          "Nodes": []
+        },
+        {
+          "Name": "COULOIRS_ET_ESP_RES",
+          "IsGroup": false,
+          "TableName": "PAG.COULOIRS_ET_ESP_RES",
+          "Nodes": []
+        },
+        {
+          "Name": "ZAD",
+          "IsGroup": false,
+          "TableName": "PAG.ZAD",
+          "Nodes": []
+        },
+        {
+          "Name": "NQ_PAP",
+          "IsGroup": false,
+          "TableName": "PAG.NQ_PAP",
+          "Nodes": []
+        },
+        {
+          "Name": "ZONES_SUPERPOSEES",
+          "IsGroup": false,
+          "TableName": "PAG.ZONES_SUPERPOSEES",
+          "Nodes": []
+        },
+        {
+          "Name": "CONST_A_CONS_POLY",
+          "IsGroup": false,
+          "TableName": "PAG.CONST_A_CONS_POLY",
+          "Nodes": []
+        },
+        {
+          "Name": "GABARIT_A_SAUV_POLY",
+          "IsGroup": false,
+          "TableName": "PAG.GABARIT_A_SAUV_POLY",
+          "Nodes": []
+        },
+        {
+          "Name": "EMPLAC_STAT",
+          "IsGroup": false,
+          "TableName": "PAG.EMPLAC_STAT",
+          "Nodes": []
+        },
+        {
+          "Name": "ZONAGE",
+          "IsGroup": false,
+          "TableName": "PAG.ZONAGE",
+          "Nodes": []
+        },
+        {
+          "Name": "PERIMETRE",
+          "IsGroup": false,
+          "TableName": "PAG.PERIMETRE",
+          "Nodes": []
+        }
+      ]
+    },
+    {
+      "Name": "PCN",
+      "IsGroup": false,
+      "TableName": "PAG.PCN",
+      "Nodes": []
+    }
+  ]
+}

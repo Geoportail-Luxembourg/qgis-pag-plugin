@@ -9,7 +9,7 @@ from collections import OrderedDict
 from pyspatialite import dbapi2 as db
 
 from qgis.core import *
-from PyQt4.QtCore import QFileInfo, QVariant, QObject, pyqtSignal
+from PyQt4.QtCore import QFileInfo, QVariant, QObject, pyqtSignal, QSettings
 from PyQt4.QtGui import QMessageBox
 
 import main
@@ -68,6 +68,9 @@ class Project(QObject):
         # Topological settings
         self._setupTopologicalSettings()
         
+        # Activate the auto Show feature form on feature creation
+        self._activateAutoShowForm()
+        
         QgsProject.instance().write()
         
         self.ready.emit()
@@ -110,6 +113,9 @@ class Project(QObject):
         
         # Topological settings
         self._setupTopologicalSettings()
+        
+        # Activate the auto Show feature form on feature creation
+        self._activateAutoShowForm()
         
         self.creation_mode = False
         
@@ -214,6 +220,10 @@ class Project(QObject):
         QgsProject.instance().writeEntry('Digitizing', '/DefaultSnapToleranceUnit', QgsTolerance.Pixels)
         
         QgsProject.instance().snapSettingsChanged.emit()
+        
+    def _activateAutoShowForm(self):
+        settings = QSettings()
+        settings.setValue("/Map/identifyAutoFeatureForm", True)
         
     def _updateDatabase(self):
         '''
@@ -400,59 +410,87 @@ class Project(QObject):
         Update layers attributes editors and add missing layers to the TOC
         '''
         
-        # Map layers in the TOC
-        maplayers = QgsMapLayerRegistry.instance().mapLayers()
+        # Get rules config
+        config_path = os.path.join(PagLuxembourg.main.plugin_dir,
+                               'assets',
+                               'LayerTree.json')
         
-        stylize = StylizeProject()
+        f = open(config_path, 'r')
+        config_file = f.read()
+        config = json.loads(config_file)
+        f.close()
         
-        # Iterates through XSD types
-        for type in main.xsd_schema.types:
-            uri = self.getTypeUri(type)
-            found = False
-            
-            # Check whether a layer with type data source exists in the map
-            for k,v in maplayers.iteritems():
-                if self.compareURIs(v.source(), uri):
-                    found = True
-                    layer = v
-                    break
-            
-            # If not found, add to the map
-            if not found:
-                layer = QgsVectorLayer(uri, type.friendlyName(), 'spatialite')
-                self._addMapLayer(layer, type)
-            
-            # Updates layers style
-            stylize.stylizeLayer(layer,type)
-            
-            # Update attributes editors
-            self._updateLayerEditors(layer, type)
+        main.qgis_interface.messageBar().clearWidgets()
+        
+        # Process root node tree
+        self._updateLayerTreeNode(config, config)
+        
+        # Add WMS basemap layer
+        ortho_url = 'url=http://wsinspire.geoportail.lu/oi&SLegend=0&crs=EPSG:2169&dpiMode=7&featureCount=10&format=image/jpeg&layers=1&styles='
+        ortho_found = False
+        for k,v in QgsMapLayerRegistry.instance().mapLayers().iteritems():
+            if v.source() == ortho_url:
+                ortho_found = True
+                break
+        
+        if not ortho_found:
+            ortho_layer = QgsRasterLayer(ortho_url, 'Ortho 2013', 'wms')
+            QgsMapLayerRegistry.instance().addMapLayer(ortho_layer, False)
+            QgsProject.instance().layerTreeRoot().addLayer(ortho_layer)
+            main.qgis_interface.mapCanvas().setExtent(ortho_layer.extent())
 
         # Add topology rules
         TopologyChecker(None).updateProjectRules()
                 
-    def _addMapLayer(self, layer, type):
+    def _updateLayerTreeNode(self, node, parentnode):
         '''
-        Adds a layer to the map
+        Update a layer tree node, a lyer group
         
-        :param layer: The layer to update
-        :type layer: QgsVectorLayer
+        :param node: The current node to update
+        :type node: dict
         
-        :param type: XSD schema type
-        :type type: PAGType
+        :param node: The parent node to update
+        :type node: dict
         '''
         
-        # Add to map
-        QgsMapLayerRegistry.instance().addMapLayer(layer)
+        parent = QgsProject.instance().layerTreeRoot()
         
-        # Add to the correct topic group
-        legend = main.qgis_interface.legendInterface()
+        if parentnode['Name'] != 'Root':
+            parent = parent.findGroup(parentnode['Name'])
         
-        if type.topic() not in legend.groups():
-            legend.addGroup(type.topic())
+        treenode = parent.findGroup(node['Name']) if node['Name'] != 'Root' else QgsProject.instance().layerTreeRoot()
+            
+        if treenode is None:
+            treenode = parent.addGroup(node['Name'])
         
-        group_index = legend.groups().index(type.topic())
-        legend.moveLayer(layer,group_index)
+        stylize = StylizeProject()
+        
+        for child in node['Nodes']:
+            if child['IsGroup']:
+                self._updateLayerTreeNode(child, node)
+            else:
+                xsd_type = main.xsd_schema.getTypeFromTableName(child['TableName'])
+                
+                # Type not found in XSD
+                if xsd_type is None:
+                    main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('Project','Error'),
+                                                                 QCoreApplication.translate('Project','Type not found in XSD : {}').format(child['TableName']))
+                    continue
+                
+                layer = self.getLayer(xsd_type)
+                
+                # Layer is in the TOC
+                if layer is None:
+                    uri = self.getTypeUri(xsd_type)
+                    layer = QgsVectorLayer(uri, child['Name'], 'spatialite')
+                    QgsMapLayerRegistry.instance().addMapLayer(layer, False)
+                    treenode.addLayer(layer)
+                
+                # Updates layers style
+                stylize.stylizeLayer(layer, xsd_type)
+                
+                # Update attributes editors
+                self._updateLayerEditors(layer, xsd_type)
         
     def getUriInfos(self, uri):
         '''
@@ -464,6 +502,7 @@ class Project(QObject):
         :returns: Database and table name
         :rtype: tuple(QString, QString)
         '''
+        
         db=''
         table=''
         split = uri.split(' ')

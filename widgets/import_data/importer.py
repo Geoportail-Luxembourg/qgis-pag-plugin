@@ -27,6 +27,8 @@ class Importer(object):
         dst_dp = dst_layer.dataProvider()
         dst_layer_fields = dst_dp.fields()
         newfeatures = list()
+        imported_extent = None
+        import_errors = False
         
         feature_request = None
         
@@ -57,13 +59,36 @@ class Importer(object):
                     src_polyline = src_feature.geometry().asPolyline()
                     if src_polyline[0] == src_polyline[-1]:
                         # It's a closed polyline
-                        dst_feature.setGeometry(QgsGeometry.fromPolygon([src_polyline]))
+                        src_polygon = QgsGeometry.fromPolygon([src_polyline])
+                        if src_polygon is None:
+                            QgsMessageLog.logMessage(QCoreApplication.translate('Importer','Invalid geometry : Handle = {}').format(src_feature.attribute('EntityHandle')), 'PAG Luxembourg', QgsMessageLog.CRITICAL)
+                            # PagLuxembourg.main.qgis_interface.openMessageLog() QGIS 2.12
+                            import_errors = True
+                            del dst_feature
+                            continue
+                        
+                        dst_feature.setGeometry(src_polygon)
                     else:
                         # It's a classical polyline, skip
                         del dst_feature
                         continue
                 else:
+                    #geometry_errors = src_feature.geometry().validateGeometry()
+                    if not src_feature.geometry().isGeosValid():
+                            QgsMessageLog.logMessage(QCoreApplication.translate('Importer','Invalid geometry : FID = {}').format(src_feature.id()), 'PAG Luxembourg', QgsMessageLog.CRITICAL)
+                            #for geometry_error in geometry_errors:
+                            #    QgsMessageLog.logMessage(geometry_error.what(), 'PAG Luxembourg', QgsMessageLog.CRITICAL)
+                            # PagLuxembourg.main.qgis_interface.openMessageLog() QGIS 2.12
+                            import_errors = True
+                            del dst_feature
+                            continue
                     dst_feature.setGeometry(src_feature.geometry())
+                
+                # Update imported extent
+                if imported_extent is None:
+                    imported_extent = src_feature.geometry().boundingBox()
+                else:
+                    imported_extent.combineExtentWith(src_feature.geometry().boundingBox())
             
             newfeatures.append(dst_feature)
         
@@ -78,20 +103,22 @@ class Importer(object):
         if not dst_layer.commitChanges():
             dst_layer.rollBack()
             PagLuxembourg.main.qgis_interface.messageBar().pushCritical(QCoreApplication.translate('Importer','Error'), 
-                                                                        QCoreApplication.translate('Importer','Commit error on layer {}').format(qgis_layer.name()))
+                                                                        QCoreApplication.translate('Importer','Commit error on layer {}').format(dst_layer.name()))
+            errors = dst_layer.commitErrors()
+            for error in errors:
+                QgsMessageLog.logMessage(error, 'PAG Luxembourg', QgsMessageLog.CRITICAL)
             return None
+        
+        # On error
+        if import_errors:
+            PagLuxembourg.main.qgis_interface.messageBar().pushCritical(QCoreApplication.translate('Importer','Error'), 
+                                                                        QCoreApplication.translate('Importer','Some features were not imported, open the message log (bubble on bottom right of the screen)'))
         
         # Reload layer
         dst_layer.reload()
         
         # Return extent
-        return src_layer.extent()
-    
-        # Zoom to selected
-        PagLuxembourg.main.qgis_interface.mapCanvas().zoomToSelected(dst_layer)
-        
-        PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('ImportShpDialog','Success'), 
-                                                                   QCoreApplication.translate('ImportShpDialog','Importation was successful'))
+        return imported_extent
         
     def _getCenteredCheckbox(self, checked = True):
         '''
@@ -248,8 +275,8 @@ class Importer(object):
         # Check whether it is an item
         item = table.item(row, column)
         if item is not None:
-            text = item.text()
-            return text if not text.isspace() else None
+            text = item.text().strip()
+            return text if not text == '' else None
         
         # It is a widget
         for child in table.cellWidget(row, column).children():
@@ -258,8 +285,8 @@ class Importer(object):
             elif type(child) is QComboBox:
                 return child.currentText(), child.itemData(child.currentIndex())
             elif type(child) is QLineEdit:
-                text = child.text()
-                return text if not text.isspace() else None
+                text = child.text().strip()
+                return text if not text == '' else None
             elif type(child) is QDoubleSpinBox:
                 return child.value()
             elif type(child) is QDateTimeEdit:
@@ -333,7 +360,7 @@ class LayerMapping(object):
         self.setSourceLayerName(None)
         self.setDestinationLayerName(None)
         self.setSourceLayerFilter(None)
-        self.setEnabled(True)
+        self.setEnabled(False)
         self.setValid(False)
         self._mapping['FieldMapping'] = list()
     

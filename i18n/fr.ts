@@ -359,27 +359,27 @@
         <translation>Le mapping pour le calque DXF {} n&apos;est pas valide, veuillez le vérifier.</translation>
     </message>
     <message>
-        <location filename="import_dxf_dialog.py" line="509"/>
+        <location filename="import_dxf_dialog.py" line="510"/>
         <source>Success</source>
         <translation>Succès</translation>
     </message>
     <message>
-        <location filename="import_dxf_dialog.py" line="442"/>
+        <location filename="import_dxf_dialog.py" line="443"/>
         <source>Importation was successful</source>
         <translation>L&apos;importation DXF s&apos;est déroulée avec succès</translation>
     </message>
     <message>
-        <location filename="import_dxf_dialog.py" line="457"/>
+        <location filename="import_dxf_dialog.py" line="458"/>
         <source>Select the configuration file to load</source>
         <translation>Sélectionnez le fichier de configuration à charger</translation>
     </message>
     <message>
-        <location filename="import_dxf_dialog.py" line="489"/>
+        <location filename="import_dxf_dialog.py" line="490"/>
         <source>Select the json location</source>
         <translation>Sélectionnez le fichier de configuration à enregistrer</translation>
     </message>
     <message>
-        <location filename="import_dxf_dialog.py" line="509"/>
+        <location filename="import_dxf_dialog.py" line="510"/>
         <source>Mapping configuration saved</source>
         <translation>Configuration du mapping enregistrée</translation>
     </message>
@@ -455,14 +455,29 @@
 <context>
     <name>Importer</name>
     <message>
-        <location filename="importer.py" line="80"/>
+        <location filename="importer.py" line="111"/>
         <source>Error</source>
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="importer.py" line="80"/>
+        <location filename="importer.py" line="102"/>
         <source>Commit error on layer {}</source>
         <translation>Erreur lors du commit sur la couche {}</translation>
+    </message>
+    <message>
+        <location filename="importer.py" line="64"/>
+        <source>Invalid geometry : Handle = {}</source>
+        <translation>Géométrie invalide : Handle = {}</translation>
+    </message>
+    <message>
+        <location filename="importer.py" line="111"/>
+        <source>Some features were not imported, open the message log (bubble on bottom right of the screen)</source>
+        <translation>Des entités n&apos;ont pas été importées, ouvrir le log de message (bulle en bas à droite de l&apos;écran)</translation>
+    </message>
+    <message>
+        <location filename="importer.py" line="77"/>
+        <source>Invalid geometry : FID = {}</source>
+        <translation>Géométrie invalide : FID = {}</translation>
     </message>
 </context>
 <context>
@@ -569,6 +584,14 @@
         <location filename="stylize.py" line="59"/>
         <source>The layers styling is finished.</source>
         <translation>La symbolisation des couches est terminée.</translation>
+    </message>
+</context>
+<context>
+    <name>rulesDialog</name>
+    <message>
+        <location filename="topology.py" line="98"/>
+        <source>No layer</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>
