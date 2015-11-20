@@ -69,6 +69,7 @@ class ErrorSummaryDialog(QtGui.QDialog, FORM_CLASS):
         self.tabDataErrors.setColumnWidth(1, 60)
         self.tabDataErrors.setColumnWidth(2, 150)
         self.tabDataErrors.currentCellChanged.connect(self._tabDataErrorsCellChanged)
+        self.tabDataErrors.cellDoubleClicked.connect(self._tabDataErrorsCellDblClicked)
         
         self._loadSchemaErrors()
         self._loadDataErrors()
@@ -106,3 +107,13 @@ class ErrorSummaryDialog(QtGui.QDialog, FORM_CLASS):
         layer, feature, field, message = self.data_errors[currentRow]
         layer.setSelectedFeatures([feature.id()])
         PagLuxembourg.main.qgis_interface.mapCanvas().zoomToSelected(layer)
+    
+    def _tabDataErrorsCellDblClicked(self, row, column):
+        # Deselect
+        layer, feature, field, message = self.data_errors[row]
+        # Start editing session
+        if not layer.isEditable():
+            layer.startEditing()
+        
+        PagLuxembourg.main.qgis_interface.legendInterface().setCurrentLayer(layer)
+        PagLuxembourg.main.qgis_interface.openFeatureForm(layer,feature)
