@@ -18,10 +18,10 @@
           <prop k="customdash_unit" v="MM"/>
           <prop k="draw_inside_polygon" v="0"/>
           <prop k="joinstyle" v="bevel"/>
-          <prop k="line_color" v="0,196,255,255"/>
+          <prop k="line_color" v="0,75,168,255"/>
           <prop k="line_style" v="solid"/>
-          <prop k="line_width" v="0.7056"/>
-          <prop k="line_width_unit" v="MM"/>
+          <prop k="line_width" v="2.5"/>
+          <prop k="line_width_unit" v="MapUnit"/>
           <prop k="offset" v="0"/>
           <prop k="offset_map_unit_scale" v="0,0"/>
           <prop k="offset_unit" v="MM"/>
