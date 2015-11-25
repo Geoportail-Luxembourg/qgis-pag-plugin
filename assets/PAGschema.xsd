@@ -223,6 +223,7 @@
               <xsd:enumeration value="EB"/>
               <xsd:enumeration value="FFH8150"/>
               <xsd:enumeration value="FFH8160"/>
+              <xsd:enumeration value="BG"/>
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:element>
@@ -635,7 +636,7 @@
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:element>
-        <xsd:element name="NOM_FICHIER_GR" minOccurs="0">
+        <xsd:element name="NOM_FICHIER_GR">
           <xsd:simpleType>
             <xsd:restriction base="xsd:normalizedString">
               <xsd:maxLength value="100"/>
@@ -662,7 +663,7 @@
         </xsd:element>
         <xsd:element name="GEOMETRIE" type="gml:SurfacePropertyType">
         </xsd:element>
-        <xsd:element name="DATE_MUTATION" minOccurs="0">
+        <xsd:element name="DATE_MUTATION">
           <xsd:simpleType>
             <xsd:restriction base="xsd:date">
             </xsd:restriction>
@@ -735,9 +736,9 @@
               <xsd:enumeration value="HOR"/>
               <xsd:enumeration value="PARC"/>
               <xsd:enumeration value="VERD"/>
-              <xsd:enumeration value="AGRI"/>
               <xsd:enumeration value="PORT_p"/>
               <xsd:enumeration value="PORT_m"/>
+              <xsd:enumeration value="ECO_c3"/>
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:element>
@@ -865,8 +866,6 @@
         <xsd:element name="CATEGORIE">
           <xsd:simpleType>
             <xsd:restriction base="xsd:normalizedString">
-              <xsd:enumeration value="ZUP_1"/>
-              <xsd:enumeration value="ZUP_2"/>
               <xsd:enumeration value="SPI_EC"/>
               <xsd:enumeration value="SPI_ENP"/>
               <xsd:enumeration value="ZRNP_G"/>
