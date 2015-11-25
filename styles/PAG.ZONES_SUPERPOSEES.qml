@@ -4,11 +4,23 @@
     <edittype widgetv2type="Hidden" name="OGC_FID">
       <widgetv2config fieldEditable="1" labelOnTop="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="CATEGORIE">
-      <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+    <edittype widgetv2type="ValueMap" name="CATEGORIE">
+      <widgetv2config fieldEditable="1" labelOnTop="0">
+        <value key="SPI_EC" value="SPI_EC"/>
+        <value key="SPI_ENP" value="SPI_ENP"/>
+        <value key="ZB" value="ZB"/>
+        <value key="ZE" value="ZE"/>
+        <value key="ZRNP_G" value="ZRNP_G"/>
+        <value key="ZRNP_I" value="ZRNP_I"/>
+        <value key="ZRNP_M" value="ZRNP_M"/>
+        <value key="ZR_SD" value="ZR_SD"/>
+        <value key="ZUP" value="ZUP"/>
+        <value key="ZUP_1" value="ZUP_1"/>
+        <value key="ZUP_2" value="ZUP_2"/>
+      </widgetv2config>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="NOM_FICHIER">
-      <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+    <edittype widgetv2type="FileName" name="NOM_FICHIER">
+      <widgetv2config fieldEditable="1" labelOnTop="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="GENRE">
       <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
@@ -24,8 +36,7 @@
       <category render="true" symbol="5" value="ZRNP_I" label="ZRNP_I"/>
       <category render="true" symbol="6" value="ZRNP_M" label="ZRNP_M"/>
       <category render="true" symbol="7" value="ZRNP_G" label="ZRNP_G"/>
-      <category render="true" symbol="8" value="ZUP_1" label="ZUP_1"/>
-      <category render="true" symbol="9" value="ZUP_2" label="ZUP_2"/>
+      <category render="true" symbol="8" value="ZUP" label="ZUP"/>
     </categories>
     <symbols>
       <symbol alpha="1" type="fill" name="0">
@@ -490,55 +501,6 @@
           </symbol>
         </layer>
       </symbol>
-      <symbol alpha="1" type="fill" name="9">
-        <layer pass="0" class="SimpleFill" locked="0">
-          <prop k="border_width_map_unit_scale" v="0,0"/>
-          <prop k="color" v="0,0,0,0"/>
-          <prop k="joinstyle" v="bevel"/>
-          <prop k="offset" v="0,0"/>
-          <prop k="offset_map_unit_scale" v="0,0"/>
-          <prop k="offset_unit" v="MM"/>
-          <prop k="outline_color" v="0,0,0,255"/>
-          <prop k="outline_style" v="solid"/>
-          <prop k="outline_width" v="0.24"/>
-          <prop k="outline_width_unit" v="MM"/>
-          <prop k="style" v="solid"/>
-        </layer>
-        <layer pass="0" class="LinePatternFill" locked="0">
-          <prop k="angle" v="0"/>
-          <prop k="color" v="0,0,255,255"/>
-          <prop k="distance" v="1"/>
-          <prop k="distance_map_unit_scale" v="0,0"/>
-          <prop k="distance_unit" v="MM"/>
-          <prop k="line_width" v="0.26"/>
-          <prop k="line_width_map_unit_scale" v="0,0"/>
-          <prop k="line_width_unit" v="MM"/>
-          <prop k="offset" v="0"/>
-          <prop k="offset_map_unit_scale" v="0,0"/>
-          <prop k="offset_unit" v="MM"/>
-          <prop k="outline_width_map_unit_scale" v="0,0"/>
-          <prop k="outline_width_unit" v="MM"/>
-          <symbol alpha="1" type="line" name="@9@1">
-            <layer pass="0" class="SimpleLine" locked="0">
-              <prop k="capstyle" v="square"/>
-              <prop k="customdash" v="5;2"/>
-              <prop k="customdash_map_unit_scale" v="0,0"/>
-              <prop k="customdash_unit" v="MM"/>
-              <prop k="draw_inside_polygon" v="0"/>
-              <prop k="joinstyle" v="bevel"/>
-              <prop k="line_color" v="110,110,110,255"/>
-              <prop k="line_style" v="solid"/>
-              <prop k="line_width" v="0.24"/>
-              <prop k="line_width_unit" v="MM"/>
-              <prop k="offset" v="0"/>
-              <prop k="offset_map_unit_scale" v="0,0"/>
-              <prop k="offset_unit" v="MM"/>
-              <prop k="use_custom_dash" v="0"/>
-              <prop k="width_map_unit_scale" v="0,0"/>
-            </layer>
-          </symbol>
-        </layer>
-      </symbol>
     </symbols>
     <source-symbol>
       <symbol alpha="1" type="fill" name="0">
@@ -618,7 +580,7 @@
     <property key="labeling/distMapUnitMaxScale" value="0"/>
     <property key="labeling/distMapUnitMinScale" value="0"/>
     <property key="labeling/enabled" value="true"/>
-    <property key="labeling/fieldName" value="CASE when( CODE = 'SPI_EC') then 'C' &#xd;&#xa;when (CODE = 'SPI_ENP') then 'N'&#xd;&#xa;when (CODE = 'ZRNP_G') then 'G'&#xd;&#xa;when (CODE = 'ZRNP_M') then 'M'&#xd;&#xa;when (CODE = 'ZRNP_I') then 'I'&#xd;&#xa;when (CODE = 'ZR_SD') then 'S'&#xd;&#xa;else''&#xd;&#xa;end&#xd;&#xa;&#xd;&#xa; "/>
+    <property key="labeling/fieldName" value="CASE when(  &quot;CATEGORIE&quot;  = 'SPI_EC') then 'C' &#xd;&#xa;when (&quot;CATEGORIE&quot;  = 'SPI_ENP') then 'N'&#xd;&#xa;when (&quot;CATEGORIE&quot;  = 'ZRNP_G') then 'G'&#xd;&#xa;when (&quot;CATEGORIE&quot;  = 'ZRNP_M') then 'M'&#xd;&#xa;when (&quot;CATEGORIE&quot;  = 'ZRNP_I') then 'I'&#xd;&#xa;when (&quot;CATEGORIE&quot;  = 'ZR_SD') then 'S'&#xa;when (&quot;CATEGORIE&quot; = 'ZUP') then&#xa;CASE when (  &quot;GENRE&quot; is not null and  &quot;GENRE&quot; !='')   then tostring(&quot;GENRE&quot;) end&#xd;&#xa;else''&#xd;&#xa;end&#xd;&#xa;&#xd;&#xa; "/>
     <property key="labeling/fontBold" value="false"/>
     <property key="labeling/fontCapitals" value="0"/>
     <property key="labeling/fontFamily" value=".Helvetica Neue DeskInterface"/>
