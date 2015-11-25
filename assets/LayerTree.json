@@ -68,7 +68,6 @@
           "TableName": "ARTIKEL17.BIOTOPE_POINT",
           "Nodes": []
         },
-
         {
           "Name": "BIOTOPE_LIGNE",
           "IsGroup": false,
@@ -130,8 +129,12 @@
           "Nodes": []
         }
       ]
-    
+    },
+    {
+      "Name": "Gestion",
+      "IsGroup": false,
+      "TableName": "GESTION.Gestion",
+      "Nodes": []
     }
-    ]
-  
+  ]
 }
