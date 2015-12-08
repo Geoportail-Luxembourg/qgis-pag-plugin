@@ -343,6 +343,10 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
             config = layer.editorWidgetV2Config(field_index)
             return self._getCalendar(config['display_format'], value)
         
+        # Field editor is simple filename
+        elif layer.editorWidgetV2(field_index) == 'SimpleFilename':
+            return self._getSimpleFilenamePicker(value)
+        
         # Other editors
         return self._getTextbox(value)
         
