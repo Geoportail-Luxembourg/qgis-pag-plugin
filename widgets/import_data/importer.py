@@ -12,6 +12,7 @@ from PyQt4.QtGui import QCheckBox, QWidget, QHBoxLayout, QComboBox, QDoubleSpinB
 from qgis.core import *
 
 import PagLuxembourg.main
+from PagLuxembourg.controls.filename import SimpleFilenamePicker
 
 class Importer(object):
     '''
@@ -276,6 +277,22 @@ class Importer(object):
                 
         return widget
     
+    def _getSimpleFilenamePicker(self, value = None):
+        '''
+        Get a combobox filled with the given values
+        
+        :param values: The filename
+        :type values: str
+        
+        :returns: A simple filename picker
+        :rtype: SimpleFilenamePicker
+        '''
+        
+        widget = SimpleFilenamePicker()
+        widget.setValue(value)
+                
+        return widget
+    
     def _getCellValue(self, table, row, column):
         '''
         Get the selected combobox text
@@ -300,11 +317,17 @@ class Importer(object):
             return text if not text == '' else None
         
         # It is a widget
-        for child in table.cellWidget(row, column).children():
+        widget = table.cellWidget(row, column)
+        if type(widget) is SimpleFilenamePicker:
+            return widget.value()
+        
+        for child in widget.children():
             if type(child) is QCheckBox:
                 return child.isChecked()
             elif type(child) is QComboBox:
                 return child.currentText(), child.itemData(child.currentIndex())
+            elif type(child) is SimpleFilenamePicker:
+                return child.value()
             elif type(child) is QLineEdit:
                 text = child.text().strip()
                 return text if not text == '' else None
