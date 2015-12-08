@@ -68,9 +68,6 @@ class Project(QObject):
         # Topological settings
         self._setupTopologicalSettings()
         
-        # Activate the auto Show feature form on feature creation
-        self._activateAutoShowForm()
-        
         QgsProject.instance().write()
         
         self.ready.emit()
@@ -113,9 +110,6 @@ class Project(QObject):
         
         # Topological settings
         self._setupTopologicalSettings()
-        
-        # Activate the auto Show feature form on feature creation
-        self._activateAutoShowForm()
         
         self.creation_mode = False
         
@@ -223,10 +217,6 @@ class Project(QObject):
         QgsProject.instance().writeEntry('Digitizing', '/DefaultSnapToleranceUnit', QgsTolerance.Pixels)
         
         QgsProject.instance().snapSettingsChanged.emit()
-        
-    def _activateAutoShowForm(self):
-        settings = QSettings()
-        settings.setValue("/Map/identifyAutoFeatureForm", True)
         
     def _updateDatabase(self):
         '''
@@ -483,6 +473,9 @@ class Project(QObject):
                 
                 # Update attributes editors
                 self._updateLayerEditors(layer, xsd_type)
+                
+                # Activate the auto Show feature form on feature creation
+                layer.setFeatureFormSuppress(QgsVectorLayer.SuppressOff)
         
     def _addOrthoBasemap(self):
         ortho_url = 'url=http://wsinspire.geoportail.lu/oi&SLegend=0&crs=EPSG:2169&dpiMode=7&featureCount=10&format=image/jpeg&layers=1&styles='
