@@ -62,7 +62,7 @@ class Importer(object):
                         src_polygon = QgsGeometry.fromPolygon([src_polyline])
                         if src_polygon is None:
                             QgsMessageLog.logMessage(QCoreApplication.translate('Importer','Invalid geometry : Handle = {}').format(src_feature.attribute('EntityHandle')), 'PAG Luxembourg', QgsMessageLog.CRITICAL)
-                            # PagLuxembourg.main.qgis_interface.openMessageLog() QGIS 2.12
+                            PagLuxembourg.main.qgis_interface.openMessageLog()
                             import_errors = True
                             del dst_feature
                             continue
@@ -78,7 +78,7 @@ class Importer(object):
                             QgsMessageLog.logMessage(QCoreApplication.translate('Importer','Invalid geometry : FID = {}').format(src_feature.id()), 'PAG Luxembourg', QgsMessageLog.CRITICAL)
                             #for geometry_error in geometry_errors:
                             #    QgsMessageLog.logMessage(geometry_error.what(), 'PAG Luxembourg', QgsMessageLog.CRITICAL)
-                            # PagLuxembourg.main.qgis_interface.openMessageLog() QGIS 2.12
+                            PagLuxembourg.main.qgis_interface.openMessageLog()
                             import_errors = True
                             del dst_feature
                             continue

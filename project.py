@@ -119,6 +119,9 @@ class Project(QObject):
         
         self.creation_mode = False
         
+        # Save project and add to recent projects
+        main.qgis_interface.actionSaveProject().trigger()
+        
         # Notify project is ready
         self.ready.emit()
         
