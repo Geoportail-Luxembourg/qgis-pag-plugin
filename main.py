@@ -34,7 +34,7 @@ from widgets.stylize.stylize import *
 from widgets.data_checker.data_checker import *
 from widgets.topology.topology import *
 from widgets.about.about import *
-import editor.filename
+import editor.simple_filename
 # Schema
 from PagLuxembourg.schema import *
 from PagLuxembourg.project import *

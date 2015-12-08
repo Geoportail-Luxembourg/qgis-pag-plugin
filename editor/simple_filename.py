@@ -11,7 +11,7 @@ from PyQt4.QtCore import QCoreApplication, QFileInfo, QSettings
 
 import os.path
  
-class FilenameWidgetWrapper(QgsEditorWidgetWrapper):
+class SimpleFilenameWidgetWrapper(QgsEditorWidgetWrapper):
     def value(self):
         if self.mLineEdit is not None:
             if self.mLineEdit.text() == str(QSettings().value('qgis/nullValue', 'NULL' )) or self.mLineEdit.text() == '':
@@ -83,7 +83,7 @@ class FilenameWidgetWrapper(QgsEditorWidgetWrapper):
             text = self.mLabel.text()
 
         fileName = QFileDialog.getOpenFileName(self.mLineEdit,
-                                               QCoreApplication.translate('FilenameWidgetWrapper','Select a file'),
+                                               QCoreApplication.translate('SimpleFilenameWidgetWrapper','Select a file'),
                                                QFileInfo(text).absolutePath())
 
         if fileName.strip() == u'':
@@ -97,13 +97,13 @@ class FilenameWidgetWrapper(QgsEditorWidgetWrapper):
         if self.mLabel is not None:
             self.mLineEdit.setText(fileName)
 
-class FilenameWidgetWrapperConfig(QgsEditorConfigWidget):
+class SimpleFilenameWidgetWrapperConfig(QgsEditorConfigWidget):
     def __init__(self, layer, idx, parent):
         QgsEditorConfigWidget.__init__(self, layer, idx, parent)
         
         self.setLayout(QHBoxLayout())
         self.ruleEdit = QLabel(self)
-        self.ruleEdit.setText(QCoreApplication.translate('FilenameWidgetWrapperConfig','A filename without extension editor widget.'))
+        self.ruleEdit.setText(QCoreApplication.translate('SimpleFilenameWidgetWrapperConfig','A filename without extension editor widget.'))
         self.layout().addWidget(self.ruleEdit)
  
     def config(self):
@@ -112,15 +112,15 @@ class FilenameWidgetWrapperConfig(QgsEditorConfigWidget):
     def setConfig(self, config):
         pass
                      
-class FilenameWidgetWrapperFactory(QgsEditorWidgetFactory):
+class SimpleFilenameWidgetWrapperFactory(QgsEditorWidgetFactory):
     def __init__(self):
-        QgsEditorWidgetFactory.__init__(self, QCoreApplication.translate('QgsEditorWidgetFactory','Simple Filename'))
+        QgsEditorWidgetFactory.__init__(self, QCoreApplication.translate('SimpleFilenameWidgetWrapperFactory','Simple Filename'))
  
     def create(self, layer, fieldIdx, editor, parent):
-        return FilenameWidgetWrapper(layer, fieldIdx, editor, parent)
+        return SimpleFilenameWidgetWrapper(layer, fieldIdx, editor, parent)
  
     def configWidget(self, layer, idx, parent):
-        return FilenameWidgetWrapperConfig(layer, idx, parent)
+        return SimpleFilenameWidgetWrapperConfig(layer, idx, parent)
  
-myFactory = FilenameWidgetWrapperFactory()
+myFactory = SimpleFilenameWidgetWrapperFactory()
 QgsEditorWidgetRegistry.instance().registerWidget('SimpleFilename', myFactory)

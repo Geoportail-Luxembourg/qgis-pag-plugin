@@ -271,17 +271,17 @@
     </message>
 </context>
 <context>
-    <name>FilenameWidgetWrapper</name>
+    <name>SimpleFilenameWidgetWrapper</name>
     <message>
-        <location filename="filename.py" line="85"/>
+        <location filename="simple_filename.py" line="85"/>
         <source>Select a file</source>
         <translation>Sélectionner un fichier</translation>
     </message>
 </context>
 <context>
-    <name>FilenameWidgetWrapperConfig</name>
+    <name>SimpleFilenameWidgetWrapperConfig</name>
     <message>
-        <location filename="filename.py" line="106"/>
+        <location filename="simple_filename.py" line="106"/>
         <source>A filename without extension editor widget.</source>
         <translation>Un éditeur de sélection de fichier sans extension.</translation>
     </message>
@@ -608,9 +608,9 @@
     </message>
 </context>
 <context>
-    <name>QgsEditorWidgetFactory</name>
+    <name>SimpleFilenameWidgetWrapperFactory</name>
     <message>
-        <location filename="filename.py" line="117"/>
+        <location filename="simple_filename.py" line="117"/>
         <source>Simple Filename</source>
         <translation>Nom de fichier simple</translation>
     </message>
