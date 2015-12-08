@@ -334,7 +334,7 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
             return self._getCombobox(ordered_config, value)
         
         # Field editor is range
-        elif layer.editorWidgetV2(field_index) == 'Range':
+        elif layer.editorWidgetV2(field_index) == 'PreciseRange':
             config = layer.editorWidgetV2Config(field_index)
             return self._getSpinbox(config['Min'], config['Max'], config['Step'], value)
         

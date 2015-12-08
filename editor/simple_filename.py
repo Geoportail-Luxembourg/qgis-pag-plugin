@@ -10,8 +10,6 @@ from PyQt4.QtGui import QWidget, QPalette, QPushButton, QGridLayout, QLineEdit, 
 from PyQt4.QtCore import QCoreApplication, QFileInfo, QSettings
 
 import os.path
-
-from PagLuxembourg.controls.filename import SimpleFilenamePicker
  
 class SimpleFilenameWidgetWrapper(QgsEditorWidgetWrapper):
     def value(self):
