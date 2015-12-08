@@ -591,7 +591,7 @@ class Project(QObject):
             # File
             for fileField in self.fileFields:
                 if field.name.startswith(fileField):
-                    editor = 'FileName'
+                    editor = 'SimpleFilename'
             
             # Enumeration
             if field.listofvalues is not None:

@@ -34,6 +34,7 @@ from widgets.stylize.stylize import *
 from widgets.data_checker.data_checker import *
 from widgets.topology.topology import *
 from widgets.about.about import *
+import editor.filename
 # Schema
 from PagLuxembourg.schema import *
 from PagLuxembourg.project import *
@@ -78,6 +79,8 @@ class PAGLuxembourg(object):
             if qVersion() > '4.3.3':
                 QCoreApplication.installTranslator(self.translator)
 
+        # Register custom editors widgets
+        
         # Declare instance attributes
         self.actions = []
         self.pag_actions = [] #PAG actions, disabled if the project is not PAG
