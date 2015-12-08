@@ -15,7 +15,7 @@ class SimpleFilenamePicker(QWidget):
     def __init__(self, parent=None):
         QWidget.__init__(self, parent)
         
-        self.setBackgroundRole(QPalette.Window)
+        #self.setBackgroundRole(QPalette.Window)
         self.setAutoFillBackground(True)
         
         self.le = QgsFilterLineEdit(self)

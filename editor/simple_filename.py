@@ -10,6 +10,8 @@ from PyQt4.QtGui import QWidget, QPalette, QPushButton, QGridLayout, QLineEdit, 
 from PyQt4.QtCore import QCoreApplication, QFileInfo, QSettings
 
 import os.path
+
+from PagLuxembourg.controls.filename import SimpleFilenamePicker
  
 class SimpleFilenameWidgetWrapper(QgsEditorWidgetWrapper):
     def value(self):
@@ -56,21 +58,24 @@ class SimpleFilenameWidgetWrapper(QgsEditorWidgetWrapper):
         return container
     
     def initWidget(self, editor):
-        self.mLineEdit = editor if editor is QLineEdit else editor.findChild(QLineEdit)
+        self.mLineEdit = editor if type(editor) is QLineEdit else editor.findChild(QLineEdit)
     
         self.mPushButton = editor.findChild(QPushButton)
     
         if self.mPushButton is not None:
             self.mPushButton.clicked.connect(self.selectFileName)
     
-        self.mLabel = editor if editor is QLabel else None
+        self.mLabel = editor if type(editor) is QLabel else None
     
-        if self.mLineEdit is QLineEdit:
+        if self.mLineEdit is not None:
             fle = editor
-            if fle is QgsFilterLineEdit:
+            if type(fle) is QgsFilterLineEdit:
                 fle.setNullValue(str(QSettings().value('qgis/nullValue', 'NULL')))
     
-            self.mLineEdit.textChanged.connect(self.valueChanged)
+            self.mLineEdit.textChanged.connect(self.onTextChanged)
+            
+    def onTextChanged(self, newText):
+        self.valueChanged.emit(newText)
 
     def valid(self):
         return self.mLineEdit is not None or self.mLabel is not None
