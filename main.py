@@ -91,6 +91,9 @@ class PAGLuxembourg(object):
         self.iface.projectRead.connect(current_project.open)
         self.iface.newProjectCreated.connect(current_project.open)
         current_project.ready.connect(self.updateGui)
+        
+        # Load current project
+        current_project.open()
 
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
@@ -297,3 +300,8 @@ class PAGLuxembourg(object):
             
         # remove the toolbar
         del self.toolbar
+        
+        # Disconnect Signals
+        self.iface.projectRead.disconnect(current_project.open)
+        self.iface.newProjectCreated.disconnect(current_project.open)
+        current_project.ready.disconnect(self.updateGui)
