@@ -1,13 +1,28 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis version="2.8.2-Wien" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
+<qgis version="2.8.3-Wien" minimumScale="-4.65661e-10" maximumScale="1e+08" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
   <edittypes>
-    <edittype widgetv2type="TextEdit" name="gml_id">
-      <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+    <edittype widgetv2type="Hidden" name="OGC_FID">
+      <widgetv2config fieldEditable="1" labelOnTop="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="CATEGORIE">
-      <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+    <edittype widgetv2type="ValueMap" name="CATEGORIE">
+      <widgetv2config fieldEditable="1" labelOnTop="0">
+        <value key="SPI_EC" value="SPI_EC"/>
+        <value key="SPI_ENP" value="SPI_ENP"/>
+        <value key="ZB" value="ZB"/>
+        <value key="ZE" value="ZE"/>
+        <value key="ZRNP_G" value="ZRNP_G"/>
+        <value key="ZRNP_I" value="ZRNP_I"/>
+        <value key="ZRNP_M" value="ZRNP_M"/>
+        <value key="ZR_SD" value="ZR_SD"/>
+        <value key="ZUP" value="ZUP"/>
+        <value key="ZUP_1" value="ZUP_1"/>
+        <value key="ZUP_2" value="ZUP_2"/>
+      </widgetv2config>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="NOM_FICHIER">
+    <edittype widgetv2type="FileName" name="NOM_FICHIER">
+      <widgetv2config fieldEditable="1" labelOnTop="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="GENRE">
       <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
     </edittype>
   </edittypes>
@@ -21,8 +36,7 @@
       <category render="true" symbol="5" value="ZRNP_I" label="ZRNP_I"/>
       <category render="true" symbol="6" value="ZRNP_M" label="ZRNP_M"/>
       <category render="true" symbol="7" value="ZRNP_G" label="ZRNP_G"/>
-      <category render="true" symbol="8" value="ZUP_1" label="ZUP_1"/>
-      <category render="true" symbol="9" value="ZUP_2" label="ZUP_2"/>
+      <category render="true" symbol="8" value="ZUP" label="ZUP"/>
     </categories>
     <symbols>
       <symbol alpha="1" type="fill" name="0">
@@ -33,7 +47,7 @@
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0"/>
           <prop k="offset_unit" v="MM"/>
-          <prop k="outline_color" v="175,179,138,255"/>
+          <prop k="outline_color" v="0,0,0,255"/>
           <prop k="outline_style" v="solid"/>
           <prop k="outline_width" v="0.26"/>
           <prop k="outline_width_unit" v="MM"/>
@@ -85,7 +99,7 @@
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0"/>
           <prop k="offset_unit" v="MM"/>
-          <prop k="outline_color" v="175,179,138,255"/>
+          <prop k="outline_color" v="0,0,0,255"/>
           <prop k="outline_style" v="solid"/>
           <prop k="outline_width" v="0.26"/>
           <prop k="outline_width_unit" v="MM"/>
@@ -137,9 +151,9 @@
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0"/>
           <prop k="offset_unit" v="MM"/>
-          <prop k="outline_color" v="128,152,72,255"/>
+          <prop k="outline_color" v="0,0,0,255"/>
           <prop k="outline_style" v="solid"/>
-          <prop k="outline_width" v="0.26"/>
+          <prop k="outline_width" v="0.24"/>
           <prop k="outline_width_unit" v="MM"/>
           <prop k="style" v="solid"/>
         </layer>
@@ -188,41 +202,41 @@
           <prop k="offset_unit" v="MM"/>
           <prop k="outline_color" v="110,110,110,255"/>
           <prop k="outline_style" v="solid"/>
-          <prop k="outline_width" v="0.26"/>
+          <prop k="outline_width" v="0.176"/>
           <prop k="outline_width_unit" v="MM"/>
           <prop k="style" v="solid"/>
         </layer>
         <layer pass="0" class="PointPatternFill" locked="0">
-          <prop k="displacement_x" v="1"/>
+          <prop k="displacement_x" v="0"/>
           <prop k="displacement_x_map_unit_scale" v="0,0"/>
           <prop k="displacement_x_unit" v="MM"/>
-          <prop k="displacement_y" v="1"/>
+          <prop k="displacement_y" v="0"/>
           <prop k="displacement_y_map_unit_scale" v="0,0"/>
           <prop k="displacement_y_unit" v="MM"/>
-          <prop k="distance_x" v="1"/>
+          <prop k="distance_x" v="2"/>
           <prop k="distance_x_map_unit_scale" v="0,0"/>
           <prop k="distance_x_unit" v="MM"/>
-          <prop k="distance_y" v="1"/>
+          <prop k="distance_y" v="2"/>
           <prop k="distance_y_map_unit_scale" v="0,0"/>
           <prop k="distance_y_unit" v="MM"/>
           <prop k="outline_width_map_unit_scale" v="0,0"/>
           <prop k="outline_width_unit" v="MM"/>
           <symbol alpha="1" type="marker" name="@3@1">
             <layer pass="0" class="SimpleMarker" locked="0">
-              <prop k="angle" v="90"/>
-              <prop k="color" v="255,0,0,255"/>
+              <prop k="angle" v="0"/>
+              <prop k="color" v="0,0,0,0"/>
               <prop k="horizontal_anchor_point" v="1"/>
-              <prop k="name" v="line"/>
+              <prop k="name" v="circle"/>
               <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="0,0"/>
               <prop k="offset_unit" v="MM"/>
-              <prop k="outline_color" v="87,104,49,255"/>
+              <prop k="outline_color" v="0,0,0,255"/>
               <prop k="outline_style" v="solid"/>
               <prop k="outline_width" v="0"/>
               <prop k="outline_width_map_unit_scale" v="0,0"/>
               <prop k="outline_width_unit" v="MM"/>
               <prop k="scale_method" v="area"/>
-              <prop k="size" v="1"/>
+              <prop k="size" v="0.7056"/>
               <prop k="size_map_unit_scale" v="0,0"/>
               <prop k="size_unit" v="MM"/>
               <prop k="vertical_anchor_point" v="1"/>
@@ -268,6 +282,19 @@
             </layer>
           </symbol>
         </layer>
+        <layer pass="0" class="SimpleFill" locked="0">
+          <prop k="border_width_map_unit_scale" v="0,0"/>
+          <prop k="color" v="0,0,0,0"/>
+          <prop k="joinstyle" v="bevel"/>
+          <prop k="offset" v="0,0"/>
+          <prop k="offset_map_unit_scale" v="0,0"/>
+          <prop k="offset_unit" v="MM"/>
+          <prop k="outline_color" v="0,0,0,255"/>
+          <prop k="outline_style" v="solid"/>
+          <prop k="outline_width" v="0.24"/>
+          <prop k="outline_width_unit" v="MM"/>
+          <prop k="style" v="solid"/>
+        </layer>
       </symbol>
       <symbol alpha="1" type="fill" name="5">
         <layer pass="0" class="PointPatternFill" locked="0">
@@ -306,6 +333,19 @@
               <prop k="vertical_anchor_point" v="1"/>
             </layer>
           </symbol>
+        </layer>
+        <layer pass="0" class="SimpleFill" locked="0">
+          <prop k="border_width_map_unit_scale" v="0,0"/>
+          <prop k="color" v="0,0,0,0"/>
+          <prop k="joinstyle" v="bevel"/>
+          <prop k="offset" v="0,0"/>
+          <prop k="offset_map_unit_scale" v="0,0"/>
+          <prop k="offset_unit" v="MM"/>
+          <prop k="outline_color" v="0,0,0,255"/>
+          <prop k="outline_style" v="solid"/>
+          <prop k="outline_width" v="0.24"/>
+          <prop k="outline_width_unit" v="MM"/>
+          <prop k="style" v="solid"/>
         </layer>
       </symbol>
       <symbol alpha="1" type="fill" name="6">
@@ -346,6 +386,19 @@
             </layer>
           </symbol>
         </layer>
+        <layer pass="0" class="SimpleFill" locked="0">
+          <prop k="border_width_map_unit_scale" v="0,0"/>
+          <prop k="color" v="0,0,0,0"/>
+          <prop k="joinstyle" v="bevel"/>
+          <prop k="offset" v="0,0"/>
+          <prop k="offset_map_unit_scale" v="0,0"/>
+          <prop k="offset_unit" v="MM"/>
+          <prop k="outline_color" v="0,0,0,255"/>
+          <prop k="outline_style" v="solid"/>
+          <prop k="outline_width" v="0.24"/>
+          <prop k="outline_width_unit" v="MM"/>
+          <prop k="style" v="solid"/>
+        </layer>
       </symbol>
       <symbol alpha="1" type="fill" name="7">
         <layer pass="0" class="PointPatternFill" locked="0">
@@ -385,6 +438,19 @@
             </layer>
           </symbol>
         </layer>
+        <layer pass="0" class="SimpleFill" locked="0">
+          <prop k="border_width_map_unit_scale" v="0,0"/>
+          <prop k="color" v="0,0,0,0"/>
+          <prop k="joinstyle" v="bevel"/>
+          <prop k="offset" v="0,0"/>
+          <prop k="offset_map_unit_scale" v="0,0"/>
+          <prop k="offset_unit" v="MM"/>
+          <prop k="outline_color" v="0,0,0,255"/>
+          <prop k="outline_style" v="solid"/>
+          <prop k="outline_width" v="0.24"/>
+          <prop k="outline_width_unit" v="MM"/>
+          <prop k="style" v="solid"/>
+        </layer>
       </symbol>
       <symbol alpha="1" type="fill" name="8">
         <layer pass="0" class="SimpleFill" locked="0">
@@ -396,14 +462,14 @@
           <prop k="offset_unit" v="MM"/>
           <prop k="outline_color" v="0,0,0,255"/>
           <prop k="outline_style" v="solid"/>
-          <prop k="outline_width" v="0.26"/>
+          <prop k="outline_width" v="0.24"/>
           <prop k="outline_width_unit" v="MM"/>
           <prop k="style" v="solid"/>
         </layer>
         <layer pass="0" class="LinePatternFill" locked="0">
           <prop k="angle" v="0"/>
           <prop k="color" v="0,0,255,255"/>
-          <prop k="distance" v="3"/>
+          <prop k="distance" v="1"/>
           <prop k="distance_map_unit_scale" v="0,0"/>
           <prop k="distance_unit" v="MM"/>
           <prop k="line_width" v="0.26"/>
@@ -424,56 +490,7 @@
               <prop k="joinstyle" v="bevel"/>
               <prop k="line_color" v="110,110,110,255"/>
               <prop k="line_style" v="solid"/>
-              <prop k="line_width" v="0.53"/>
-              <prop k="line_width_unit" v="MM"/>
-              <prop k="offset" v="0"/>
-              <prop k="offset_map_unit_scale" v="0,0"/>
-              <prop k="offset_unit" v="MM"/>
-              <prop k="use_custom_dash" v="0"/>
-              <prop k="width_map_unit_scale" v="0,0"/>
-            </layer>
-          </symbol>
-        </layer>
-      </symbol>
-      <symbol alpha="1" type="fill" name="9">
-        <layer pass="0" class="SimpleFill" locked="0">
-          <prop k="border_width_map_unit_scale" v="0,0"/>
-          <prop k="color" v="0,0,0,0"/>
-          <prop k="joinstyle" v="bevel"/>
-          <prop k="offset" v="0,0"/>
-          <prop k="offset_map_unit_scale" v="0,0"/>
-          <prop k="offset_unit" v="MM"/>
-          <prop k="outline_color" v="0,0,0,255"/>
-          <prop k="outline_style" v="solid"/>
-          <prop k="outline_width" v="0.26"/>
-          <prop k="outline_width_unit" v="MM"/>
-          <prop k="style" v="solid"/>
-        </layer>
-        <layer pass="0" class="LinePatternFill" locked="0">
-          <prop k="angle" v="0"/>
-          <prop k="color" v="0,0,255,255"/>
-          <prop k="distance" v="3"/>
-          <prop k="distance_map_unit_scale" v="0,0"/>
-          <prop k="distance_unit" v="MM"/>
-          <prop k="line_width" v="0.26"/>
-          <prop k="line_width_map_unit_scale" v="0,0"/>
-          <prop k="line_width_unit" v="MM"/>
-          <prop k="offset" v="0"/>
-          <prop k="offset_map_unit_scale" v="0,0"/>
-          <prop k="offset_unit" v="MM"/>
-          <prop k="outline_width_map_unit_scale" v="0,0"/>
-          <prop k="outline_width_unit" v="MM"/>
-          <symbol alpha="1" type="line" name="@9@1">
-            <layer pass="0" class="SimpleLine" locked="0">
-              <prop k="capstyle" v="square"/>
-              <prop k="customdash" v="5;2"/>
-              <prop k="customdash_map_unit_scale" v="0,0"/>
-              <prop k="customdash_unit" v="MM"/>
-              <prop k="draw_inside_polygon" v="0"/>
-              <prop k="joinstyle" v="bevel"/>
-              <prop k="line_color" v="110,110,110,255"/>
-              <prop k="line_style" v="solid"/>
-              <prop k="line_width" v="0.53"/>
+              <prop k="line_width" v="0.24"/>
               <prop k="line_width_unit" v="MM"/>
               <prop k="offset" v="0"/>
               <prop k="offset_map_unit_scale" v="0,0"/>
@@ -563,10 +580,10 @@
     <property key="labeling/distMapUnitMaxScale" value="0"/>
     <property key="labeling/distMapUnitMinScale" value="0"/>
     <property key="labeling/enabled" value="true"/>
-    <property key="labeling/fieldName" value="CASE when( CATEGORIE = 'SPI_EC') then 'C' &#xd;&#xa;when (CATEGORIE = 'SPI_ENP') then 'N'&#xd;&#xa;when (CATEGORIE = 'ZRNP_G') then 'G'&#xd;&#xa;when (CATEGORIE = 'ZRNP_M') then 'M'&#xd;&#xa;when (CATEGORIE = 'ZRNP_I') then 'I'&#xd;&#xa;when (CATEGORIE = 'ZR_SD') then 'S'&#xd;&#xa;else''&#xd;&#xa;end&#xd;&#xa;&#xd;&#xa; "/>
+    <property key="labeling/fieldName" value="CASE when(  &quot;CATEGORIE&quot;  = 'SPI_EC') then 'C' &#xd;&#xa;when (&quot;CATEGORIE&quot;  = 'SPI_ENP') then 'N'&#xd;&#xa;when (&quot;CATEGORIE&quot;  = 'ZRNP_G') then 'G'&#xd;&#xa;when (&quot;CATEGORIE&quot;  = 'ZRNP_M') then 'M'&#xd;&#xa;when (&quot;CATEGORIE&quot;  = 'ZRNP_I') then 'I'&#xd;&#xa;when (&quot;CATEGORIE&quot;  = 'ZR_SD') then 'S'&#xa;when (&quot;CATEGORIE&quot; = 'ZUP') then&#xa;CASE when (  &quot;GENRE&quot; is not null and  &quot;GENRE&quot; !='')   then tostring(&quot;GENRE&quot;) end&#xd;&#xa;else''&#xd;&#xa;end&#xd;&#xa;&#xd;&#xa; "/>
     <property key="labeling/fontBold" value="false"/>
     <property key="labeling/fontCapitals" value="0"/>
-    <property key="labeling/fontFamily" value="MS Shell Dlg 2"/>
+    <property key="labeling/fontFamily" value=".Helvetica Neue DeskInterface"/>
     <property key="labeling/fontItalic" value="false"/>
     <property key="labeling/fontLetterSpacing" value="0"/>
     <property key="labeling/fontLimitPixelSize" value="false"/>
@@ -595,7 +612,7 @@
     <property key="labeling/minFeatureSize" value="0"/>
     <property key="labeling/multilineAlign" value="0"/>
     <property key="labeling/multilineHeight" value="1"/>
-    <property key="labeling/namedStyle" value="Normal"/>
+    <property key="labeling/namedStyle" value=""/>
     <property key="labeling/obstacle" value="true"/>
     <property key="labeling/placeDirectionSymbol" value="0"/>
     <property key="labeling/placement" value="1"/>

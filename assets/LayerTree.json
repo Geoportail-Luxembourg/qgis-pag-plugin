@@ -4,6 +4,12 @@
   "TableName": "",
   "Nodes": [
     {
+      "Name": "PERIMETRE",
+      "IsGroup": false,
+      "TableName": "PAG.PERIMETRE",
+      "Nodes": []
+    },
+    {
       "Name": "PAP_APPROUVE",
       "IsGroup": false,
       "TableName": "PAG.PAP_APPROUVE",
@@ -16,16 +22,10 @@
       "Nodes": []
     },
     {
-      "Name": "Group1",
+      "Name": "PAG",
       "IsGroup": true,
       "TableName": "",
       "Nodes": [
-        {
-          "Name": "GABARIT_A_SAUV_POINT",
-          "IsGroup": false,
-          "TableName": "PAG.GABARIT_A_SAUV_POINT",
-          "Nodes": []
-        },
         {
           "Name": "CONST_A_CONS_POINT",
           "IsGroup": false,
@@ -33,15 +33,39 @@
           "Nodes": []
         },
         {
-          "Name": "BIOTOPE_POINT",
+          "Name": "GABARIT_A_SAUV_POINT",
           "IsGroup": false,
-          "TableName": "ARTIKEL17.BIOTOPE_POINT",
+          "TableName": "PAG.GABARIT_A_SAUV_POINT",
+          "Nodes": []
+        },
+        {
+          "Name": "GABARIT_A_SAUV_POLY",
+          "IsGroup": false,
+          "TableName": "PAG.GABARIT_A_SAUV_POLY",
           "Nodes": []
         },
         {
           "Name": "ALIGN_A_RESP",
           "IsGroup": false,
           "TableName": "PAG.ALIGN_A_RESP",
+          "Nodes": []
+        },
+        {
+          "Name": "BATIMENTS",
+          "IsGroup": false,
+          "TableName": "PAG.BATIMENT",
+          "Nodes": []
+        },
+        {
+          "Name": "PCN",
+          "IsGroup": false,
+          "TableName": "PAG.PCN",
+          "Nodes": []
+        },
+        {
+          "Name": "BIOTOPE_POINT",
+          "IsGroup": false,
+          "TableName": "ARTIKEL17.BIOTOPE_POINT",
           "Nodes": []
         },
         {
@@ -54,12 +78,6 @@
           "Name": "BIOTOPE_POLY",
           "IsGroup": false,
           "TableName": "ARTIKEL17.BIOTOPE_POLY",
-          "Nodes": []
-        },
-        {
-          "Name": "ZONE_SERV_URB",
-          "IsGroup": false,
-          "TableName": "PAG.ZONE_SERV_URB",
           "Nodes": []
         },
         {
@@ -93,9 +111,9 @@
           "Nodes": []
         },
         {
-          "Name": "GABARIT_A_SAUV_POLY",
+          "Name": "ZONE_SERV_URB",
           "IsGroup": false,
-          "TableName": "PAG.GABARIT_A_SAUV_POLY",
+          "TableName": "PAG.ZONE_SERV_URB",
           "Nodes": []
         },
         {
@@ -109,19 +127,13 @@
           "IsGroup": false,
           "TableName": "PAG.ZONAGE",
           "Nodes": []
-        },
-        {
-          "Name": "PERIMETRE",
-          "IsGroup": false,
-          "TableName": "PAG.PERIMETRE",
-          "Nodes": []
         }
       ]
     },
     {
-      "Name": "PCN",
+      "Name": "Gestion",
       "IsGroup": false,
-      "TableName": "PAG.PCN",
+      "TableName": "GESTION.Gestion",
       "Nodes": []
     }
   ]

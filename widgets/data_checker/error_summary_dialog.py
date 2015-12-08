@@ -27,6 +27,8 @@ from PyQt4 import QtGui, uic
 from PyQt4.QtGui import QFileDialog, QMessageBox, QTableWidgetItem, QHeaderView, QColor
 from PyQt4.QtCore import QCoreApplication
 
+from qgis.core import *
+
 import PagLuxembourg.main
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -111,9 +113,14 @@ class ErrorSummaryDialog(QtGui.QDialog, FORM_CLASS):
     def _tabDataErrorsCellDblClicked(self, row, column):
         # Deselect
         layer, feature, field, message = self.data_errors[row]
+        
         # Start editing session
         if not layer.isEditable():
             layer.startEditing()
         
         PagLuxembourg.main.qgis_interface.legendInterface().setCurrentLayer(layer)
-        PagLuxembourg.main.qgis_interface.openFeatureForm(layer,feature)
+        
+        features = layer.getFeatures(QgsFeatureRequest(feature.id()))
+        
+        for feature in features:
+            PagLuxembourg.main.qgis_interface.openFeatureForm(layer, feature)

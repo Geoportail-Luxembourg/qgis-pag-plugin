@@ -35,7 +35,7 @@
         <layer pass="0" class="LinePatternFill" locked="0">
           <prop k="angle" v="90"/>
           <prop k="color" v="0,0,0,255"/>
-          <prop k="distance" v="3"/>
+          <prop k="distance" v="2"/>
           <prop k="distance_map_unit_scale" v="0,0"/>
           <prop k="distance_unit" v="MM"/>
           <prop k="line_width" v="0.5"/>
@@ -54,9 +54,9 @@
               <prop k="customdash_unit" v="MM"/>
               <prop k="draw_inside_polygon" v="0"/>
               <prop k="joinstyle" v="bevel"/>
-              <prop k="line_color" v="110,110,110,255"/>
+              <prop k="line_color" v="0,0,0,255"/>
               <prop k="line_style" v="solid"/>
-              <prop k="line_width" v="0.52"/>
+              <prop k="line_width" v="0.24"/>
               <prop k="line_width_unit" v="MM"/>
               <prop k="offset" v="0"/>
               <prop k="offset_map_unit_scale" v="0,0"/>
@@ -73,7 +73,7 @@
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0"/>
           <prop k="offset_unit" v="MM"/>
-          <prop k="outline_color" v="110,110,110,255"/>
+          <prop k="outline_color" v="0,0,0,255"/>
           <prop k="outline_style" v="solid"/>
           <prop k="outline_width" v="0.15"/>
           <prop k="outline_width_unit" v="MM"/>

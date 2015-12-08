@@ -1,13 +1,16 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis version="2.8.2-Wien" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
+<qgis version="2.8.3-Wien" minimumScale="-4.65661e-10" maximumScale="1e+08" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
   <edittypes>
-    <edittype widgetv2type="TextEdit" name="gml_id">
-      <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+    <edittype widgetv2type="Hidden" name="OGC_FID">
+      <widgetv2config fieldEditable="1" labelOnTop="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="CATEGORIE">
       <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="NOM_FICHIER">
+      <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="GENRE">
       <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
     </edittype>
   </edittypes>
@@ -22,27 +25,28 @@
       <category render="true" symbol="6" value="BEP" label="BEP"/>
       <category render="true" symbol="7" value="ECO_c1" label="ECO_c1"/>
       <category render="true" symbol="8" value="ECO_c2" label="ECO_c2"/>
-      <category render="true" symbol="9" value="ECO_r1" label="ECO_r1"/>
-      <category render="true" symbol="10" value="ECO_r2" label="ECO_r2"/>
-      <category render="true" symbol="11" value="ECO_n" label="ECO_n"/>
-      <category render="true" symbol="12" value="SP_n" label="SP_n"/>
-      <category render="true" symbol="13" value="COM" label="COM"/>
-      <category render="true" symbol="14" value="MIL" label="MIL"/>
-      <category render="true" symbol="15" value="SPEC" label="SPEC"/>
-      <category render="true" symbol="16" value="AERO" label="AERO"/>
-      <category render="true" symbol="17" value="PORT_m" label="PORT_m"/>
-      <category render="true" symbol="18" value="PORT_p" label="PORT_p"/>
-      <category render="true" symbol="19" value="GARE" label="GARE"/>
-      <category render="true" symbol="20" value="REC" label="REC"/>
-      <category render="true" symbol="21" value="REC_1" label="REC_1"/>
-      <category render="true" symbol="22" value="REC_2" label="REC_2"/>
-      <category render="true" symbol="23" value="REC_3" label="REC_3"/>
-      <category render="true" symbol="24" value="JAR" label="JAR"/>
-      <category render="true" symbol="25" value="FOR" label="FOR"/>
-      <category render="true" symbol="26" value="VIT" label="VIT"/>
-      <category render="true" symbol="27" value="HORT" label="HORT"/>
-      <category render="true" symbol="28" value="PARC" label="PARC"/>
-      <category render="true" symbol="29" value="VERD" label="VERD"/>
+      <category render="true" symbol="9" value="ECO_c3" label="ECO_c3"/>
+      <category render="true" symbol="10" value="ECO_r1" label="ECO_r1"/>
+      <category render="true" symbol="11" value="ECO_r2" label="ECO_r2"/>
+      <category render="true" symbol="12" value="ECO_n" label="ECO_n"/>
+      <category render="true" symbol="13" value="SP_n" label="SP_n"/>
+      <category render="true" symbol="14" value="COM" label="COM"/>
+      <category render="true" symbol="15" value="MIL" label="MIL"/>
+      <category render="true" symbol="16" value="SPEC" label="SPEC"/>
+      <category render="true" symbol="17" value="AERO" label="AERO"/>
+      <category render="true" symbol="18" value="PORT_m" label="PORT_m"/>
+      <category render="true" symbol="19" value="PORT_p" label="PORT_p"/>
+      <category render="true" symbol="20" value="GARE" label="GARE"/>
+      <category render="true" symbol="21" value="REC" label="REC"/>
+      <category render="true" symbol="22" value="REC_1" label="REC_1"/>
+      <category render="true" symbol="23" value="REC_2" label="REC_2"/>
+      <category render="true" symbol="24" value="REC_3" label="REC_3"/>
+      <category render="true" symbol="25" value="JAR" label="JAR"/>
+      <category render="true" symbol="26" value="FOR" label="FOR"/>
+      <category render="true" symbol="27" value="VIT" label="VIT"/>
+      <category render="true" symbol="28" value="HORT" label="HORT"/>
+      <category render="true" symbol="29" value="PARC" label="PARC"/>
+      <category render="true" symbol="30" value="VERD" label="VERD"/>
     </categories>
     <symbols>
       <symbol alpha="1" type="fill" name="0">
@@ -93,7 +97,7 @@
       <symbol alpha="1" type="fill" name="11">
         <layer pass="0" class="SimpleFill" locked="0">
           <prop k="border_width_map_unit_scale" v="0,0"/>
-          <prop k="color" v="185,155,242,255"/>
+          <prop k="color" v="245,99,255,255"/>
           <prop k="joinstyle" v="bevel"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0"/>
@@ -123,7 +127,7 @@
       <symbol alpha="1" type="fill" name="13">
         <layer pass="0" class="SimpleFill" locked="0">
           <prop k="border_width_map_unit_scale" v="0,0"/>
-          <prop k="color" v="237,169,116,255"/>
+          <prop k="color" v="185,155,242,255"/>
           <prop k="joinstyle" v="bevel"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0"/>
@@ -138,7 +142,7 @@
       <symbol alpha="1" type="fill" name="14">
         <layer pass="0" class="SimpleFill" locked="0">
           <prop k="border_width_map_unit_scale" v="0,0"/>
-          <prop k="color" v="89,83,57,255"/>
+          <prop k="color" v="237,169,116,255"/>
           <prop k="joinstyle" v="bevel"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0"/>
@@ -153,7 +157,7 @@
       <symbol alpha="1" type="fill" name="15">
         <layer pass="0" class="SimpleFill" locked="0">
           <prop k="border_width_map_unit_scale" v="0,0"/>
-          <prop k="color" v="240,148,35,255"/>
+          <prop k="color" v="89,83,57,255"/>
           <prop k="joinstyle" v="bevel"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0"/>
@@ -168,7 +172,7 @@
       <symbol alpha="1" type="fill" name="16">
         <layer pass="0" class="SimpleFill" locked="0">
           <prop k="border_width_map_unit_scale" v="0,0"/>
-          <prop k="color" v="145,145,255,255"/>
+          <prop k="color" v="240,148,35,255"/>
           <prop k="joinstyle" v="bevel"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0"/>
@@ -183,7 +187,7 @@
       <symbol alpha="1" type="fill" name="17">
         <layer pass="0" class="SimpleFill" locked="0">
           <prop k="border_width_map_unit_scale" v="0,0"/>
-          <prop k="color" v="101,59,255,255"/>
+          <prop k="color" v="145,145,255,255"/>
           <prop k="joinstyle" v="bevel"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0"/>
@@ -213,7 +217,7 @@
       <symbol alpha="1" type="fill" name="19">
         <layer pass="0" class="SimpleFill" locked="0">
           <prop k="border_width_map_unit_scale" v="0,0"/>
-          <prop k="color" v="187,184,252,255"/>
+          <prop k="color" v="101,59,255,255"/>
           <prop k="joinstyle" v="bevel"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0"/>
@@ -243,7 +247,7 @@
       <symbol alpha="1" type="fill" name="20">
         <layer pass="0" class="SimpleFill" locked="0">
           <prop k="border_width_map_unit_scale" v="0,0"/>
-          <prop k="color" v="219,208,175,255"/>
+          <prop k="color" v="187,184,252,255"/>
           <prop k="joinstyle" v="bevel"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0"/>
@@ -303,7 +307,7 @@
       <symbol alpha="1" type="fill" name="24">
         <layer pass="0" class="SimpleFill" locked="0">
           <prop k="border_width_map_unit_scale" v="0,0"/>
-          <prop k="color" v="213,255,191,255"/>
+          <prop k="color" v="219,208,175,255"/>
           <prop k="joinstyle" v="bevel"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0"/>
@@ -318,7 +322,7 @@
       <symbol alpha="1" type="fill" name="25">
         <layer pass="0" class="SimpleFill" locked="0">
           <prop k="border_width_map_unit_scale" v="0,0"/>
-          <prop k="color" v="134,255,104,255"/>
+          <prop k="color" v="213,255,191,255"/>
           <prop k="joinstyle" v="bevel"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0"/>
@@ -333,14 +337,14 @@
       <symbol alpha="1" type="fill" name="26">
         <layer pass="0" class="SimpleFill" locked="0">
           <prop k="border_width_map_unit_scale" v="0,0"/>
-          <prop k="color" v="158,224,130,255"/>
+          <prop k="color" v="134,255,104,255"/>
           <prop k="joinstyle" v="bevel"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0"/>
           <prop k="offset_unit" v="MM"/>
           <prop k="outline_color" v="0,0,0,255"/>
           <prop k="outline_style" v="solid"/>
-          <prop k="outline_width" v="0.26"/>
+          <prop k="outline_width" v="0.141"/>
           <prop k="outline_width_unit" v="MM"/>
           <prop k="style" v="solid"/>
         </layer>
@@ -348,7 +352,7 @@
       <symbol alpha="1" type="fill" name="27">
         <layer pass="0" class="SimpleFill" locked="0">
           <prop k="border_width_map_unit_scale" v="0,0"/>
-          <prop k="color" v="222,255,122,255"/>
+          <prop k="color" v="158,224,130,255"/>
           <prop k="joinstyle" v="bevel"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0"/>
@@ -363,14 +367,14 @@
       <symbol alpha="1" type="fill" name="28">
         <layer pass="0" class="SimpleFill" locked="0">
           <prop k="border_width_map_unit_scale" v="0,0"/>
-          <prop k="color" v="171,255,69,255"/>
+          <prop k="color" v="222,255,122,255"/>
           <prop k="joinstyle" v="bevel"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0"/>
           <prop k="offset_unit" v="MM"/>
           <prop k="outline_color" v="0,0,0,255"/>
           <prop k="outline_style" v="solid"/>
-          <prop k="outline_width" v="0.141"/>
+          <prop k="outline_width" v="0.26"/>
           <prop k="outline_width_unit" v="MM"/>
           <prop k="style" v="solid"/>
         </layer>
@@ -378,7 +382,7 @@
       <symbol alpha="1" type="fill" name="29">
         <layer pass="0" class="SimpleFill" locked="0">
           <prop k="border_width_map_unit_scale" v="0,0"/>
-          <prop k="color" v="0,135,0,255"/>
+          <prop k="color" v="171,255,69,255"/>
           <prop k="joinstyle" v="bevel"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0"/>
@@ -394,6 +398,21 @@
         <layer pass="0" class="SimpleFill" locked="0">
           <prop k="border_width_map_unit_scale" v="0,0"/>
           <prop k="color" v="232,18,7,255"/>
+          <prop k="joinstyle" v="bevel"/>
+          <prop k="offset" v="0,0"/>
+          <prop k="offset_map_unit_scale" v="0,0"/>
+          <prop k="offset_unit" v="MM"/>
+          <prop k="outline_color" v="0,0,0,255"/>
+          <prop k="outline_style" v="solid"/>
+          <prop k="outline_width" v="0.141"/>
+          <prop k="outline_width_unit" v="MM"/>
+          <prop k="style" v="solid"/>
+        </layer>
+      </symbol>
+      <symbol alpha="1" type="fill" name="30">
+        <layer pass="0" class="SimpleFill" locked="0">
+          <prop k="border_width_map_unit_scale" v="0,0"/>
+          <prop k="color" v="0,135,0,255"/>
           <prop k="joinstyle" v="bevel"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0"/>
@@ -483,14 +502,14 @@
       <symbol alpha="1" type="fill" name="9">
         <layer pass="0" class="SimpleFill" locked="0">
           <prop k="border_width_map_unit_scale" v="0,0"/>
-          <prop k="color" v="245,99,255,255"/>
+          <prop k="color" v="255,191,255,255"/>
           <prop k="joinstyle" v="bevel"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0"/>
           <prop k="offset_unit" v="MM"/>
           <prop k="outline_color" v="0,0,0,255"/>
           <prop k="outline_style" v="solid"/>
-          <prop k="outline_width" v="0.141"/>
+          <prop k="outline_width" v="0.26"/>
           <prop k="outline_width_unit" v="MM"/>
           <prop k="style" v="solid"/>
         </layer>
@@ -543,7 +562,7 @@
     <property key="labeling/bufferTransp" value="0"/>
     <property key="labeling/centroidInside" value="false"/>
     <property key="labeling/centroidWhole" value="false"/>
-    <property key="labeling/dataDefined/FontCase" value="0~~1~~replace ( CATEGORIE, '_', '-' )~~"/>
+    <property key="labeling/dataDefined/FontCase" value="0~~1~~replace ( CODE, '_', '-' )~~"/>
     <property key="labeling/decimals" value="3"/>
     <property key="labeling/displayAll" value="false"/>
     <property key="labeling/dist" value="0"/>
@@ -551,10 +570,10 @@
     <property key="labeling/distMapUnitMaxScale" value="0"/>
     <property key="labeling/distMapUnitMinScale" value="0"/>
     <property key="labeling/enabled" value="true"/>
-    <property key="labeling/fieldName" value="replace ( CATEGORIE, '_', '-' )"/>
+    <property key="labeling/fieldName" value="CASE &#xa;WHEN GENRE IS NOT NULL AND GENRE != ''&#xa;THEN replace ( CATEGORIE, '_', '-' )  + '-' + GENRE&#xa;ELSE replace ( CATEGORIE, '_', '-' ) &#xa;END"/>
     <property key="labeling/fontBold" value="false"/>
     <property key="labeling/fontCapitals" value="0"/>
-    <property key="labeling/fontFamily" value="MS Shell Dlg 2"/>
+    <property key="labeling/fontFamily" value=".Helvetica Neue DeskInterface"/>
     <property key="labeling/fontItalic" value="false"/>
     <property key="labeling/fontLetterSpacing" value="0"/>
     <property key="labeling/fontLimitPixelSize" value="false"/>
@@ -583,7 +602,7 @@
     <property key="labeling/minFeatureSize" value="0"/>
     <property key="labeling/multilineAlign" value="0"/>
     <property key="labeling/multilineHeight" value="1"/>
-    <property key="labeling/namedStyle" value="Normal"/>
+    <property key="labeling/namedStyle" value=""/>
     <property key="labeling/obstacle" value="true"/>
     <property key="labeling/placeDirectionSymbol" value="0"/>
     <property key="labeling/placement" value="1"/>

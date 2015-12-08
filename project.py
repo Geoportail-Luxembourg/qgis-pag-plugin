@@ -426,18 +426,7 @@ class Project(QObject):
         self._updateLayerTreeNode(config, config)
         
         # Add WMS basemap layer
-        ortho_url = 'url=http://wsinspire.geoportail.lu/oi&SLegend=0&crs=EPSG:2169&dpiMode=7&featureCount=10&format=image/jpeg&layers=1&styles='
-        ortho_found = False
-        for k,v in QgsMapLayerRegistry.instance().mapLayers().iteritems():
-            if v.source() == ortho_url:
-                ortho_found = True
-                break
-        
-        if not ortho_found:
-            ortho_layer = QgsRasterLayer(ortho_url, 'Ortho 2013', 'wms')
-            QgsMapLayerRegistry.instance().addMapLayer(ortho_layer, False)
-            QgsProject.instance().layerTreeRoot().addLayer(ortho_layer)
-            main.qgis_interface.mapCanvas().setExtent(ortho_layer.extent())
+        self._addOrthoBasemap()
 
         # Add topology rules
         TopologyChecker(None).updateProjectRules()
@@ -492,6 +481,20 @@ class Project(QObject):
                 # Update attributes editors
                 self._updateLayerEditors(layer, xsd_type)
         
+    def _addOrthoBasemap(self):
+        ortho_url = 'url=http://wsinspire.geoportail.lu/oi&SLegend=0&crs=EPSG:2169&dpiMode=7&featureCount=10&format=image/jpeg&layers=1&styles='
+        ortho_found = False
+        for k,v in QgsMapLayerRegistry.instance().mapLayers().iteritems():
+            if v.source() == ortho_url:
+                ortho_found = True
+                break
+        
+        if not ortho_found:
+            ortho_layer = QgsRasterLayer(ortho_url, 'Ortho 2013', 'wms')
+            QgsMapLayerRegistry.instance().addMapLayer(ortho_layer, False)
+            QgsProject.instance().layerTreeRoot().addLayer(ortho_layer)
+            main.qgis_interface.mapCanvas().setExtent(ortho_layer.extent())
+            
     def getUriInfos(self, uri):
         '''
         Gets the database and table name from uri
