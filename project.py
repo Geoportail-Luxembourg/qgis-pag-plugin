@@ -603,8 +603,7 @@ class Project(QObject):
             
         # Integer
         elif field.type == DataType.INTEGER:
-            editor = 'Range'
-            config['Style'] = 'SpinBox'
+            editor = 'PreciseRange'
             config['Min'] = int(field.minvalue) if field.minvalue is not None else -sys.maxint-1
             config['Max'] = int(field.maxvalue) if field.maxvalue is not None else sys.maxint
             config['Step'] = 1
@@ -612,8 +611,7 @@ class Project(QObject):
             
         # Double
         elif field.type == DataType.DOUBLE:
-            editor = 'Range'
-            config['Style'] = 'SpinBox'
+            editor = 'PreciseRange'
             config['Min'] = float(field.minvalue) if field.minvalue is not None else -sys.maxint-1
             config['Max'] = float(field.maxvalue) if field.maxvalue is not None else sys.maxint
             mindecimal = len(field.minvalue.split('.')[1]) if field.minvalue is not None and len(field.minvalue.split('.'))==2 else 0
