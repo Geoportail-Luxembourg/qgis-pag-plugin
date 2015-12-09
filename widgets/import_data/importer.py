@@ -6,7 +6,7 @@ Created on 04 nov. 2015
 
 import json
 
-from PyQt4.QtCore import QCoreApplication, QVariant, Qt, QDate
+from PyQt4.QtCore import QCoreApplication, QVariant, Qt, QDate, QSettings
 from PyQt4.QtGui import QCheckBox, QWidget, QHBoxLayout, QComboBox, QDoubleSpinBox, QDateTimeEdit, QLineEdit
 
 from qgis.core import *
@@ -200,7 +200,7 @@ class Importer(object):
                 
         return widget
     
-    def _getSpinbox(self, minvalue, maxvalue, step, value = 0):
+    def _getSpinbox(self, minvalue, maxvalue, step, nullable = True, value = 0):
         '''
         Get a combobox filled with the given values
         
@@ -217,6 +217,10 @@ class Importer(object):
         spinbox.setMaximum(maxvalue)
         spinbox.setSingleStep(step)
         spinbox.setDecimals(len(str(step).split('.')[1]) if len(str(step).split('.'))==2 else 0)
+        if nullable:
+            spinbox.setMinimum(minvalue - step)
+            spinbox.setValue(spinbox.minimum())
+            spinbox.setSpecialValueText(str(QSettings().value('qgis/nullValue', 'NULL' )))
         if value is not None:
             spinbox.setValue(value)
         layout = QHBoxLayout(widget)
@@ -332,7 +336,11 @@ class Importer(object):
                 text = child.text().strip()
                 return text if not text == '' else None
             elif type(child) is QDoubleSpinBox:
-                return child.value()
+                value = child.value()
+                if value == child.minimum() and child.specialValueText() != '':
+                    return None
+                else:
+                    return value
             elif type(child) is QDateTimeEdit:
                 return child.date().toString(child.displayFormat())
         

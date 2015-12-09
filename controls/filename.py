@@ -15,7 +15,6 @@ class SimpleFilenamePicker(QWidget):
     def __init__(self, parent=None):
         QWidget.__init__(self, parent)
         
-        #self.setBackgroundRole(QPalette.Window)
         self.setAutoFillBackground(True)
         
         self.le = QgsFilterLineEdit(self)
@@ -34,7 +33,7 @@ class SimpleFilenamePicker(QWidget):
     
     def value(self):
         if self.le.text() == str(QSettings().value('qgis/nullValue', 'NULL' )) or self.le.text() == '':
-            return NULL
+            return None
         else:
             return self.le.text()
  

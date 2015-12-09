@@ -49,7 +49,7 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
                                                          QCoreApplication.translate('ImportDxfDialog','Value'),
                                                          QCoreApplication.translate('ImportDxfDialog','Enabled')])
         self.tabFieldsMapping.setColumnWidth(0, 200)
-        self.tabFieldsMapping.setColumnWidth(1, 490)
+        self.tabFieldsMapping.setColumnWidth(1, 460)
         
         # Load dxf layers
         self._loadDxfLayers(filename)
@@ -58,11 +58,14 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
         if not self.valid :
             return
         
+        # Don't trigger events if loading from config file
+        self.is_loading_mapping = False
+        
         # Load the QGIS layers
         self._loadQgisLayers()
         
         # Load the default mapping
-        self.mapping = Mapping()#self._generateDefaultMapping()
+        self.mapping = Mapping()
         
         self._loadLayersMapping()
             
@@ -170,11 +173,13 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
         Loads the layers mapping
         '''
         
-        #self.is_loading_mapping = True
+        self.is_loading_mapping = True
         
         # Clear the table
         self.tabLayersMapping.clearContents()
         self.tabLayersMapping.setRowCount(len(self.dxf_layernames))
+        self.tabFieldsMapping.clearContents()
+        self.tabFieldsMapping.setRowCount(0)
         
         rowindex = 0
         
@@ -188,9 +193,12 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
             
             rowindex +=  1
         
-        #self.is_loading_mapping = False
+        self.is_loading_mapping = False
     
     def _tabLayersMappingCellChanged(self, currentRow, currentColumn, previousRow, previousColumn):
+        
+        if self.is_loading_mapping:
+            return
         
         # Update mapping
         self._updateMappingFromUI(previousRow)
@@ -336,7 +344,7 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
         # Field editor is range
         elif layer.editorWidgetV2(field_index) == 'PreciseRange':
             config = layer.editorWidgetV2Config(field_index)
-            return self._getSpinbox(config['Min'], config['Max'], config['Step'], value)
+            return self._getSpinbox(config['Min'], config['Max'], config['Step'], config['AllowNull'], value)
         
         # Field editor is datetime
         elif layer.editorWidgetV2(field_index) == 'DateTime':
