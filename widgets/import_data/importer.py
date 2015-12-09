@@ -5,6 +5,7 @@ Created on 04 nov. 2015
 '''
 
 import json
+from collections import OrderedDict
 
 from PyQt4.QtCore import QCoreApplication, QVariant, Qt, QDate, QSettings
 from PyQt4.QtGui import QCheckBox, QWidget, QHBoxLayout, QComboBox, QDoubleSpinBox, QDateTimeEdit, QLineEdit
@@ -121,6 +122,43 @@ class Importer(object):
         # Return extent
         return imported_extent
         
+    def _getFieldsMappingTableItemWidget(self, layer, field, value):
+        '''
+        Gets the table widget corresponding to the current field
+        
+        :param layer: The QGIS layer
+        :type layer: QgsVectorLayer
+        
+        :param field: The QGIS field
+        :type field: QgsField
+        '''
+        
+        field_index = layer.fieldNameIndex(field.name())
+        
+        # Field editor is ValueMap
+        if layer.editorWidgetV2(field_index) == 'ValueMap':
+            config = layer.editorWidgetV2Config(field_index)
+            config = dict((v, k) for k, v in config.iteritems())
+            ordered_config = OrderedDict(sorted(config.items(), key=lambda t: t[1]))
+            return self._getCombobox(ordered_config, value)
+        
+        # Field editor is range
+        elif layer.editorWidgetV2(field_index) == 'PreciseRange':
+            config = layer.editorWidgetV2Config(field_index)
+            return self._getSpinbox(config['Min'], config['Max'], config['Step'], config['AllowNull'], value)
+        
+        # Field editor is datetime
+        elif layer.editorWidgetV2(field_index) == 'DateTime':
+            config = layer.editorWidgetV2Config(field_index)
+            return self._getCalendar(config['display_format'], value)
+        
+        # Field editor is simple filename
+        elif layer.editorWidgetV2(field_index) == 'SimpleFilename':
+            return self._getSimpleFilenamePicker(value)
+        
+        # Other editors
+        return self._getTextbox(value)
+    
     def _getCenteredCheckbox(self, checked = True):
         '''
         Get a centered checkbox to insert in a table widget
@@ -329,7 +367,7 @@ class Importer(object):
             if type(child) is QCheckBox:
                 return child.isChecked()
             elif type(child) is QComboBox:
-                return child.currentText(), child.itemData(child.currentIndex())
+                return child.itemData(child.currentIndex())
             elif type(child) is SimpleFilenamePicker:
                 return child.value()
             elif type(child) is QLineEdit:
@@ -463,7 +501,7 @@ class LayerMapping(object):
         
         return None, None, None, None
     
-    def asIndexFieldMappings(self, destination_fields):
+    def asIndexFieldMappings(self, destination_fields, source_fields=None):
         mapping = LayerMapping()
         mapping.setSourceLayerName(self.sourceLayerName())
         mapping.setDestinationLayerName(self.destinationLayerName())
@@ -472,7 +510,11 @@ class LayerMapping(object):
         mapping.setValid(self.isValid())
         
         for source, destination, constant_value, enabled in self.fieldMappings():
-            mapping.addFieldMapping(source, destination_fields.fieldNameIndex(destination), constant_value, enabled)
+            mapping.addFieldMapping(
+                                    source_fields.fieldNameIndex(source) if source is not None else source, 
+                                    destination_fields.fieldNameIndex(destination), 
+                                    constant_value, 
+                                    enabled)
         
         return mapping
         

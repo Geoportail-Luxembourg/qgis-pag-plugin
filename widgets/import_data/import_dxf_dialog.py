@@ -229,7 +229,7 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
             layersmapping_rowindex = self.tabLayersMapping.currentRow()
             
         dxf_layername = self._getCellValue(self.tabLayersMapping, layersmapping_rowindex, 0)
-        qgis_layer = self._getQgisLayerFromTableName(self._getCellValue(self.tabLayersMapping, layersmapping_rowindex, 1)[1])
+        qgis_layer = self._getQgisLayerFromTableName(self._getCellValue(self.tabLayersMapping, layersmapping_rowindex, 1))
         qgis_tablename = PagLuxembourg.main.current_project.getLayerTableName(qgis_layer)
         
         layer_mapping = self._getLayerMappingFromSourceDxfLayer(dxf_layername)
@@ -320,43 +320,6 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
             rowindex +=  1
         
         layer_mapping.setValid(True)
-    
-    def _getFieldsMappingTableItemWidget(self, layer, field, value):
-        '''
-        Gets the table widget corresponding to the current field
-        
-        :param layer: The QGIS layer
-        :type layer: QgsVectorLayer
-        
-        :param field: The QGIS field
-        :type field: QgsField
-        '''
-        
-        field_index = layer.fieldNameIndex(field.name())
-        
-        # Field editor is ValueMap
-        if layer.editorWidgetV2(field_index) == 'ValueMap':
-            config = layer.editorWidgetV2Config(field_index)
-            config = dict((v, k) for k, v in config.iteritems())
-            ordered_config = OrderedDict(sorted(config.items(), key=lambda t: t[1]))
-            return self._getCombobox(ordered_config, value)
-        
-        # Field editor is range
-        elif layer.editorWidgetV2(field_index) == 'PreciseRange':
-            config = layer.editorWidgetV2Config(field_index)
-            return self._getSpinbox(config['Min'], config['Max'], config['Step'], config['AllowNull'], value)
-        
-        # Field editor is datetime
-        elif layer.editorWidgetV2(field_index) == 'DateTime':
-            config = layer.editorWidgetV2Config(field_index)
-            return self._getCalendar(config['display_format'], value)
-        
-        # Field editor is simple filename
-        elif layer.editorWidgetV2(field_index) == 'SimpleFilename':
-            return self._getSimpleFilenamePicker(value)
-        
-        # Other editors
-        return self._getTextbox(value)
         
     def _updateMappingFromUI(self, layersmapping_rowindex = None):
         
@@ -371,7 +334,7 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
             # Layer mapping
             layer_mapping = self._getLayerMappingFromSourceDxfLayer(dxf_layername)
             
-            qgis_layer = self._getQgisLayerFromTableName(self._getCellValue(self.tabLayersMapping, layermapping_rowindex, 1)[1])
+            qgis_layer = self._getQgisLayerFromTableName(self._getCellValue(self.tabLayersMapping, layermapping_rowindex, 1))
             qgis_tablename = PagLuxembourg.main.current_project.getLayerTableName(qgis_layer)
         
             # Check whether the destination layer is the same
