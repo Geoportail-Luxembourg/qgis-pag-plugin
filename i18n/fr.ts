@@ -218,28 +218,48 @@
         <source>Enable all</source>
         <translation>Activer tout</translation>
     </message>
+    <message>
+        <location filename="error_summary_dialog.ui" line="125"/>
+        <source>Export to CSV</source>
+        <translation>Exporter en CSV</translation>
+    </message>
 </context>
 <context>
     <name>ErrorSummaryDialog</name>
     <message>
-        <location filename="error_summary_dialog.py" line="65"/>
+        <location filename="error_summary_dialog.py" line="66"/>
         <source>Layer</source>
         <translation>Couche</translation>
     </message>
     <message>
-        <location filename="error_summary_dialog.py" line="65"/>
+        <location filename="error_summary_dialog.py" line="66"/>
         <source>Field name</source>
         <translation>Attribut</translation>
     </message>
     <message>
-        <location filename="error_summary_dialog.py" line="65"/>
+        <location filename="error_summary_dialog.py" line="66"/>
         <source>Error</source>
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="error_summary_dialog.py" line="65"/>
+        <location filename="error_summary_dialog.py" line="66"/>
         <source>Feature ID</source>
         <translation>ID entité</translation>
+    </message>
+    <message>
+        <location filename="error_summary_dialog.py" line="135"/>
+        <source>Select the csv location</source>
+        <translation>Sélectionner l'emplacement du fichier CSV</translation>
+    </message>
+    <message>
+        <location filename="error_summary_dialog.py" line="175"/>
+        <source>Success</source>
+        <translation>Succès</translation>
+    </message>
+    <message>
+        <location filename="error_summary_dialog.py" line="175"/>
+        <source>CSV export was successful</source>
+        <translation>L'export CSV s&apos;est déroulé avec succès</translation>
     </message>
 </context>
 <context>
@@ -271,19 +291,11 @@
     </message>
 </context>
 <context>
-    <name>SimpleFilenameWidgetWrapper</name>
+    <name>Filename</name>
     <message>
-        <location filename="simple_filename.py" line="85"/>
+        <location filename="filename.py" line="50"/>
         <source>Select a file</source>
         <translation>Sélectionner un fichier</translation>
-    </message>
-</context>
-<context>
-    <name>SimpleFilenameWidgetWrapperConfig</name>
-    <message>
-        <location filename="simple_filename.py" line="106"/>
-        <source>A filename without extension editor widget.</source>
-        <translation>Un éditeur de sélection de fichier sans extension.</translation>
     </message>
 </context>
 <context>
@@ -370,37 +382,37 @@
         <translation>Mapping du calque DXF &quot;{}&quot; vers la couche QGIS &quot;{}&quot;</translation>
     </message>
     <message>
-        <location filename="import_dxf_dialog.py" line="402"/>
+        <location filename="import_dxf_dialog.py" line="406"/>
         <source>Error</source>
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="import_dxf_dialog.py" line="402"/>
+        <location filename="import_dxf_dialog.py" line="406"/>
         <source>Mapping for DXF layer {} is not valid, please check it again.</source>
         <translation>Le mapping pour le calque DXF {} n&apos;est pas valide, veuillez le vérifier.</translation>
     </message>
     <message>
-        <location filename="import_dxf_dialog.py" line="516"/>
+        <location filename="import_dxf_dialog.py" line="520"/>
         <source>Success</source>
         <translation>Succès</translation>
     </message>
     <message>
-        <location filename="import_dxf_dialog.py" line="449"/>
+        <location filename="import_dxf_dialog.py" line="453"/>
         <source>Importation was successful</source>
         <translation>L&apos;importation DXF s&apos;est déroulée avec succès</translation>
     </message>
     <message>
-        <location filename="import_dxf_dialog.py" line="464"/>
+        <location filename="import_dxf_dialog.py" line="468"/>
         <source>Select the configuration file to load</source>
         <translation>Sélectionnez le fichier de configuration à charger</translation>
     </message>
     <message>
-        <location filename="import_dxf_dialog.py" line="496"/>
+        <location filename="import_dxf_dialog.py" line="500"/>
         <source>Select the json location</source>
         <translation>Sélectionnez le fichier de configuration à enregistrer</translation>
     </message>
     <message>
-        <location filename="import_dxf_dialog.py" line="516"/>
+        <location filename="import_dxf_dialog.py" line="520"/>
         <source>Mapping configuration saved</source>
         <translation>Configuration du mapping enregistrée</translation>
     </message>
@@ -476,27 +488,27 @@
 <context>
     <name>Importer</name>
     <message>
-        <location filename="importer.py" line="114"/>
+        <location filename="importer.py" line="115"/>
         <source>Error</source>
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="importer.py" line="105"/>
+        <location filename="importer.py" line="106"/>
         <source>Commit error on layer {}</source>
         <translation>Erreur lors du commit sur la couche {}</translation>
     </message>
     <message>
-        <location filename="importer.py" line="64"/>
+        <location filename="importer.py" line="65"/>
         <source>Invalid geometry : Handle = {}</source>
         <translation>Géométrie invalide : Handle = {}</translation>
     </message>
     <message>
-        <location filename="importer.py" line="114"/>
+        <location filename="importer.py" line="115"/>
         <source>Some features were not imported, open the message log (bubble on bottom right of the screen)</source>
         <translation>Des entités n&apos;ont pas été importées, ouvrir le log de message (bulle en bas à droite de l&apos;écran)</translation>
     </message>
     <message>
-        <location filename="importer.py" line="78"/>
+        <location filename="importer.py" line="79"/>
         <source>Invalid geometry : FID = {}</source>
         <translation>Géométrie invalide : FID = {}</translation>
     </message>
@@ -504,113 +516,145 @@
 <context>
     <name>PAGLuxembourg</name>
     <message>
-        <location filename="main.py" line="299"/>
+        <location filename="main.py" line="300"/>
         <source>&amp;PAG Luxembourg</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="main.py" line="198"/>
+        <location filename="main.py" line="199"/>
         <source>New project</source>
         <translation>Nouveau projet</translation>
     </message>
     <message>
-        <location filename="main.py" line="198"/>
+        <location filename="main.py" line="199"/>
         <source>Creates a new PAG project</source>
         <translation>Crée un nouveau projet PAG</translation>
     </message>
     <message>
-        <location filename="main.py" line="225"/>
+        <location filename="main.py" line="226"/>
         <source>Apply styles</source>
         <translation>Symboliser les couches</translation>
     </message>
     <message>
-        <location filename="main.py" line="225"/>
+        <location filename="main.py" line="226"/>
         <source>Apply predefined styles to the project</source>
         <translation>Applique les styles prédéfinis aux couches</translation>
     </message>
     <message>
-        <location filename="main.py" line="260"/>
+        <location filename="main.py" line="261"/>
         <source>About</source>
         <translation>A propos</translation>
     </message>
     <message>
-        <location filename="main.py" line="260"/>
+        <location filename="main.py" line="261"/>
         <source>About the PAG plugin</source>
         <translation>A propos du plugin PAGLuxembourg</translation>
     </message>
     <message>
-        <location filename="main.py" line="207"/>
+        <location filename="main.py" line="208"/>
         <source>Import data</source>
         <translation>Importer des données</translation>
     </message>
     <message>
-        <location filename="main.py" line="207"/>
+        <location filename="main.py" line="208"/>
         <source>Import data from files (GML, SHP, DXF)</source>
         <translation>Importer des données depuis un fichier (GML, SHP, DXF)</translation>
     </message>
     <message>
-        <location filename="main.py" line="216"/>
+        <location filename="main.py" line="217"/>
         <source>Export GML</source>
         <translation>Export GML</translation>
     </message>
     <message>
-        <location filename="main.py" line="216"/>
+        <location filename="main.py" line="217"/>
         <source>Export the current project to a GML file</source>
         <translation>Exporter le projet vers un fichier GML</translation>
     </message>
     <message>
-        <location filename="main.py" line="234"/>
+        <location filename="main.py" line="235"/>
         <source>Check data</source>
         <translation>Vérifier les données</translation>
     </message>
     <message>
-        <location filename="main.py" line="234"/>
+        <location filename="main.py" line="235"/>
         <source>Check project data for errors</source>
         <translation>Vérifier les données du projet</translation>
     </message>
     <message>
-        <location filename="main.py" line="247"/>
+        <location filename="main.py" line="248"/>
         <source>Check topology</source>
         <translation>Vérifier la topologie</translation>
     </message>
     <message>
-        <location filename="main.py" line="247"/>
+        <location filename="main.py" line="248"/>
         <source>Check layers topology according to predefined rules</source>
         <translation>Vérifier la topologie selon les règles prédéfinies du PAG</translation>
     </message>
     <message>
-        <location filename="main.py" line="286"/>
+        <location filename="main.py" line="287"/>
         <source>PAG Luxembourg</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="main.py" line="286"/>
+        <location filename="main.py" line="287"/>
         <source>The &quot;Topology Checker&quot; plugin is required by the &quot;PAG Luxembourg&quot;, please install it and restart QGIS.</source>
         <translation>Le plugin &quot;Topology Checker&quot; est requis par le plugin &quot;PAG Luxembourg&quot;, merci de l&apos;installer et de redémarrer QGIS.</translation>
     </message>
     <message>
-        <location filename="main.py" line="288"/>
+        <location filename="main.py" line="289"/>
         <source>Show plugin manager</source>
         <translation>Afficher le gestionnaire de plugins</translation>
     </message>
 </context>
 <context>
+    <name>PreciseRangeWidgetWrapperConfig</name>
+    <message>
+        <location filename="precise_range.py" line="63"/>
+        <source>A precise range editor.</source>
+        <translation>Un éditeur de plage précise, nombre de décimales = précision</translation>
+    </message>
+</context>
+<context>
+    <name>PreciseRangeWidgetWrapperFactory</name>
+    <message>
+        <location filename="precise_range.py" line="74"/>
+        <source>Precise Range</source>
+        <translation>Plage précise</translation>
+    </message>
+</context>
+<context>
     <name>Project</name>
     <message>
-        <location filename="project.py" line="468"/>
+        <location filename="project.py" line="458"/>
         <source>Error</source>
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="project.py" line="468"/>
+        <location filename="project.py" line="458"/>
         <source>Type not found in XSD : {}</source>
         <translation>Type non trouvé dans le XSD : {}</translation>
     </message>
 </context>
 <context>
+    <name>SimpleFilenameWidgetWrapper</name>
+    <message>
+        <location filename="simple_filename.py" line="88"/>
+        <source>Select a file</source>
+        <translation>Sélectionner un fichier</translation>
+    </message>
+</context>
+<context>
+    <name>SimpleFilenameWidgetWrapperConfig</name>
+    <message>
+        <location filename="simple_filename.py" line="109"/>
+        <source>A filename without extension editor widget.</source>
+        <translation>Un éditeur de sélection de fichier sans extension.</translation>
+    </message>
+</context>
+<context>
     <name>SimpleFilenameWidgetWrapperFactory</name>
     <message>
-        <location filename="simple_filename.py" line="117"/>
+        <location filename="simple_filename.py" line="120"/>
         <source>Simple Filename</source>
         <translation>Nom de fichier simple</translation>
     </message>

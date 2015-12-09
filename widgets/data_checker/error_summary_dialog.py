@@ -22,6 +22,7 @@
 """
 
 import os
+import csv
 
 from PyQt4 import QtGui, uic
 from PyQt4.QtGui import QFileDialog, QMessageBox, QTableWidgetItem, QHeaderView, QColor
@@ -124,3 +125,53 @@ class ErrorSummaryDialog(QtGui.QDialog, FORM_CLASS):
         
         for feature in features:
             PagLuxembourg.main.qgis_interface.openFeatureForm(layer, feature)
+    
+    def exportToCsv(self):
+        # Select CSV file to export
+        dialog = QFileDialog()
+        dialog.setFileMode(QFileDialog.AnyFile)
+        dialog.setAcceptMode(QFileDialog.AcceptSave)
+        dialog.setNameFilter('CSV file (*.csv)');
+        dialog.setWindowTitle(QCoreApplication.translate('ErrorSummaryDialog','Select the csv location'))
+        dialog.setSizeGripEnabled(False)
+        result = dialog.exec_()
+        
+        if result == 0:
+            return
+        
+        selected_files = dialog.selectedFiles()
+        
+        if len(selected_files)==0:
+            return
+        
+        # CSV filename and directory
+        csv_filename = selected_files[0]
+        csvfile = open(csv_filename, 'wb')
+        csvwriter = csv.writer(csvfile, delimiter=';')
+        
+        # Header
+        csvwriter.writerow(['Layer name', 'Feature ID', 'Field name', 'Message', 'Centroid X', 'Centroid Y'])
+        
+        # Iterate errors
+        for rowindex in range(self.tabDataErrors.rowCount()):
+            row = []
+            
+            # Feature info
+            for colindex in range(4):
+                row.append(self.tabDataErrors.item(rowindex,colindex).text())
+                
+            # Centroid
+            layer, feature, field, message = self.data_errors[rowindex]
+            if feature.geometry().isGeosValid():
+                centroid = feature.geometry().centroid().asPoint()
+                row.append(centroid.x())
+                row.append(centroid.y())
+                           
+            csvwriter.writerow(row)
+            
+        csvfile.close()
+        
+        # Success message
+        PagLuxembourg.main.qgis_interface.messageBar().clearWidgets()
+        PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('ErrorSummaryDialog','Success'),
+                                                                   QCoreApplication.translate('ErrorSummaryDialog','CSV export was successful'))
