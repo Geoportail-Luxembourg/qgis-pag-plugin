@@ -171,7 +171,7 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
             
             self.tabMapping.setItem(rowindex, 0, QTableWidgetItem(field.name())) # QGIS field
             self.tabMapping.setCellWidget(rowindex, 1, self._getShpFieldsCombobox(field, destination)) # SHP fields
-            self.tabMapping.setCellWidget(rowindex, 2, self._getFieldsMappingTableItemWidget(qgis_layer, field, constant_value)) # Constant value
+            self.tabMapping.setCellWidget(rowindex, 2, self._getFieldsMappingTableItemWidget(qgis_layer, field.name(), constant_value)) # Constant value
             self.tabMapping.setCellWidget(rowindex, 3, self._getCenteredCheckbox(enabled if enabled is not None else True)) # Enabled checkbox
             
             rowindex +=  1
@@ -239,9 +239,55 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         
         return widget
     
+    def _tabMappingCellChanged(self, currentRow, currentColumn, previousRow, previousColumn):
+        
+        if self.is_loading_mapping:
+            return
+        
+        # Update mapping
+        #self._updateMappingFromUI(previousRow)
+        
+        # Load mapping into the table
+        self._loadValueMap()
+        
     def _loadValueMap(self):
-        pass
+        mapping_rowindex = self.tabMapping.currentRow()
+        
+        if mapping_rowindex == -1:
+            return
+        
+        shp_field = self._getCellValue(self.tabMapping, mapping_rowindex, 1)
+        
+        if shp_field is None:
+            return
+        
+        qgis_layer = self.qgislayers[self.cbbLayers.currentIndex()]
+        qgis_field = self._getCellValue(self.tabMapping, mapping_rowindex, 0)
+        shp_values = self._getFieldUniqueValue(self.shplayer, shp_field)
+        
+        # Clear the table
+        self.tabValueMap.clearContents()
+        self.tabValueMap.setRowCount(len(shp_values))
+        
+        rowindex = 0
+        
+        for shp_value in shp_values:
+            self.tabValueMap.setItem(rowindex, 0, QTableWidgetItem(shp_value)) # SHP value
+            self.tabValueMap.setCellWidget(rowindex, 1, self._getFieldsMappingTableItemWidget(qgis_layer, qgis_field, shp_value)) # QGIS value
+            
+            rowindex +=  1
     
+    def _getFieldUniqueValue(self, layer, field):
+        
+        result = set()
+        
+        fieldindex = layer.fieldNameIndex(field)
+        
+        for feature in layer.getFeatures():
+            result.add(feature[fieldindex])
+            
+        return result
+        
     def _updateMappingFromUI(self, mapping_rowindex = None):
         '''
         Get the field mapping between the source layer and destination layer
@@ -266,10 +312,10 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
             if rowindex == mapping_rowindex:
                 del valuemap[:]
                 for valuemap_rowindex in range(self.tabValueMap.rowCount()):
-                    valuemap.append(
-                                    self._getCellValue(self.tabMapping, rowindex, 0), 
-                                    self._getCellValue(self.tabMapping, rowindex, 1)
-                                    )
+                    valuemap.append((
+                                     self._getCellValue(self.tabValueMap, valuemap_rowindex, 0), 
+                                     self._getCellValue(self.tabValueMap, valuemap_rowindex, 1)
+                                     ))
                     
             newmapping.addFieldMapping(self._getCellValue(self.tabMapping, rowindex, 1),
                                        self._getCellValue(self.tabMapping, rowindex, 0),

@@ -314,7 +314,7 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
             source, destination, constant_value, enabled = layer_mapping.getFieldMappingForDestination(field.name())
             
             self.tabFieldsMapping.setItem(rowindex, 0, QTableWidgetItem(destination)) # QGIS field
-            self.tabFieldsMapping.setCellWidget(rowindex, 1, self._getFieldsMappingTableItemWidget(qgis_layer, field, constant_value)) # Constant value
+            self.tabFieldsMapping.setCellWidget(rowindex, 1, self._getFieldsMappingTableItemWidget(qgis_layer, field.name(), constant_value)) # Constant value
             self.tabFieldsMapping.setCellWidget(rowindex, 2, self._getCenteredCheckbox(enabled)) # Enabled checkbox
             
             rowindex +=  1

@@ -153,7 +153,10 @@
      </rect>
     </property>
     <property name="selectionMode">
-     <enum>QAbstractItemView::NoSelection</enum>
+     <enum>QAbstractItemView::SingleSelection</enum>
+    </property>
+    <property name="selectionBehavior">
+     <enum>QAbstractItemView::SelectRows</enum>
     </property>
     <property name="columnCount">
      <number>4</number>
@@ -316,6 +319,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>tabMapping</sender>
+   <signal>currentCellChanged(int,int,int,int)</signal>
+   <receiver>Dialog</receiver>
+   <slot>_tabMappingCellChanged(int,int,int,int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>270</x>
+     <y>196</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>311</x>
+     <y>639</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>_selectedLayerIndexChanged(int)</slot>
@@ -323,5 +342,6 @@
   <slot>_saveConfig()</slot>
   <slot>_loadConfig()</slot>
   <slot>_toggleFieldsMappingCheckboxes()</slot>
+  <slot>_tabMappingCellChanged(int,int,int,int)</slot>
  </slots>
 </ui>

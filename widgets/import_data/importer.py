@@ -122,7 +122,7 @@ class Importer(object):
         # Return extent
         return imported_extent
         
-    def _getFieldsMappingTableItemWidget(self, layer, field, value):
+    def _getFieldsMappingTableItemWidget(self, layer, fieldname, value):
         '''
         Gets the table widget corresponding to the current field
         
@@ -133,7 +133,7 @@ class Importer(object):
         :type field: QgsField
         '''
         
-        field_index = layer.fieldNameIndex(field.name())
+        field_index = layer.fieldNameIndex(fieldname)
         
         # Field editor is ValueMap
         if layer.editorWidgetV2(field_index) == 'ValueMap':
@@ -506,12 +506,7 @@ class LayerMapping(object):
             if destination == destination_fieldname:
                 return value_map
         
-        return None
-    
-    '''def clearValueMapForDestination(self, destination_fieldname):
-        for source, destination, constant_value, enabled, value_map in self._mapping['FieldMapping']:
-            if destination == destination_fieldname:
-                del value_map[:]'''
+        return []
     
     def asIndexFieldMappings(self, destination_fields, source_fields=None):
         mapping = LayerMapping()
@@ -532,9 +527,6 @@ class LayerMapping(object):
         return mapping
         
     def addFieldMapping(self, source, destination, constant_value, enabled, value_map = []):
-        value_map = []
-        value_map.append(('test1','test2'))
-        value_map.append(('test3','test3'))
         self._mapping['FieldMapping'].append((source, destination, constant_value, enabled, value_map))
     
     def clearFieldMapping(self):
