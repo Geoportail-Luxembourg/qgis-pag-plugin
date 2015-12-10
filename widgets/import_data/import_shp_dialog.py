@@ -71,6 +71,12 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         self.tabMapping.setColumnWidth(1, 200)
         self.tabMapping.setColumnWidth(2, 270)
         
+        self.tabValueMap.setHorizontalHeaderLabels([
+                                                      QCoreApplication.translate('ImportShpDialog','SHP Value'),
+                                                      QCoreApplication.translate('ImportShpDialog','QGIS Value')
+                                                      ])
+        self.tabValueMap.setColumnWidth(0, 200)
+        
         # Load shp layer
         self.shplayer = QgsVectorLayer(filename, filename, "ogr")
         
@@ -81,6 +87,9 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
             self.valid = False
             return
             
+        # Load the default mapping
+        self.mapping = LayerMapping()
+        
         self._loadShpFields()
         self._loadQgisLayers()
         
@@ -116,9 +125,10 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         '''
         
         if not self.is_loading_mapping:
+            self.mapping = LayerMapping()
             self._loadMapping()
     
-    def _loadMapping(self, mapping = None):
+    def _loadMapping(self):
         '''
         Loads a mapping using an existing one or a default one
         
@@ -126,27 +136,22 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         :type mapping: LayerMapping
         '''
         
-        qgis_layer = None
+        qgis_layer = self.qgislayers[self.cbbLayers.currentIndex()]
         
-        if mapping is None:
-            # Loads default mapping
-            mapping = LayerMapping()
-            qgis_layer = self.qgislayers[self.cbbLayers.currentIndex()]
-        else:
-            # Gets the mapping destination layer
-            for layer in self.qgislayers:
-                if PagLuxembourg.main.current_project.getLayerTableName(layer) == mapping.destinationLayerName():
-                    qgis_layer = layer
-            
-            if qgis_layer is None:
-                QMessageBox.critical(self, 
-                                     QCoreApplication.translate('ImportShpDialog','Error'),
-                                     QCoreApplication.translate('ImportShpDialog','Destination layer {} not found.').format(mapping.destinationLayerName()))
-                return
-            
-            # Loads a config file mapping
-            self.is_loading_mapping = True
-            self.cbbLayers.setCurrentIndex(self.qgislayers.index(qgis_layer))
+        # Gets the mapping destination layer
+        for layer in self.qgislayers:
+            if PagLuxembourg.main.current_project.getLayerTableName(layer) == self.mapping.destinationLayerName():
+                qgis_layer = layer
+        
+        if self.mapping.destinationLayerName() is not None and qgis_layer is None:
+            QMessageBox.critical(self, 
+                                 QCoreApplication.translate('ImportShpDialog','Error'),
+                                 QCoreApplication.translate('ImportShpDialog','Destination layer {} not found.').format(self.mapping.destinationLayerName()))
+            return
+        
+        # Loads a config file mapping
+        self.is_loading_mapping = True
+        self.cbbLayers.setCurrentIndex(self.qgislayers.index(qgis_layer))
             
         qgis_fields = qgis_layer.dataProvider().fields()
         
@@ -162,7 +167,7 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
             if field.name() == PagLuxembourg.project.PK:
                 continue
         
-            source, destination, constant_value, enabled = mapping.getFieldMappingForDestination(field.name())
+            source, destination, constant_value, enabled, value_map = self.mapping.getFieldMappingForDestination(field.name())
             
             self.tabMapping.setItem(rowindex, 0, QTableWidgetItem(field.name())) # QGIS field
             self.tabMapping.setCellWidget(rowindex, 1, self._getShpFieldsCombobox(field, destination)) # SHP fields
@@ -170,6 +175,8 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
             self.tabMapping.setCellWidget(rowindex, 3, self._getCenteredCheckbox(enabled if enabled is not None else True)) # Enabled checkbox
             
             rowindex +=  1
+        
+        self._loadValueMap()
         
         self.is_loading_mapping = False
     
@@ -232,26 +239,45 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         
         return widget
     
-    def _getMapping(self):
+    def _loadValueMap(self):
+        pass
+    
+    def _updateMappingFromUI(self, mapping_rowindex = None):
         '''
         Get the field mapping between the source layer and destination layer
         
         :returns: A list of tuples : SHP field index, QGIS field index, None, Enabled (not a constant value)
-        :rtype: List of tuples : str, str, None, Boolean
+        :rtype: List of tuples : str, str, None, Boolean, []
         '''
         
+        if mapping_rowindex is None:
+            mapping_rowindex = self.tabMapping.currentRow()
+            
         qgis_layer = self.qgislayers[self.cbbLayers.currentIndex()]
         
-        mapping = LayerMapping()
-        mapping.setDestinationLayerName(PagLuxembourg.main.current_project.getLayerTableName(qgis_layer))
+        newmapping = LayerMapping()
+        newmapping.setDestinationLayerName(PagLuxembourg.main.current_project.getLayerTableName(qgis_layer))
         
         for rowindex in range(self.tabMapping.rowCount()):
-            mapping.addFieldMapping(self._getCellValue(self.tabMapping, rowindex, 1),
-                                    self._getCellValue(self.tabMapping, rowindex, 0),
-                                    self._getCellValue(self.tabMapping, rowindex, 2),
-                                    self._getCellValue(self.tabMapping, rowindex, 3))
-        
-        return mapping
+            qgis_field = self._getCellValue(self.tabMapping, rowindex, 0)
+            valuemap = self.mapping.getValueMapForDestination(qgis_field)
+            
+            # If row is selected, update field mapping
+            if rowindex == mapping_rowindex:
+                del valuemap[:]
+                for valuemap_rowindex in range(self.tabValueMap.rowCount()):
+                    valuemap.append(
+                                    self._getCellValue(self.tabMapping, rowindex, 0), 
+                                    self._getCellValue(self.tabMapping, rowindex, 1)
+                                    )
+                    
+            newmapping.addFieldMapping(self._getCellValue(self.tabMapping, rowindex, 1),
+                                       self._getCellValue(self.tabMapping, rowindex, 0),
+                                       self._getCellValue(self.tabMapping, rowindex, 2),
+                                       self._getCellValue(self.tabMapping, rowindex, 3),
+                                       valuemap)        
+        del self.mapping
+        self.mapping = newmapping
     
     def _validateMapping(self):
         '''
@@ -261,9 +287,11 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         :rtype: Boolean
         '''
         
-        mapping = self._getMapping().fieldMappings()
+        self._updateMappingFromUI()
         
-        for shpfield, qgisfield, constant_value, enabled in mapping:
+        mapping = self.mapping.fieldMappings()
+        
+        for shpfield, qgisfield, constant_value, enabled, value_map in mapping:
             pass
             
         return True
@@ -282,7 +310,7 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         imported_extent = self._importLayer(
                                             self.shplayer, 
                                             qgis_layer, 
-                                            self._getMapping().asIndexFieldMappings(qgis_layer.dataProvider().fields(), self.shpfields)
+                                            self.mapping.asIndexFieldMappings(qgis_layer.dataProvider().fields(), self.shpfields)
                                             )
         
         # Zoom to selected
@@ -324,7 +352,8 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         if len(mapping.layerMappings()) != 1:
             return
         
-        self._loadMapping(mapping.layerMappings()[0])
+        self.mapping = mapping.layerMappings()[0]
+        self._loadMapping()
         
     def _saveConfig(self):
         '''
@@ -358,7 +387,7 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         
         # Generates the mapping and save it
         mapping = Mapping()
-        mapping.addLayerMapping(self._getMapping())
+        mapping.addLayerMapping(self.mapping)
         mapping.writeJson(filename)
         
         QMessageBox.information(self, 

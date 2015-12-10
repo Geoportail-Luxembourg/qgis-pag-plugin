@@ -44,7 +44,7 @@ class Importer(object):
         # Iterate source features
         for src_feature in src_dp.getFeatures(feature_request):
             dst_feature = QgsFeature(dst_layer_fields)
-            for src_index, dst_index, constant_value, enabled in mapping.fieldMappings():
+            for src_index, dst_index, constant_value, enabled, value_map in mapping.fieldMappings():
                 value = constant_value if src_index is None else src_feature[src_index]
                 
                 # Check if numeric value needs to be casted
@@ -488,18 +488,30 @@ class LayerMapping(object):
         return self._mapping['FieldMapping']
     
     def getFieldMappingForSource(self, source_fieldname):
-        for source, destination, constant_value, enabled in self._mapping['FieldMapping']:
+        for source, destination, constant_value, enabled, value_map in self._mapping['FieldMapping']:
             if source == source_fieldname:
-                return source, destination, constant_value, enabled
+                return source, destination, constant_value, enabled, value_map
         
-        return None, None, None, None
+        return None, None, None, None, None
     
     def getFieldMappingForDestination(self, destination_fieldname):
-        for source, destination, constant_value, enabled in self._mapping['FieldMapping']:
+        for source, destination, constant_value, enabled, value_map in self._mapping['FieldMapping']:
             if destination == destination_fieldname:
-                return source, destination, constant_value, enabled
+                return source, destination, constant_value, enabled, value_map
         
-        return None, None, None, None
+        return None, None, None, None, None
+    
+    def getValueMapForDestination(self, destination_fieldname):
+        for source, destination, constant_value, enabled, value_map in self._mapping['FieldMapping']:
+            if destination == destination_fieldname:
+                return value_map
+        
+        return None
+    
+    '''def clearValueMapForDestination(self, destination_fieldname):
+        for source, destination, constant_value, enabled, value_map in self._mapping['FieldMapping']:
+            if destination == destination_fieldname:
+                del value_map[:]'''
     
     def asIndexFieldMappings(self, destination_fields, source_fields=None):
         mapping = LayerMapping()
@@ -509,17 +521,21 @@ class LayerMapping(object):
         mapping.setEnabled(self.isEnabled())
         mapping.setValid(self.isValid())
         
-        for source, destination, constant_value, enabled in self.fieldMappings():
+        for source, destination, constant_value, enabled, value_map in self.fieldMappings():
             mapping.addFieldMapping(
                                     source_fields.fieldNameIndex(source) if source is not None else source, 
                                     destination_fields.fieldNameIndex(destination), 
                                     constant_value, 
-                                    enabled)
+                                    enabled,
+                                    value_map)
         
         return mapping
         
-    def addFieldMapping(self, source, destination, constant_value, enabled):
-        self._mapping['FieldMapping'].append((source, destination, constant_value, enabled))
+    def addFieldMapping(self, source, destination, constant_value, enabled, value_map = []):
+        value_map = []
+        value_map.append(('test1','test2'))
+        value_map.append(('test3','test3'))
+        self._mapping['FieldMapping'].append((source, destination, constant_value, enabled, value_map))
     
     def clearFieldMapping(self):
         del self._mapping['FieldMapping'][:]
