@@ -16,7 +16,7 @@ VERSION "2015-04-01"  =
   TOPIC GESTION =
 
     CLASS Gestion =
-      /** Numéro de la commune
+      /** Numéro interne du Minsitère de l'Intérieur de la commune
        */
       ID_COMMUNE (FINAL) : MANDATORY (
         /** Nommern
@@ -341,6 +341,9 @@ VERSION "2015-04-01"  =
       /** date de délivrance
        */
       DATE : MANDATORY FORMAT INTERLIS.XMLDate "2000-1-1" .. "2099-1-1";
+      /** Date de mutation du PCN ou fond de plan qui servait comme base à l'élaboration du PAG (p.ex yyyy-mm-jj)
+       */
+      DATE_MUTATION_FOND_DE_PLAN : MANDATORY FORMAT INTERLIS.XMLDate "2004-1-1" .. "2018-8-28";
     END Gestion;
 
   END GESTION;
@@ -441,7 +444,7 @@ VERSION "2015-04-01"  =
     CLASS BIOTOPE_POLY =
       /** géometrie du biotope
        */
-      GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF;
+      GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
       /** code du type de biotope tel que defini dans Kurzanleitung zur Erfassung der nach Art. 17 des
        * luxemburgischen Naturschutzgesetzes
        * geschützten Biotope
@@ -586,7 +589,7 @@ VERSION "2015-04-01"  =
    */
   TOPIC PAG =
 
-    /** Inventaire patrimoine
+    /** alignement à respecter (ligne)
      */
     CLASS ALIGN_A_RESP =
       /** Texte explicatif
@@ -603,10 +606,10 @@ VERSION "2015-04-01"  =
     /** inventaire de tous les bâtiments de la commune
      */
     CLASS BATIMENT =
-      GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF;
+      GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
     END BATIMENT;
 
-    /** Inventaire patrimoine (point)
+    /** constructions à conserver (point)
      */
     CLASS CONST_A_CONS_POINT =
       /** Texte explicatif
@@ -620,7 +623,7 @@ VERSION "2015-04-01"  =
       GEOMETRIE : MANDATORY PAG.LUREF;
     END CONST_A_CONS_POINT;
 
-    /** Inventaire patrimoine (polygone)
+    /** constructions à conserver (polygone)
      */
     CLASS CONST_A_CONS_POLY =
       /** Texte explicatif
@@ -631,7 +634,7 @@ VERSION "2015-04-01"  =
       NOM_FICHIER : MANDATORY TEXT*100;
       /** géométrie (surface)
        */
-      GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF;
+      GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
     END CONST_A_CONS_POLY;
 
     /** couloirs et espaces réservés (art. 32)
@@ -678,10 +681,19 @@ VERSION "2015-04-01"  =
       NOM_FICHIER : MANDATORY TEXT*100;
       /** géométrie de la zone
        */
-      GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF;
+      GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
     END EMPLAC_STAT;
 
-    /** Inventaire patrimoine (point)
+    /** PCN ou fond de plan qui servait comme base à l'élaboration du PAG
+     */
+    CLASS FOND_DE_PLAN =
+      /** NUM_CADASTRAL/CODE_SUP
+       */
+      NUM_CADAST : MANDATORY TEXT*20;
+      GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
+    END FOND_DE_PLAN;
+
+    /** gabarit à sauvegarder (point)
      */
     CLASS GABARIT_A_SAUV_POINT =
       /** Texte explicatif
@@ -695,7 +707,7 @@ VERSION "2015-04-01"  =
       GEOMETRIE : MANDATORY PAG.LUREF;
     END GABARIT_A_SAUV_POINT;
 
-    /** Inventaire patrimoine (polygone)
+    /** gabarit à sauvegarder (polygone)
      */
     CLASS GABARIT_A_SAUV_POLY =
       /** Texte explicatif
@@ -706,12 +718,18 @@ VERSION "2015-04-01"  =
       NOM_FICHIER : MANDATORY TEXT*100;
       /** géométrie (polygone)
        */
-      GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF;
+      GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
     END GABARIT_A_SAUV_POLY;
 
+    /** limites de la modification ponctuelle du PAG
+     */
     CLASS MODIFICATION_PAG =
+      /** Date de la modification
+       */
       DATE_MODIF : FORMAT INTERLIS.XMLDate "2011-1-1" .. "2030-1-1";
-      GEOMETRIE : SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF;
+      /** limites de la modification PAG
+       */
+      GEOMETRIE : SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
     END MODIFICATION_PAG;
 
     /** Zone soumise à un plan d'aménagement particulier "nouveau quartier" (art.38)
@@ -740,7 +758,7 @@ VERSION "2015-04-01"  =
       DL_MAX : 0 .. 1000;
       /** géométrie du quartier
        */
-      GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF;
+      GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
       /** Dénomination de la zone
        */
       DENOMINATION : TEXT*100;
@@ -766,27 +784,15 @@ VERSION "2015-04-01"  =
       NOM_FICHIER_GR : MANDATORY TEXT*100;
       /** géométrie du PAP
        */
-      GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF;
+      GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
     END PAP_APPROUVE;
-
-    /** PCN qui servait comme base du zonage
-     */
-    CLASS PCN =
-      /** NUM_CADASTRAL/CODE_SUP
-       */
-      NUM_CADAST : MANDATORY TEXT*20;
-      GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF;
-      /** Date de mutation
-       */
-      DATE_MUTATION : MANDATORY FORMAT INTERLIS.XMLDate "2000-1-1" .. "2020-12-31";
-    END PCN;
 
     /** délimitation du périmètre
      */
     CLASS PERIMETRE =
       /** géométrie(surface)
        */
-      GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF;
+      GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
     END PERIMETRE;
 
     /** Zone d'aménagement différé (art.29)
@@ -794,7 +800,7 @@ VERSION "2015-04-01"  =
     CLASS ZAD =
       /** géométrie du quartier
        */
-      GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF;
+      GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
       /** Nom du fichier word contenant la partie écrite du PAG de l'article concerné
        */
       NOM_FICHIER : MANDATORY TEXT*100;
@@ -901,28 +907,11 @@ VERSION "2015-04-01"  =
       NOM_FICHIER : MANDATORY TEXT*100;
       /** géométrie (surface)
        */
-      GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF;
+      GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
       /** subdivision de la zone définie dans Catégorie
        */
       GENRE : TEXT*10;
     END ZONAGE;
-
-    /** zones tel que défini dans le règlement grand-ducal du 28 juillet 2011 concernant le contenu du plan d'aménagement général d'une commune (art. 31bis)
-     */
-    CLASS ZONE_SERV_ECO =
-      /** type de la servitude écologique
-       */
-      CODE : MANDATORY TEXT*20;
-      /** libellé du code
-       */
-      LIB : TEXT*100;
-      /** Nom du fichier word contenant la partie écrite du PAG de l'article concerné
-       */
-      NOM_FICHIER : MANDATORY TEXT*100;
-      /** géométrie (surface)
-       */
-      GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF;
-    END ZONE_SERV_ECO;
 
     /** zones tel que défini dans le règlement grand-ducal du 28 juillet 2011 concernant le contenu du plan d'aménagement général d'une commune (art. 31)
      */
@@ -938,7 +927,7 @@ VERSION "2015-04-01"  =
       NOM_FICHIER : MANDATORY TEXT*100;
       /** géométrie (surface)
        */
-      GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF;
+      GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
     END ZONE_SERV_URB;
 
     /** informations sur les quartiers existants
@@ -955,7 +944,7 @@ VERSION "2015-04-01"  =
       NOM_FICHIER_GR : TEXT*100;
       /** géométrie(surface)
        */
-      GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF;
+      GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
     END ZONES_QE;
 
     /** informations concernant les zones définies dans le règlement grand-ducal 28 juillet 2011 art. 30;33-37
@@ -997,7 +986,7 @@ VERSION "2015-04-01"  =
       NOM_FICHIER : MANDATORY TEXT*100;
       /** géométrie de la zone
        */
-      GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF;
+      GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
       /** subdivision de la zone définie dans Catégorie
        */
       GENRE : TEXT*10;

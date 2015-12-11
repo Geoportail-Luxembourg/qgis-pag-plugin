@@ -57,9 +57,9 @@
           "Nodes": []
         },
         {
-          "Name": "PCN",
+          "Name": "FOND_DE_PLAN",
           "IsGroup": false,
-          "TableName": "PAG.PCN",
+          "TableName": "PAG.FOND_DE_PLAN",
           "Nodes": []
         },
         {
