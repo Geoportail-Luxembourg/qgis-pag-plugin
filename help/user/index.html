@@ -1,0 +1,349 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Aide plugin PAG Luxembourg</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+
+    <style>
+        h1 {
+            padding-bottom: 9px;
+            border-bottom: 1px solid #eee;
+        }
+
+        h4 {
+            margin-top: 30px;    
+        }
+
+        img {
+            max-width: 100%;
+        }
+    </style>
+
+</head>
+<body style="padding-top: 60px;position: relative;">
+    <div class="container">
+        <nav id="navbar" class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">Aide PAG Luxembourg</a>
+                </div>
+
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a href="#create"><img src="images/create.png" /> Créer un projet</a></li>
+                        <li><a href="#import"><img src="images/import.png" /> Importer</a></li>
+                        <li><a href="#export"><img src="images/export.png" /> Exporter</a></li>
+                        <li><a href="#stylize"><img src="images/stylize.png" /> Symboliser</a></li>
+                        <li><a href="#check"><img src="images/check.png" /> Valider</a></li>
+                        <li><a href="#topology"><img src="images/topology.png" /> Topologie</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <h1 id="create"><img src="images/create.png" /> Créer un nouveau projet PAG</h1>
+
+        <p>
+            Cet outil permet de créer un projet PAG. Cliquer sur l'icône pour ouvrir la boite de dialogue.
+        </p>
+
+        <p>
+            <img src="images/create1.png" />
+        </p>
+
+        <p>
+            Saisir les paramètres du nouveau projet selon les indications suivantes :
+            <dl class="dl-horizontal">
+                <dt>Nom du projet</dt>
+                <dd>Le nom du projet, le nom du répertoire qui va contenir les fichiers du projet</dd>
+                <dt>Répertoire</dt>
+                <dd>Le répertoire qui va contenir le projet</dd>
+            </dl>
+        </p>
+
+        <div class="alert alert-info" role="alert">
+            <b>Note : </b>La création d'un projet peut prendre plusieurs secondes.
+        </div>
+
+        <p>
+            L'ouverture d'un projet PAG se fait via l'outil classique de QGIS : <img src="images/create2.png" />. Ouvrir le fichier <i><b>project.qgs</b></i> du répertoire de projet.
+        </p>
+
+        <p>
+            <img src="images/create3.png" />
+        </p>
+        
+        <p>
+            Une fois le projet créé, l'interface s'affiche avec la liste des couches à gauche.
+        </p>
+
+        <p>
+            <img src="images/create4.png" />
+        </p>
+
+        <div class="alert alert-warning" role="alert">
+            <b>Attention : </b>Il faut obligatoirement créer ou ouvrir un projet PAG pour accéder aux autres outils du plugin!
+        </div>
+
+        <h1 id="import"><img src="images/import.png" /> Importer des données</h1>
+        
+        <p>
+            Cet outil permet d'importer des données depuis un fichier <a href="#import-gml">GML</a>, <a href="#import-shp">SHP</a> ou <a href="#import-dxf">DXF</a>. Cliquez sur l'outil pour ouvrir la fenêtre de sélection du fichier à importer.
+        </p>
+        
+        <p>
+            <img src="images/import1.png" />
+        </p>
+        
+        <p>
+            La suite l'import dépend du type de fichier à importer :
+        </p>
+        
+        <h4 id="import-gml">Import d'un fichier GML</h4>
+        
+        <p>
+            L'import du fichier GML est direct, sans intervention de l'utilisateur, car il est au même format qu'un projet PAG.
+        </p>
+        
+        <p>
+            Une barre de progression indique l'avancement de l'import.
+        </p>
+
+        <p>
+            <img src="images/import2.png" />
+        </p>
+        
+        <p>
+            Un message indique la fin de l'import, et la carte zoom sur les entités importées.
+        </p>
+
+        <p>
+            <img src="images/import3.png" />
+        </p>
+        
+        <h4 id="import-shp">Import d'un fichier SHP (Shapefile ESRI)</h4>
+
+        <p>
+            L'import du fichier SHP nécessite une configuration préalable, appelée mapping. Après sélection d'un fichier SHP, la fenêtre de configuration s'ouvre.
+        </p>
+        
+        <p>
+            <img src="images/import4.png" />
+        </p>
+        
+        <p>
+            Dans la première liste déroulante, sélectionnez la couche QGIS dans laquelle importer le fichier SHP.
+        </p>
+
+        <p>
+            <img src="images/import5.png" />
+        </p>
+        
+        <p>
+            La seconde étape consiste à assigner un attribut QGIS à chaque attribut SHP. Lors de l'importation, le contenu de l'attribut SHP sera alors copié dans l'attribut QGIS correspondant.
+            Une fois la couche QGIS sélectionnée, la liste des attributs de cette couche (attributs QGIS) est disponible dans les différentes boites déroulantes.
+            Si le nom de l'attribut QGIS est le même que le nom de l'attribut SHP, le plugin le proposera par défaut.
+            Vous pouvez choisir l'attribut QGIS qui correspond à l'attribut SHP source.
+            Il est possible de désactiver un mapping si vous ne souhaitez pas importer un attribut SHP.
+            <br/>
+            Cliquez sur importer.
+        </p>
+
+        <p>
+            <img src="images/import6.png" />
+        </p>
+        
+        <p>
+            Un message indique la fin de l'import, et la carte zoom sur les entités importées.
+        </p>
+
+        <p>
+            <img src="images/import7.png" />
+        </p>
+        
+        <div class="alert alert-info" role="alert">
+            <b>Note : </b>Il est possible de sauvegarder et de charger une configuration de mapping via les boutons éponymes.
+        </div>
+        
+        <h4 id="import-dxf">Import d'un fichier DXF (Autocad)</h4>
+
+        <p>
+            Comme l'import SHP, l'import du fichier DXF nécessite une configuration préalable, légèrement plus complexe, appelée mapping.
+            En effet, contrairement à un fichier SHP, un calque DXF peut contenir plusieurs types de géométries.
+            Après sélection d'un fichier DXF, la fenêtre de configuration s'ouvre.
+        </p>
+
+        <p>
+            <img src="images/import8.png" />
+        </p>
+
+        <p>
+            La première étape consiste, pour chaque calque DXF, à indiquer dans quelle couche QGIS ils doivent être copiés.
+            Il est possible de désactiver un import de calque en le décochant.
+        </p>
+
+        <p>
+            <img src="images/import9.png" />
+        </p>
+        
+        <div class="alert alert-warning" role="alert">
+            <b>Attention : </b>L'import ne copiera que les entités DXF dont la géométrie correspond à la couche QGIS de destination.
+            Les polylignes fermées DXF seront considérées comme des polygones dans QGIS.
+        </div>
+        
+        <p>
+            La seconde étape consiste, pour chaque mapping calque DXF -> couche QGIS, à sélectionner les constantes à insérer dans les attributs QGIS.
+            Pour cela il faut cliquer sur le mapping à configurer dans le cadre du haut, puis saisir les valeurs dans le cadre du bas.
+        </p>
+
+        <p>
+            <img src="images/import10.png" />
+        </p>
+        
+        <p>
+            Une fois configuré, cliquez sur importer.
+        </p>
+
+        <p>
+            <img src="images/import11.png" />
+        </p>
+
+        <p>
+            Un message indique la fin de l'import, et la carte zoom sur les entités importées.
+        </p>
+
+        <p>
+            <img src="images/import12.png" />
+        </p>
+
+        <div class="alert alert-info" role="alert">
+            <b>Note : </b>Il est possible de sauvegarder et de charger une configuration de mapping via les boutons éponymes.
+        </div>
+
+        <h1 id="export"><img src="images/export.png" /> Exporter le projet en GML</h1>
+        
+        <p>
+            Cet outil permet d'exporter le projet actuel au format GML pour transmission au Ministère de l'Intérieur. Cliquez sur l'outil pour sélectionner le fichier GML de destination.
+        </p>
+
+        <p>
+            <img src="images/export1.png" />
+        </p>
+        
+        <p>
+            Un message indique la fin de l'export.
+        </p>
+
+        <p>
+            <img src="images/export2.png" />
+        </p>
+
+        <div class="alert alert-info" role="alert">
+            <b>Note : </b>Une vérification des données est automatiquement effectuée avant l'export.
+        </div>
+
+        <h1 id="stylize"><img src="images/stylize.png" /> Symboliser le projet</h1>
+        
+        <p>
+            Cet outil sert à symboliser les différentes couches du projet selon la configuration fournie par le Ministère de l'Intérieur.
+            Cliquez sur l'outil pour lancer la symbolisation.
+        </p>
+        
+        <p>
+            Un message indique la fin de la symbolisation des couches.
+        </p>
+
+        <p>
+            <img src="images/stylize1.png" />
+        </p>
+
+        <h1 id="check"><img src="images/check.png" /> Valider les données</h1>
+        
+        <p>
+            Cet outil lance une vérification de la structure des données ainsi que des données elles-mêmes.
+            Cliquez sur l'outil pour lancer la vérification.
+        </p>
+        
+        <p>
+            <img src="images/check1.png" />
+        </p>
+        
+        <p>
+            Le premier cadre liste les erreurs de structure de données, type de géométrie, type d'attribut.
+            Ce genre d'erreur ne devrait pas survenir, dans tous les cas, il faut recréer la couche pour les corriger.
+        </p>
+
+        <p>
+            <img src="images/check2.png" />
+        </p>
+        
+        <p>
+            Le second cadre liste les erreurs de données, valeur absente d'une liste, valeur requise, longueur maximale dépassée...
+            Cliquer la ligne correspondante pour zoomer sur l'entité en question, vous pouvez ainsi l'éditer avec les outils de QGIS.
+        </p>
+
+        <p>
+            <img src="images/check3.png" />
+        </p>
+        
+        <div class="alert alert-info" role="alert">
+            <b>Note : </b>Penser à sauvegarder l'édition avant relancer la vérification des données.
+        </div>
+
+        <h1 id="topology"><img src="images/topology.png" /> Vérifier la topologie</h1>
+        
+        <p>
+            Cet outil lance une vérification de la topologie des données, trous entre les polygones, superposition de polygones....
+            Le plugin va en fait configurer le plugin de vérification topologique intégré à QGIS.
+            Cliquez sur l'outil pour ouvrir le plugin <i><b>Topology Checker</b></i>.
+        </p>
+        
+        <p>
+            <img src="images/topology1.png" />
+        </p>
+        
+        <p>
+            La liste des règles peut-être visualisée en cliquant sur <i><b>Configuration</b></i>.
+        </p>
+
+        <p>
+            <img src="images/topology2.png" />
+        </p>
+        
+        <p>
+            Lancer la validation en cliquant sur <i><b>Valider tout</b></i>.
+        </p>
+        <p>
+            La liste des erreurs apparait alors dans le tableau. Cliquer sur l'erreur pour zoomer dessus, vous permettant de la corriger.
+        </p>
+
+        <p>
+            <img src="images/topology3.png" />
+        </p>
+
+        <script src="js/jquery-1.11.3.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script type="text/javascript">
+            var offsetHeight = 60;
+
+            $('body').scrollspy({
+                offset: offsetHeight
+            });
+
+            $('a').click(function (event) {
+                var scrollPos = $('body > .container').find($(this).attr('href')).offset().top - offsetHeight;
+                $('body,html').animate({
+                    scrollTop: scrollPos
+                }, 500, function () {
+                    $(".btn-navbar").click();
+                });
+                return false;
+            });
+        </script>
+    </div>
+</body>
+</html>

@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/plugins/PagLuxembourg" >
+        <file>icon.png</file>
+        <file>widgets/create_project/icon.png</file>
+        <file>widgets/import_data/icon.png</file>
+        <file>widgets/export_gml/icon.png</file>
+        <file>widgets/stylize/icon.png</file>
+        <file>widgets/topology/icon.png</file>
+        <file>widgets/data_checker/icon.png</file>
+        <file>widgets/about/icon.png</file>
+    </qresource>
+</RCC>
