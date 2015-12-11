@@ -90,6 +90,9 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         # Load the default mapping
         self.mapping = LayerMapping()
         
+        # Cache foe shp unique values
+        self.shp_uniquevalues_cache = dict()
+        
         self._loadShpFields()
         self._loadQgisLayers()
         
@@ -312,6 +315,9 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
     
     def _getFieldUniqueValue(self, layer, field):
         
+        if field in self.shp_uniquevalues_cache:
+            return self.shp_uniquevalues_cache[field]
+        
         result = set()
         
         fieldindex = layer.fieldNameIndex(field)
@@ -320,6 +326,8 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
             value = feature[fieldindex]
             result.add(value if value != NULL else 'NULL')
             
+        self.shp_uniquevalues_cache[field] = result
+        
         return result
         
     def _updateMappingFromUI(self, mapping_rowindex = None):
