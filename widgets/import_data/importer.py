@@ -47,6 +47,11 @@ class Importer(object):
             for src_index, dst_index, constant_value, enabled, value_map in mapping.fieldMappings():
                 value = constant_value if src_index is None else src_feature[src_index]
                 
+                # Manage value map
+                for shp, qgis in value_map:
+                    if value == shp:
+                        value = qgis
+                
                 # Check if numeric value needs to be casted
                 if value == NULL or value is None:
                     dst_feature.setAttribute(dst_index, NULL)
@@ -219,22 +224,19 @@ class Importer(object):
         widget.setLayout(layout);
         
         current_item_index = 0
-        selected_index = -1
+        selected_index = 0
         
         for key, value in values.iteritems():
             combobox.addItem(value, key)
             
             # Select value
-            if key == secondary_selected_value and selected_index == -1:
+            if key == secondary_selected_value and selected_index == 0:
                 selected_index = current_item_index
             if key == primary_selected_value:
                 selected_index = current_item_index
                 
             current_item_index += 1
         
-        if primary_selected_value is None and secondary_selected_value is None:
-            selected_index = 0
-            
         combobox.setCurrentIndex(selected_index)
             
         if currentindex_changed_callback is not None:
