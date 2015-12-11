@@ -254,9 +254,9 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
                     continue                
                 
                 # Add or update mapping for every fields
-                source, destination, constant_value, enabled = layer_mapping.getFieldMappingForDestination(field.name())
+                source, destination, constant_value, enabled, valuemap = layer_mapping.getFieldMappingForDestination(field.name())
                 if destination is None:
-                    layer_mapping.addFieldMapping(None, field.name(), None, True)
+                    layer_mapping.addFieldMapping(None, field.name(), None, True, valuemap)
         
         layer_mapping.setDestinationLayerName(qgis_tablename)
         
@@ -316,8 +316,11 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
             # Skip PK field
             if field.name() == PagLuxembourg.project.PK:
                 continue
-                
-            source, destination, constant_value, enabled = layer_mapping.getFieldMappingForDestination(field.name())
+            # Skip IMPORT_ID field
+            if field.name() == PagLuxembourg.project.IMPORT_ID:
+                continue 
+                    
+            source, destination, constant_value, enabled, valuemap = layer_mapping.getFieldMappingForDestination(field.name())
             
             self.tabFieldsMapping.setItem(rowindex, 0, QTableWidgetItem(destination)) # QGIS field
             self.tabFieldsMapping.setCellWidget(rowindex, 1, self._getFieldsMappingTableItemWidget(qgis_layer, field.name(), constant_value)) # Constant value

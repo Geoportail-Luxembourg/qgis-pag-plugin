@@ -32,7 +32,7 @@ class Importer(object):
     def _startImportSession(self):
         self.importid = str(uuid.uuid1())
         self.import_date = QDateTime.currentDateTime().toString('yyyy-MM-dd hh:mm:ss')
-        self.imported_layers = []
+        self.imported_layers = set()
     
     def _commitImport(self):
         importlog_layer = PagLuxembourg.main.current_project.getImportLogLayer()
@@ -172,7 +172,7 @@ class Importer(object):
         dst_layer.reload()
         
         # Add layer to imported layers
-        self.imported_layers.append(dst_layer.name())
+        self.imported_layers.add(dst_layer.name())
         
         # Return extent
         return imported_extent, import_errors
