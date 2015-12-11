@@ -29,6 +29,7 @@ import os.path
 # Widgets
 from widgets.create_project.create_project import *
 from widgets.import_data.import_data import *
+from widgets.import_manager.import_manager import *
 from widgets.export_gml.export_gml import *
 from widgets.stylize.stylize import *
 from widgets.data_checker.data_checker import *
@@ -210,6 +211,15 @@ class PAGLuxembourg(object):
             text=self.tr(u'Import data'),
             callback=self.import_data_widget.run,
             status_tip=self.tr(u'Import data from files (GML, SHP, DXF)'),
+            parent=self.iface.mainWindow()))
+        
+        # Import manager
+        self.import_manager_widget = ImportManager()
+        self.pag_actions.append(self.add_action(
+            ':/plugins/PagLuxembourg/widgets/import_manager/icon.png',
+            text=self.tr(u'Import manager'),
+            callback=self.import_manager_widget.run,
+            status_tip=self.tr(u'Open the import manager'),
             parent=self.iface.mainWindow()))
         
         # Export GML

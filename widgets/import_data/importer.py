@@ -4,15 +4,18 @@ Created on 04 nov. 2015
 @author: arxit
 '''
 
+import os.path
 import json
 from collections import OrderedDict
+import uuid
 
-from PyQt4.QtCore import QCoreApplication, QVariant, Qt, QDate, QSettings
+from PyQt4.QtCore import QCoreApplication, QVariant, Qt, QDate, QDateTime, QSettings
 from PyQt4.QtGui import QCheckBox, QWidget, QHBoxLayout, QComboBox, QDoubleSpinBox, QDateTimeEdit, QLineEdit
 
 from qgis.core import *
 
 import PagLuxembourg.main
+import PagLuxembourg.project
 from PagLuxembourg.controls.filename import SimpleFilenamePicker
 
 class Importer(object):
@@ -20,6 +23,42 @@ class Importer(object):
     Base class for the differents importers (GML, SHP, DXF)
     '''
 
+    def __init__(self, filename):
+        '''
+        Constructor.
+        '''
+        self.import_filename = os.path.basename(filename.strip())
+        
+    def _startImportSession(self):
+        self.importid = str(uuid.uuid1())
+        self.import_date = QDateTime.currentDateTime().toString('yyyy-MM-dd hh:mm:ss')
+        self.imported_layers = []
+    
+    def _commitImport(self):
+        importlog_layer = PagLuxembourg.main.current_project.getImportLogLayer()
+        dst_feature = QgsFeature(importlog_layer.fields())
+        dst_feature.setAttribute(1, self.importid)
+        dst_feature.setAttribute(2, self.import_date)
+        dst_feature.setAttribute(3, self.import_filename)
+        dst_feature.setAttribute(4, "|".join(self.imported_layers))
+        
+        # Start editing session
+        if not importlog_layer.isEditable():
+            importlog_layer.startEditing()
+        
+        # Add features    
+        importlog_layer.addFeatures([dst_feature], False)
+        
+        # Commit    
+        if not importlog_layer.commitChanges():
+            importlog_layer.rollBack()
+            PagLuxembourg.main.qgis_interface.messageBar().pushCritical(QCoreApplication.translate('Importer','Error'), 
+                                                                        QCoreApplication.translate('Importer','Commit error on layer {}').format(importlog_layer.name()))
+            errors = importlog_layer.commitErrors()
+            for error in errors:
+                QgsMessageLog.logMessage(error, 'PAG Luxembourg', QgsMessageLog.CRITICAL)
+            PagLuxembourg.main.qgis_interface.openMessageLog()
+        
     def _importLayer(self, src_layer, dst_layer, mapping):
         '''
         Launch the import
@@ -33,6 +72,8 @@ class Importer(object):
         import_errors = False
         
         feature_request = None
+        
+        importid_index = dst_layer.fieldNameIndex(PagLuxembourg.project.IMPORT_ID)
         
         # Set layer filter if existing, for DXF
         if mapping.sourceLayerFilter() is None:
@@ -97,6 +138,11 @@ class Importer(object):
                 else:
                     imported_extent.combineExtentWith(src_feature.geometry().boundingBox())
             
+            
+            # Add import ID
+            dst_feature.setAttribute(importid_index, self.importid)
+            
+            # Add feature to new features list
             newfeatures.append(dst_feature)
         
         # Start editing session
@@ -114,6 +160,7 @@ class Importer(object):
             errors = dst_layer.commitErrors()
             for error in errors:
                 QgsMessageLog.logMessage(error, 'PAG Luxembourg', QgsMessageLog.CRITICAL)
+            PagLuxembourg.main.qgis_interface.openMessageLog()
             return None
         
         # On error
@@ -124,8 +171,11 @@ class Importer(object):
         # Reload layer
         dst_layer.reload()
         
+        # Add layer to imported layers
+        self.imported_layers.append(dst_layer.name())
+        
         # Return extent
-        return imported_extent
+        return imported_extent, import_errors
         
     def _getFieldsMappingTableItemWidget(self, layer, fieldname, value, secondary_value = None):
         '''

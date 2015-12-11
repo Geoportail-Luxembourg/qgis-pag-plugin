@@ -24,6 +24,7 @@ class ImportGML(Importer):
     data_checker = DataChecker()
 
     def __init__(self, filename):
+        Importer.__init__(self, filename)
         '''
         Constructor
         
@@ -65,6 +66,9 @@ class ImportGML(Importer):
         # Define imported extent
         imported_extent = None
         
+        # Start import session
+        self._startImportSession()
+        
         # Loop GML types
         for gmltype in gmlschema.typeNames():
             xsdtype = xsdschema.getType(gmltype)
@@ -82,7 +86,7 @@ class ImportGML(Importer):
             layer_structure_errors = layer_structure_errors + fatal_errors
             
             if len(fatal_errors) == 0:
-                extent = self._importGmlLayer(gmllayer, xsdtype)
+                extent, errors = self._importGmlLayer(gmllayer, xsdtype)
                 
                 if extent is not None:
                     if imported_extent is None:
@@ -94,11 +98,17 @@ class ImportGML(Importer):
             
         PagLuxembourg.main.qgis_interface.messageBar().clearWidgets()
         
+        # Commit import session
+        self._commitImport()
+            
         # Success message
         if len(layer_structure_errors) == 0:
-            PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('ImportData','Success'), 
-                                                                       QCoreApplication.translate('ImportData','Importation was successful'))
             PagLuxembourg.main.qgis_interface.mapCanvas().setExtent(imported_extent)
+            
+            if not errors:
+                PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('ImportData','Success'), 
+                                                                           QCoreApplication.translate('ImportData','Importation was successful'))
+            
         else:
             PagLuxembourg.main.qgis_interface.messageBar().pushWarning(QCoreApplication.translate('ImportData','Warning'), 
                                                                        QCoreApplication.translate('ImportData','Some errors encountered during importation'))
@@ -122,11 +132,11 @@ class ImportGML(Importer):
         if xsd_layer is None:
             return
         
-        imported_extent = self._importLayer(gml_layer,
-                                            xsd_layer,
-                                            self._getFieldMap(gml_layer, xsd_layer, xsdtype))
+        result = self._importLayer(gml_layer,
+                                    xsd_layer,
+                                    self._getFieldMap(gml_layer, xsd_layer, xsdtype))
         
-        return imported_extent
+        return result
     
     def _getFieldMap(self, source_layer, destination_layer, xsdtype):
         '''

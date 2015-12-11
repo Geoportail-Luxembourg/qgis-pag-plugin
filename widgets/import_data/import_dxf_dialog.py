@@ -29,6 +29,7 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
         '''
         
         super(ImportDxfDialog, self).__init__(parent)
+        Importer.__init__(self, filename)
         # Set up the user interface from Designer.
         # After setupUI you can access any designer object by doing
         # self.<objectname>, and you can use autoconnect slots - see
@@ -248,6 +249,9 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
                 # Skip PK field
                 if field.name() == PagLuxembourg.project.PK:
                     continue
+                # Skip IMPORT_ID field
+                if field.name() == PagLuxembourg.project.IMPORT_ID:
+                    continue                
                 
                 # Add or update mapping for every fields
                 source, destination, constant_value, enabled = layer_mapping.getFieldMappingForDestination(field.name())
@@ -394,6 +398,9 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
         # Define imported extent
         imported_extent = None
         
+        # Start import session
+        self._startImportSession()
+        
         for layer_mapping in self.mapping.layerMappings():
             # Skip if not enabled
             if not layer_mapping.isEnabled():
@@ -406,12 +413,12 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
             
             # Import features according to geometry type
             if qgis_layer.geometryType() == QGis.Point:
-                extent = self._importLayer(self.dxflayer_points, qgis_layer, layer_indexmapping)
+                extent, errors = self._importLayer(self.dxflayer_points, qgis_layer, layer_indexmapping)
             elif qgis_layer.geometryType() == QGis.Line:
-                extent = self._importLayer(self.dxflayer_linestrings, qgis_layer, layer_indexmapping)
+                extent, errors = self._importLayer(self.dxflayer_linestrings, qgis_layer, layer_indexmapping)
             elif qgis_layer.geometryType() == QGis.Polygon:
-                extent = self._importLayer(self.dxflayer_linestrings, qgis_layer, layer_indexmapping)
-                extent = self._importLayer(self.dxflayer_polygons, qgis_layer, layer_indexmapping)
+                extent, errors = self._importLayer(self.dxflayer_linestrings, qgis_layer, layer_indexmapping)
+                extent, errors = self._importLayer(self.dxflayer_polygons, qgis_layer, layer_indexmapping)
             
             # Update imported extent
             if extent is not None:
@@ -420,11 +427,16 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
                     else:
                         imported_extent.combineExtentWith(extent)
         
+        # Commit import session
+        self._commitImport()
+            
         # Zoom to selected
         if imported_extent is not None:
+            # Display message
             PagLuxembourg.main.qgis_interface.mapCanvas().setExtent(imported_extent)
-            PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('ImportDxfDialog','Success'), 
-                                                                       QCoreApplication.translate('ImportDxfDialog','Importation was successful'))
+            if not errors:
+                PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('ImportDxfDialog','Success'), 
+                                                                           QCoreApplication.translate('ImportDxfDialog','Importation was successful'))
         
         self.close()
     

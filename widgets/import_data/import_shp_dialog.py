@@ -45,6 +45,7 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         '''
         
         super(ImportShpDialog, self).__init__(parent)
+        Importer.__init__(self, filename)
         # Set up the user interface from Designer.
         # After setupUI you can access any designer object by doing
         # self.<objectname>, and you can use autoconnect slots - see
@@ -160,7 +161,7 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         
         # Clear the table
         self.tabMapping.clearContents()
-        self.tabMapping.setRowCount(len(qgis_fields) if qgis_fields.fieldNameIndex(PagLuxembourg.project.PK) == -1 else len(qgis_fields) - 1)
+        self.tabMapping.setRowCount(len(qgis_fields) - 2)
         
         rowindex = 0
         
@@ -168,6 +169,9 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         for field in qgis_fields:
             # Skip PK field
             if field.name() == PagLuxembourg.project.PK:
+                continue
+            # Skip IMPORT_ID field
+            if field.name() == PagLuxembourg.project.IMPORT_ID:
                 continue
         
             source, destination, constant_value, enabled, value_map = self.mapping.getFieldMappingForDestination(field.name())
@@ -393,20 +397,27 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         if not self._validateMapping():
             return
         
-        qgis_layer = self.qgislayers[self.cbbLayers.currentIndex()]        
+        qgis_layer = self.qgislayers[self.cbbLayers.currentIndex()]
+        
+        # Start import session
+        self._startImportSession()
         
         # Import the layer, and get the imported extent
-        imported_extent = self._importLayer(
-                                            self.shplayer, 
-                                            qgis_layer, 
-                                            self.mapping.asIndexFieldMappings(qgis_layer.dataProvider().fields(), self.shpfields)
-                                            )
+        imported_extent, import_errors = self._importLayer(
+                                                           self.shplayer, 
+                                                           qgis_layer, 
+                                                           self.mapping.asIndexFieldMappings(qgis_layer.dataProvider().fields(), self.shpfields)
+                                                           )
+        
+        # Commit import session
+        self._commitImport()
         
         # Zoom to selected
         if imported_extent is not None:
             PagLuxembourg.main.qgis_interface.mapCanvas().setExtent(imported_extent)
-            PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('ImportShpDialog','Success'), 
-                                                                       QCoreApplication.translate('ImportShpDialog','Importation was successful'))
+            if not import_errors:
+                PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('ImportShpDialog','Success'), 
+                                                                           QCoreApplication.translate('ImportShpDialog','Importation was successful'))
         
         self.close()
     
