@@ -5,6 +5,7 @@ Created on 04 nov. 2015
 '''
 
 import json
+from collections import OrderedDict
 
 from PyQt4.QtCore import QCoreApplication, QVariant, Qt, QDate, QSettings
 from PyQt4.QtGui import QCheckBox, QWidget, QHBoxLayout, QComboBox, QDoubleSpinBox, QDateTimeEdit, QLineEdit
@@ -43,8 +44,13 @@ class Importer(object):
         # Iterate source features
         for src_feature in src_dp.getFeatures(feature_request):
             dst_feature = QgsFeature(dst_layer_fields)
-            for src_index, dst_index, constant_value, enabled in mapping.fieldMappings():
+            for src_index, dst_index, constant_value, enabled, value_map in mapping.fieldMappings():
                 value = constant_value if src_index is None else src_feature[src_index]
+                
+                # Manage value map
+                for shp, qgis in value_map:
+                    if value == shp:
+                        value = qgis
                 
                 # Check if numeric value needs to be casted
                 if value == NULL or value is None:
@@ -121,6 +127,43 @@ class Importer(object):
         # Return extent
         return imported_extent
         
+    def _getFieldsMappingTableItemWidget(self, layer, fieldname, value, secondary_value = None):
+        '''
+        Gets the table widget corresponding to the current field
+        
+        :param layer: The QGIS layer
+        :type layer: QgsVectorLayer
+        
+        :param field: The QGIS field
+        :type field: QgsField
+        '''
+        
+        field_index = layer.fieldNameIndex(fieldname)
+        
+        # Field editor is ValueMap
+        if layer.editorWidgetV2(field_index) == 'ValueMap':
+            config = layer.editorWidgetV2Config(field_index)
+            config = dict((v, k) for k, v in config.iteritems())
+            ordered_config = OrderedDict(sorted(config.items(), key=lambda t: t[1]))
+            return self._getCombobox(ordered_config, value, secondary_value)
+        
+        # Field editor is range
+        elif layer.editorWidgetV2(field_index) == 'PreciseRange':
+            config = layer.editorWidgetV2Config(field_index)
+            return self._getSpinbox(config['Min'], config['Max'], config['Step'], config['AllowNull'], value)
+        
+        # Field editor is datetime
+        elif layer.editorWidgetV2(field_index) == 'DateTime':
+            config = layer.editorWidgetV2Config(field_index)
+            return self._getCalendar(config['display_format'], value)
+        
+        # Field editor is simple filename
+        elif layer.editorWidgetV2(field_index) == 'SimpleFilename':
+            return self._getSimpleFilenamePicker(value)
+        
+        # Other editors
+        return self._getTextbox(value)
+    
     def _getCenteredCheckbox(self, checked = True):
         '''
         Get a centered checkbox to insert in a table widget
@@ -161,7 +204,7 @@ class Importer(object):
         for row in range(table.rowCount()):
             self._setCheckboxChecked(table, row, column, checked)
     
-    def _getCombobox(self, values, selected_value = None, currentindex_changed_callback = None):
+    def _getCombobox(self, values, primary_selected_value = None, secondary_selected_value = None, currentindex_changed_callback = None):
         '''
         Get a combobox filled with the given values
         
@@ -181,19 +224,20 @@ class Importer(object):
         widget.setLayout(layout);
         
         current_item_index = 0
-        selected_index = -1
+        selected_index = 0
         
         for key, value in values.iteritems():
             combobox.addItem(value, key)
             
-            # Select layer
-            if key == selected_value:
+            # Select value
+            if key == secondary_selected_value and selected_index == 0:
+                selected_index = current_item_index
+            if key == primary_selected_value:
                 selected_index = current_item_index
                 
             current_item_index += 1
         
-        if selected_value is not None:
-            combobox.setCurrentIndex(selected_index)
+        combobox.setCurrentIndex(selected_index)
             
         if currentindex_changed_callback is not None:
             combobox.currentIndexChanged.connect(currentindex_changed_callback)
@@ -329,7 +373,7 @@ class Importer(object):
             if type(child) is QCheckBox:
                 return child.isChecked()
             elif type(child) is QComboBox:
-                return child.currentText(), child.itemData(child.currentIndex())
+                return child.itemData(child.currentIndex())
             elif type(child) is SimpleFilenamePicker:
                 return child.value()
             elif type(child) is QLineEdit:
@@ -450,20 +494,27 @@ class LayerMapping(object):
         return self._mapping['FieldMapping']
     
     def getFieldMappingForSource(self, source_fieldname):
-        for source, destination, constant_value, enabled in self._mapping['FieldMapping']:
+        for source, destination, constant_value, enabled, value_map in self._mapping['FieldMapping']:
             if source == source_fieldname:
-                return source, destination, constant_value, enabled
+                return source, destination, constant_value, enabled, value_map
         
-        return None, None, None, None
+        return None, None, None, None, None
     
     def getFieldMappingForDestination(self, destination_fieldname):
-        for source, destination, constant_value, enabled in self._mapping['FieldMapping']:
+        for source, destination, constant_value, enabled, value_map in self._mapping['FieldMapping']:
             if destination == destination_fieldname:
-                return source, destination, constant_value, enabled
+                return source, destination, constant_value, enabled, value_map
         
-        return None, None, None, None
+        return None, None, None, None, None
     
-    def asIndexFieldMappings(self, destination_fields):
+    def getValueMapForDestination(self, destination_fieldname):
+        for source, destination, constant_value, enabled, value_map in self._mapping['FieldMapping']:
+            if destination == destination_fieldname:
+                return value_map
+        
+        return []
+    
+    def asIndexFieldMappings(self, destination_fields, source_fields=None):
         mapping = LayerMapping()
         mapping.setSourceLayerName(self.sourceLayerName())
         mapping.setDestinationLayerName(self.destinationLayerName())
@@ -471,13 +522,18 @@ class LayerMapping(object):
         mapping.setEnabled(self.isEnabled())
         mapping.setValid(self.isValid())
         
-        for source, destination, constant_value, enabled in self.fieldMappings():
-            mapping.addFieldMapping(source, destination_fields.fieldNameIndex(destination), constant_value, enabled)
+        for source, destination, constant_value, enabled, value_map in self.fieldMappings():
+            mapping.addFieldMapping(
+                                    source_fields.fieldNameIndex(source) if source is not None else source, 
+                                    destination_fields.fieldNameIndex(destination), 
+                                    constant_value, 
+                                    enabled,
+                                    value_map)
         
         return mapping
         
-    def addFieldMapping(self, source, destination, constant_value, enabled):
-        self._mapping['FieldMapping'].append((source, destination, constant_value, enabled))
+    def addFieldMapping(self, source, destination, constant_value, enabled, value_map = []):
+        self._mapping['FieldMapping'].append((source, destination, constant_value, enabled, value_map))
     
     def clearFieldMapping(self):
         del self._mapping['FieldMapping'][:]
