@@ -20,6 +20,7 @@ from PagLuxembourg.widgets.topology.topology import *
 FILENAME = 'project.qgs'
 DATABASE = 'database.sqlite'
 PK = 'OGC_FID'
+IMPORT_ID = 'ImportId'
 
 class Project(QObject):
     '''
@@ -213,7 +214,7 @@ class Project(QObject):
         uri = self.getTypeUri(logimport_table)
         layer = QgsVectorLayer(uri, logimport_table.friendlyName(), 'spatialite')
         
-        if not layer.isvalid():
+        if not layer.isValid():
             return None
         
         return layer
@@ -255,8 +256,8 @@ class Project(QObject):
             if not layer.isValid():
                 self._createTable(conn, type)
                 layer = QgsVectorLayer(uri, type.friendlyName(), 'spatialite')
-                
-            self._updateTable(type, layer)
+            
+            self._updateTable(type, layer, True)
             
         # Check and update metadata
         self._updateMetadataTable(conn)
@@ -390,32 +391,32 @@ class Project(QObject):
         logimport_table.name = 'ImportLog'
         
         # Import ID field
-        key_field = PAGField()
-        key_field.name = 'ID'
-        key_field.type = DataType.STRING
-        key_field.nullable = False
-        logimport_table.fields.append(key_field)
+        field = PAGField()
+        field.name = IMPORT_ID
+        field.type = DataType.STRING
+        field.nullable = False
+        logimport_table.fields.append(field)
         
         # Date field
-        value_field = PAGField()
-        value_field.name = 'Date'
-        value_field.type = DataType.STRING
-        value_field.nullable = False
-        logimport_table.fields.append(value_field)
+        field = PAGField()
+        field.name = 'Date'
+        field.type = DataType.STRING
+        field.nullable = False
+        logimport_table.fields.append(field)
         
         # Type field
-        value_field = PAGField()
-        value_field.name = 'Type'
-        value_field.type = DataType.STRING
-        value_field.nullable = False
-        logimport_table.fields.append(value_field)
+        field = PAGField()
+        field.name = 'Filename'
+        field.type = DataType.STRING
+        field.nullable = False
+        logimport_table.fields.append(field)
         
         # Layers field
-        value_field = PAGField()
-        value_field.name = 'Layers'
-        value_field.type = DataType.STRING
-        value_field.nullable = True
-        logimport_table.fields.append(value_field)
+        field = PAGField()
+        field.name = 'Layers'
+        field.type = DataType.STRING
+        field.nullable = True
+        logimport_table.fields.append(field)
         
         uri = self.getTypeUri(logimport_table)
         layer = QgsVectorLayer(uri, logimport_table.friendlyName(), 'spatialite')
@@ -428,7 +429,7 @@ class Project(QObject):
         # Update fields
         self._updateTable(logimport_table, layer)
             
-    def _updateTable(self, type, layer):
+    def _updateTable(self, type, layer, add_importid = False):
         '''
         Updates the layer's table according to the XSD
         
@@ -440,6 +441,15 @@ class Project(QObject):
         '''
         
         for field in type.fields:
+            if layer.fieldNameIndex(field.name)<0:
+                layer.dataProvider().addAttributes([self._getField(field)])
+        
+        # Add import id field
+        if add_importid:
+            field = PAGField()
+            field.name = IMPORT_ID
+            field.type = DataType.STRING
+            field.nullable = True
             if layer.fieldNameIndex(field.name)<0:
                 layer.dataProvider().addAttributes([self._getField(field)])
         
@@ -613,7 +623,7 @@ class Project(QObject):
         '''
         
         # Hide fields
-        hidden = [PK,]
+        hidden = [PK, IMPORT_ID]
         for field in layer.pendingFields():
             if field.name() in hidden:
                 layer.setEditorWidgetV2(layer.fieldNameIndex(field.name()),'Hidden')
