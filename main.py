@@ -33,6 +33,7 @@ from widgets.import_manager.import_manager import *
 from widgets.export_gml.export_gml import *
 from widgets.stylize.stylize import *
 from widgets.data_checker.data_checker import *
+from widgets.snapping.snapping import *
 from widgets.topology.topology import *
 from widgets.about.about import *
 import editor.simple_filename
@@ -238,6 +239,15 @@ class PAGLuxembourg(object):
             text=self.tr(u'Apply styles'),
             callback=self.stylize_project_widget.run,
             status_tip=self.tr(u'Apply predefined styles to the project'),
+            parent=self.iface.mainWindow()))
+        
+        # Snapping tool
+        self.snapping_widget = Snapping()
+        self.pag_actions.append(self.add_action(
+            ':/plugins/PagLuxembourg/widgets/snapping/icon.png',
+            text=self.tr(u'Snapping'),
+            callback=self.snapping_widget.run,
+            status_tip=self.tr(u'Snaps closes vertices together'),
             parent=self.iface.mainWindow()))
         
         # Data checker
