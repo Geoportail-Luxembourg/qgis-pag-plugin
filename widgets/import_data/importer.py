@@ -122,7 +122,7 @@ class Importer(object):
         # Return extent
         return imported_extent
         
-    def _getFieldsMappingTableItemWidget(self, layer, fieldname, value):
+    def _getFieldsMappingTableItemWidget(self, layer, fieldname, value, secondary_value = None):
         '''
         Gets the table widget corresponding to the current field
         
@@ -140,7 +140,7 @@ class Importer(object):
             config = layer.editorWidgetV2Config(field_index)
             config = dict((v, k) for k, v in config.iteritems())
             ordered_config = OrderedDict(sorted(config.items(), key=lambda t: t[1]))
-            return self._getCombobox(ordered_config, value)
+            return self._getCombobox(ordered_config, value, secondary_value)
         
         # Field editor is range
         elif layer.editorWidgetV2(field_index) == 'PreciseRange':
@@ -199,7 +199,7 @@ class Importer(object):
         for row in range(table.rowCount()):
             self._setCheckboxChecked(table, row, column, checked)
     
-    def _getCombobox(self, values, selected_value = None, currentindex_changed_callback = None):
+    def _getCombobox(self, values, primary_selected_value = None, secondary_selected_value = None, currentindex_changed_callback = None):
         '''
         Get a combobox filled with the given values
         
@@ -224,14 +224,18 @@ class Importer(object):
         for key, value in values.iteritems():
             combobox.addItem(value, key)
             
-            # Select layer
-            if key == selected_value:
+            # Select value
+            if key == secondary_selected_value and selected_index == -1:
+                selected_index = current_item_index
+            if key == primary_selected_value:
                 selected_index = current_item_index
                 
             current_item_index += 1
         
-        if selected_value is not None:
-            combobox.setCurrentIndex(selected_index)
+        if primary_selected_value is None and secondary_selected_value is None:
+            selected_index = 0
+            
+        combobox.setCurrentIndex(selected_index)
             
         if currentindex_changed_callback is not None:
             combobox.currentIndexChanged.connect(currentindex_changed_callback)

@@ -236,6 +236,7 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
                     break;
         
         combobox.setCurrentIndex(selected_index)
+        combobox.currentIndexChanged.connect(self._comboboxShpFieldIndexChanged)
         
         return widget
     
@@ -245,12 +246,33 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
             return
         
         # Update mapping
-        #self._updateMappingFromUI(previousRow)
+        self._updateMappingFromUI(previousRow)
         
         # Load mapping into the table
         self._loadValueMap()
+    
+    def _comboboxShpFieldIndexChanged(self, index):
+        # Get the row of the combobox which changed
+        rowindex = 0
+        
+        for i in range(self.tabMapping.rowCount()):
+            if self.tabMapping.cellWidget(i, 1) is self.sender().parent():
+                rowindex = i
+                
+        # Layer mapping corresponding to the selected row
+        self._updateMappingFromUI(rowindex)
+        
+        if rowindex == self.tabMapping.currentRow():
+            self._loadValueMap()
         
     def _loadValueMap(self):
+        # Disable the table
+        self.tabValueMap.setEnabled(False)
+        
+        # Clear the table
+        self.tabValueMap.clearContents()
+        self.tabValueMap.setRowCount(0)
+        
         mapping_rowindex = self.tabMapping.currentRow()
         
         if mapping_rowindex == -1:
@@ -263,19 +285,30 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         
         qgis_layer = self.qgislayers[self.cbbLayers.currentIndex()]
         qgis_field = self._getCellValue(self.tabMapping, mapping_rowindex, 0)
+                
+        # Check if field editor is ValueMap
+        if qgis_layer.editorWidgetV2(qgis_layer.fieldNameIndex(qgis_field)) != 'ValueMap':
+            return
+            
         shp_values = self._getFieldUniqueValue(self.shplayer, shp_field)
+        valuemap = self.mapping.getValueMapForDestination(qgis_field)
         
-        # Clear the table
-        self.tabValueMap.clearContents()
         self.tabValueMap.setRowCount(len(shp_values))
         
         rowindex = 0
         
         for shp_value in shp_values:
+            qgis_value = None
+            for shp, qgis in valuemap:
+                if shp == shp_value:
+                    qgis_value = qgis
             self.tabValueMap.setItem(rowindex, 0, QTableWidgetItem(shp_value)) # SHP value
-            self.tabValueMap.setCellWidget(rowindex, 1, self._getFieldsMappingTableItemWidget(qgis_layer, qgis_field, shp_value)) # QGIS value
+            self.tabValueMap.setCellWidget(rowindex, 1, self._getFieldsMappingTableItemWidget(qgis_layer, qgis_field, qgis_value, shp_value)) # QGIS value
             
             rowindex +=  1
+        
+        # Enable the table
+        self.tabValueMap.setEnabled(True)
     
     def _getFieldUniqueValue(self, layer, field):
         
@@ -284,7 +317,8 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         fieldindex = layer.fieldNameIndex(field)
         
         for feature in layer.getFeatures():
-            result.add(feature[fieldindex])
+            value = feature[fieldindex]
+            result.add(value if value != NULL else 'NULL')
             
         return result
         
@@ -312,8 +346,9 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
             if rowindex == mapping_rowindex:
                 del valuemap[:]
                 for valuemap_rowindex in range(self.tabValueMap.rowCount()):
+                    shp_value = self._getCellValue(self.tabValueMap, valuemap_rowindex, 0)
                     valuemap.append((
-                                     self._getCellValue(self.tabValueMap, valuemap_rowindex, 0), 
+                                     shp_value if shp_value != 'NULL' else shp_value, 
                                      self._getCellValue(self.tabValueMap, valuemap_rowindex, 1)
                                      ))
                     

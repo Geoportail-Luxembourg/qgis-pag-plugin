@@ -151,7 +151,9 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
         for layer in self.qgislayers:
             layers[PagLuxembourg.main.current_project.getLayerTableName(layer)]=layer.name()
             
-        return self._getCombobox(layers, selected_layer, self._comboboxQgisLayersIndexChanged)
+        return self._getCombobox(layers,
+                                 primary_selected_value=selected_layer, 
+                                 currentindex_changed_callback=self._comboboxQgisLayersIndexChanged)
         
     def _getLayerMappingFromSourceDxfLayer(self, dxf_layername):
         '''
