@@ -205,6 +205,18 @@ class Project(QObject):
             return None
         
         return self.getUriInfos(layer.source())[1]
+    
+    def getImportLogLayer(self):
+        logimport_table = PAGType()
+        logimport_table.name = 'ImportLog'
+        
+        uri = self.getTypeUri(logimport_table)
+        layer = QgsVectorLayer(uri, logimport_table.friendlyName(), 'spatialite')
+        
+        if not layer.isvalid():
+            return None
+        
+        return layer
             
     def _setupTopologicalSettings(self):
         # Topological editing
@@ -248,6 +260,9 @@ class Project(QObject):
             
         # Check and update metadata
         self._updateMetadataTable(conn)
+        
+        # Check and update the import log table
+        self._updateImportLogTable(conn)
         
         conn.close()
         del conn
@@ -362,6 +377,57 @@ class Project(QObject):
             changes = {layer.fieldNameIndex('Value'):main.PLUGIN_VERSION}
             layer.dataProvider().changeAttributeValues({ feat.id() : changes })
         
+    def _updateImportLogTable(self, conn):
+        '''
+        Update the import table
+        
+        :param conn: The database connection
+        :type conn: Connection
+        '''
+        
+        # Log import table
+        logimport_table = PAGType()
+        logimport_table.name = 'ImportLog'
+        
+        # Import ID field
+        key_field = PAGField()
+        key_field.name = 'ID'
+        key_field.type = DataType.STRING
+        key_field.nullable = False
+        logimport_table.fields.append(key_field)
+        
+        # Date field
+        value_field = PAGField()
+        value_field.name = 'Date'
+        value_field.type = DataType.STRING
+        value_field.nullable = False
+        logimport_table.fields.append(value_field)
+        
+        # Type field
+        value_field = PAGField()
+        value_field.name = 'Type'
+        value_field.type = DataType.STRING
+        value_field.nullable = False
+        logimport_table.fields.append(value_field)
+        
+        # Layers field
+        value_field = PAGField()
+        value_field.name = 'Layers'
+        value_field.type = DataType.STRING
+        value_field.nullable = True
+        logimport_table.fields.append(value_field)
+        
+        uri = self.getTypeUri(logimport_table)
+        layer = QgsVectorLayer(uri, logimport_table.friendlyName(), 'spatialite')
+        
+        # Create table if not valid
+        if not layer.isValid():
+            self._createTable(conn, logimport_table)
+            layer = QgsVectorLayer(uri, logimport_table.friendlyName(), 'spatialite')
+        
+        # Update fields
+        self._updateTable(logimport_table, layer)
+            
     def _updateTable(self, type, layer):
         '''
         Updates the layer's table according to the XSD
