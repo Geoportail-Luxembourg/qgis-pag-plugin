@@ -7,7 +7,7 @@ Created on 05 nov. 2015
 import os
 
 from PyQt4 import QtGui, uic
-from PyQt4.QtGui import QFileDialog, QMessageBox, QTableWidgetItem, QHeaderView, QColor, QCheckBox, QWidget, QHBoxLayout, QComboBox
+from PyQt4.QtGui import QFileDialog, QMessageBox, QTableWidgetItem, QHeaderView, QColor, QCheckBox, QWidget, QHBoxLayout, QComboBox, QProgressBar
 from PyQt4.QtCore import QCoreApplication, Qt, QVariant, QSettings
 
 from qgis.core import *
@@ -398,8 +398,19 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
         if not self._validateMapping():
             return
         
-        # Define imported extent
-        imported_extent = None
+        self.close()
+        
+        # Progress bar + message
+        progressMessageBar = PagLuxembourg.main.qgis_interface.messageBar().createMessage(QCoreApplication.translate('ImportDxfDialog','Importing DXF'))
+        progress = QProgressBar()
+        progress.setMaximum(self._getEnabledLayerMappingCount())
+        progress.setAlignment(Qt.AlignLeft|Qt.AlignVCenter)
+        progressMessageBar.layout().addWidget(progress)
+        progress2 = QProgressBar()
+        progress2.setMaximum(self.dxflayer_points.featureCount() + self.dxflayer_linestrings.featureCount() + self.dxflayer_polygons.featureCount())
+        progress2.setAlignment(Qt.AlignLeft|Qt.AlignVCenter)
+        progressMessageBar.layout().addWidget(progress2)
+        PagLuxembourg.main.qgis_interface.messageBar().pushWidget(progressMessageBar, QgsMessageBar.INFO)
         
         # Start import session
         self._startImportSession()
@@ -409,40 +420,38 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
             if not layer_mapping.isEnabled():
                 continue
             
+            # Progression message
+            progressMessageBar.setText(QCoreApplication.translate('ImportDxfDialog','Importing {}').format(layer_mapping.sourceLayerName()))
+            
             # QGIS layer
             qgis_layer = self._getQgisLayerFromTableName(layer_mapping.destinationLayerName())
             
             layer_indexmapping = layer_mapping.asIndexFieldMappings(qgis_layer.dataProvider().fields())
             
+            progress2.setValue(0)
+        
             # Import features according to geometry type
             if qgis_layer.geometryType() == QGis.Point:
-                extent, errors = self._importLayer(self.dxflayer_points, qgis_layer, layer_indexmapping)
+                self._importLayer(self.dxflayer_points, qgis_layer, layer_indexmapping, progress2)
             elif qgis_layer.geometryType() == QGis.Line:
-                extent, errors = self._importLayer(self.dxflayer_linestrings, qgis_layer, layer_indexmapping)
+                self._importLayer(self.dxflayer_linestrings, qgis_layer, layer_indexmapping, progress2)
             elif qgis_layer.geometryType() == QGis.Polygon:
-                extent, errors = self._importLayer(self.dxflayer_linestrings, qgis_layer, layer_indexmapping)
-                extent, errors = self._importLayer(self.dxflayer_polygons, qgis_layer, layer_indexmapping)
+                self._importLayer(self.dxflayer_linestrings, qgis_layer, layer_indexmapping, progress2)
+                self._importLayer(self.dxflayer_polygons, qgis_layer, layer_indexmapping, progress2)
             
-            # Update imported extent
-            if extent is not None:
-                    if imported_extent is None:
-                        imported_extent = extent
-                    else:
-                        imported_extent.combineExtentWith(extent)
-        
+            pass
         # Commit import session
         self._commitImport()
-            
-        # Zoom to selected
-        if imported_extent is not None:
-            # Display message
-            PagLuxembourg.main.qgis_interface.mapCanvas().setExtent(imported_extent)
-            if not errors:
-                PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('ImportDxfDialog','Success'), 
-                                                                           QCoreApplication.translate('ImportDxfDialog','Importation was successful'))
-        
-        self.close()
     
+    def _getEnabledLayerMappingCount(self):
+        count = 0
+        
+        for layer_mapping in self.mapping.layerMappings():
+            if layer_mapping.isEnabled():
+                count += 1
+        
+        return count
+            
     def _loadConfig(self):
         '''
         Load a JSON configuration

@@ -8,11 +8,13 @@ import os.path
 import json
 from collections import OrderedDict
 import uuid
+import csv
 
 from PyQt4.QtCore import QCoreApplication, QVariant, Qt, QDate, QDateTime, QSettings
-from PyQt4.QtGui import QCheckBox, QWidget, QHBoxLayout, QComboBox, QDoubleSpinBox, QDateTimeEdit, QLineEdit
+from PyQt4.QtGui import QCheckBox, QWidget, QHBoxLayout, QComboBox, QDoubleSpinBox, QDateTimeEdit, QLineEdit, QPushButton, QFileDialog
 
 from qgis.core import *
+from qgis.gui import *
 
 import PagLuxembourg.main
 import PagLuxembourg.project
@@ -33,8 +35,15 @@ class Importer(object):
         self.importid = str(uuid.uuid1())
         self.import_date = QDateTime.currentDateTime().toString('yyyy-MM-dd hh:mm:ss')
         self.imported_layers = set()
+        self.imported_extent=None
+        self.features_errors=[]
+        self.commit_errors=[]
     
     def _commitImport(self):
+        '''
+        Add to import log
+        '''
+        
         importlog_layer = PagLuxembourg.main.current_project.getImportLogLayer()
         dst_feature = QgsFeature(importlog_layer.fields())
         dst_feature.setAttribute(1, self.importid)
@@ -59,6 +68,88 @@ class Importer(object):
                 QgsMessageLog.logMessage(error, 'PAG Luxembourg', QgsMessageLog.CRITICAL)
             PagLuxembourg.main.qgis_interface.openMessageLog()
         
+        '''
+        Process import result
+        '''
+            
+        # Zoom to selected
+        if self.imported_extent is not None:
+            PagLuxembourg.main.qgis_interface.mapCanvas().setExtent(self.imported_extent)
+        
+        PagLuxembourg.main.qgis_interface.messageBar().clearWidgets()
+        
+        # Display features errors
+        if len(self.features_errors) > 0:
+            messageBar = PagLuxembourg.main.qgis_interface.messageBar().createMessage(QCoreApplication.translate('Importer','Warning'), 
+                                                                                      QCoreApplication.translate('Importer','Import was successful, but some features could not be imported'))
+            btnExportCsv = QPushButton(QCoreApplication.translate('Importer','Export to CSV'))
+            btnExportCsv.clicked.connect(self._exportErrorsToCsv)
+            messageBar.layout().addWidget(btnExportCsv)
+            PagLuxembourg.main.qgis_interface.messageBar().pushWidget(messageBar, QgsMessageBar.WARNING)
+        
+        # Display commit errors
+        for error in self.commit_errors:
+            messageBar = PagLuxembourg.main.qgis_interface.messageBar().createMessage(QCoreApplication.translate('Importer','Error'), 
+                                                                                      error)
+            btnOpenLog = QPushButton(QCoreApplication.translate('Importer','Open log'))
+            btnOpenLog.clicked.connect(PagLuxembourg.main.qgis_interface.openMessageLog)
+            messageBar.layout().addWidget(btnOpenLog)
+            PagLuxembourg.main.qgis_interface.messageBar().pushWidget(messageBar, QgsMessageBar.CRITICAL)
+            
+        # Display success message
+        if (len(self.features_errors) + len(self.commit_errors)) == 0:
+            PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('Importer','Success'), 
+                                                                       QCoreApplication.translate('Importer','Import was successful'))
+        
+    def _exportErrorsToCsv(self):
+        # Select CSV file to export
+        dialog = QFileDialog()
+        dialog.setFileMode(QFileDialog.AnyFile)
+        dialog.setAcceptMode(QFileDialog.AcceptSave)
+        dialog.setNameFilter('CSV file (*.csv)');
+        dialog.setWindowTitle(QCoreApplication.translate('Importer','Select the csv location'))
+        dialog.setSizeGripEnabled(False)
+        result = dialog.exec_()
+        
+        if result == 0:
+            return
+        
+        selected_files = dialog.selectedFiles()
+        
+        if len(selected_files)==0:
+            return
+        
+        # CSV filename and directory
+        csv_filename = selected_files[0]
+        csvfile = open(csv_filename, 'wb')
+        csvwriter = csv.writer(csvfile, delimiter=';')
+        
+        # Header
+        csvwriter.writerow(['Layer name', 'Feature ID', 'Message', 'Centroid X', 'Centroid Y'])
+        
+        # Iterate errors
+        for layer, featureid, messsage, centroid in self.features_errors:
+            row = []
+            
+            # Feature info
+            row.append(layer)
+            row.append(featureid)
+            row.append(messsage)
+                
+            # Centroid
+            if centroid is not None:
+                row.append(centroid.x())
+                row.append(centroid.y())
+                           
+            csvwriter.writerow(row)
+            
+        csvfile.close()
+        
+        # Success message
+        PagLuxembourg.main.qgis_interface.messageBar().clearWidgets()
+        PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('Importer','Success'),
+                                                                   QCoreApplication.translate('Importer','CSV export was successful'))
+        
     def _importLayer(self, src_layer, dst_layer, mapping, progressbar = None):
         '''
         Launch the import
@@ -68,8 +159,6 @@ class Importer(object):
         dst_dp = dst_layer.dataProvider()
         dst_layer_fields = dst_dp.fields()
         newfeatures = list()
-        imported_extent = None
-        import_errors = False
         
         feature_request = None
         
@@ -109,9 +198,12 @@ class Importer(object):
                         # It's a closed polyline
                         src_polygon = QgsGeometry.fromPolygon([src_polyline])
                         if src_polygon is None:
-                            QgsMessageLog.logMessage(QCoreApplication.translate('Importer','Invalid geometry : Handle = {}').format(src_feature.attribute('EntityHandle')), 'PAG Luxembourg', QgsMessageLog.CRITICAL)
-                            PagLuxembourg.main.qgis_interface.openMessageLog()
-                            import_errors = True
+                            self.features_errors.append((
+                                                         mapping.sourceLayerName(),
+                                                         src_feature.attribute('EntityHandle'),
+                                                         QCoreApplication.translate('Importer','Invalid geometry'),
+                                                         self._getCentroid(src_feature.geometry())
+                                                         ))
                             del dst_feature
                             continue
                         
@@ -121,22 +213,24 @@ class Importer(object):
                         del dst_feature
                         continue
                 else:
-                    #geometry_errors = src_feature.geometry().validateGeometry()
                     if not src_feature.geometry().isGeosValid():
-                            QgsMessageLog.logMessage(QCoreApplication.translate('Importer','Invalid geometry : FID = {}').format(src_feature.id()), 'PAG Luxembourg', QgsMessageLog.CRITICAL)
-                            #for geometry_error in geometry_errors:
-                            #    QgsMessageLog.logMessage(geometry_error.what(), 'PAG Luxembourg', QgsMessageLog.CRITICAL)
-                            PagLuxembourg.main.qgis_interface.openMessageLog()
-                            import_errors = True
-                            del dst_feature
-                            continue
+                        self.features_errors.append((
+                                                     src_layer.name(),
+                                                     src_feature.id(),
+                                                     QCoreApplication.translate('Importer','Invalid geometry'),
+                                                     self._getCentroid(src_feature.geometry())
+                                                     ))
+                        #import_errors = True
+                        del dst_feature
+                        continue
+                    
                     dst_feature.setGeometry(src_feature.geometry())
                 
                 # Update imported extent
-                if imported_extent is None:
-                    imported_extent = src_feature.geometry().boundingBox()
+                if self.imported_extent is None:
+                    self.imported_extent = src_feature.geometry().boundingBox()
                 else:
-                    imported_extent.combineExtentWith(src_feature.geometry().boundingBox())
+                    self.imported_extent.combineExtentWith(src_feature.geometry().boundingBox())
             
             
             # Add import ID
@@ -157,30 +251,25 @@ class Importer(object):
         dst_layer.addFeatures(newfeatures, True)
         
         # Commit    
-        if not dst_layer.commitChanges():
+        if dst_layer.commitChanges():
+            # Add layer to imported layers
+            self.imported_layers.add(dst_layer.name())
+        else:
             dst_layer.rollBack()
-            PagLuxembourg.main.qgis_interface.messageBar().pushCritical(QCoreApplication.translate('Importer','Error'), 
-                                                                        QCoreApplication.translate('Importer','Commit error on layer {}').format(dst_layer.name()))
+            self.commit_errors.append(QCoreApplication.translate('Importer','Commit error on layer {}').format(dst_layer.name()))
             errors = dst_layer.commitErrors()
             for error in errors:
-                QgsMessageLog.logMessage(error, 'PAG Luxembourg', QgsMessageLog.CRITICAL)
-            PagLuxembourg.main.qgis_interface.openMessageLog()
-            return None
-        
-        # On error
-        if import_errors:
-            PagLuxembourg.main.qgis_interface.messageBar().pushCritical(QCoreApplication.translate('Importer','Error'), 
-                                                                        QCoreApplication.translate('Importer','Some features were not imported, open the message log (bubble on bottom right of the screen)'))
-        
+                QgsMessageLog.logMessage(error, 'Import {}'.format(self.import_filename), QgsMessageLog.CRITICAL)
+            
         # Reload layer
         dst_layer.reload()
         
-        # Add layer to imported layers
-        self.imported_layers.add(dst_layer.name())
-        
-        # Return extent
-        return imported_extent, import_errors
-        
+    def _getCentroid(self, geometry):
+        try:
+            return geometry.centroid().asPoint()
+        except:
+            return None
+    
     def _getFieldsMappingTableItemWidget(self, layer, fieldname, value, secondary_value = None):
         '''
         Gets the table widget corresponding to the current field

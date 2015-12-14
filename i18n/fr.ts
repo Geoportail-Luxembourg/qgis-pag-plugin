@@ -231,7 +231,7 @@
     <message>
         <location filename="import_shp_dialog.ui" line="241"/>
         <source>Select a field mapping to edit its value map</source>
-        <translation>Sélectionner un mapping d'attribut pour éditer son mapping de valeurs</translation>
+        <translation>Sélectionner un mapping d&apos;attribut pour éditer son mapping de valeurs</translation>
     </message>
     <message>
         <location filename="import_manager_dialog.ui" line="26"/>
@@ -338,36 +338,6 @@
         <source>Select the file to import</source>
         <translation>Sélectionner le fichier à importer</translation>
     </message>
-    <message>
-        <location filename="import_gml.py" line="59"/>
-        <source>Importing GML</source>
-        <translation>Import GML</translation>
-    </message>
-    <message>
-        <location filename="import_gml.py" line="80"/>
-        <source>Importing {}</source>
-        <translation>Importation de {}</translation>
-    </message>
-    <message>
-        <location filename="import_gml.py" line="109"/>
-        <source>Success</source>
-        <translation>Succès</translation>
-    </message>
-    <message>
-        <location filename="import_gml.py" line="109"/>
-        <source>Importation was successful</source>
-        <translation>L&apos;importation GML s&apos;est déroulée avec succès</translation>
-    </message>
-    <message>
-        <location filename="import_gml.py" line="113"/>
-        <source>Warning</source>
-        <translation>Attention</translation>
-    </message>
-    <message>
-        <location filename="import_gml.py" line="113"/>
-        <source>Some errors encountered during importation</source>
-        <translation>Il y&apos;a eu des erreurs durant l&apos;importation</translation>
-    </message>
 </context>
 <context>
     <name>ImportDxfDialog</name>
@@ -412,29 +382,77 @@
         <translation>Le mapping pour le calque DXF {} n&apos;est pas valide, veuillez le vérifier.</translation>
     </message>
     <message>
-        <location filename="import_dxf_dialog.py" line="508"/>
+        <location filename="import_dxf_dialog.py" line="517"/>
         <source>Success</source>
         <translation>Succès</translation>
     </message>
     <message>
         <location filename="import_dxf_dialog.py" line="441"/>
         <source>Importation was successful</source>
-        <translation>L&apos;importation DXF s&apos;est déroulée avec succès</translation>
+        <translation type="obsolete">L&apos;importation DXF s&apos;est déroulée avec succès</translation>
     </message>
     <message>
-        <location filename="import_dxf_dialog.py" line="456"/>
+        <location filename="import_dxf_dialog.py" line="465"/>
         <source>Select the configuration file to load</source>
         <translation>Sélectionnez le fichier de configuration à charger</translation>
     </message>
     <message>
-        <location filename="import_dxf_dialog.py" line="488"/>
+        <location filename="import_dxf_dialog.py" line="497"/>
         <source>Select the json location</source>
         <translation>Sélectionnez le fichier de configuration à enregistrer</translation>
     </message>
     <message>
-        <location filename="import_dxf_dialog.py" line="508"/>
+        <location filename="import_dxf_dialog.py" line="517"/>
         <source>Mapping configuration saved</source>
         <translation>Configuration du mapping enregistrée</translation>
+    </message>
+    <message>
+        <location filename="import_dxf_dialog.py" line="404"/>
+        <source>Importing DXF</source>
+        <translation>Import DXF</translation>
+    </message>
+    <message>
+        <location filename="import_dxf_dialog.py" line="424"/>
+        <source>Importing {}</source>
+        <translation>Importation de {}</translation>
+    </message>
+</context>
+<context>
+    <name>ImportGML</name>
+    <message>
+        <location filename="import_data.py" line="44"/>
+        <source>Select the file to import</source>
+        <translation type="obsolete">Sélectionner le fichier à importer</translation>
+    </message>
+    <message>
+        <location filename="import_gml.py" line="59"/>
+        <source>Importing GML</source>
+        <translation>Import GML</translation>
+    </message>
+    <message>
+        <location filename="import_gml.py" line="80"/>
+        <source>Importing {}</source>
+        <translation>Importation de {}</translation>
+    </message>
+    <message>
+        <location filename="import_gml.py" line="109"/>
+        <source>Success</source>
+        <translation type="obsolete">Succès</translation>
+    </message>
+    <message>
+        <location filename="import_gml.py" line="109"/>
+        <source>Importation was successful</source>
+        <translation type="obsolete">L&apos;importation GML s&apos;est déroulée avec succès</translation>
+    </message>
+    <message>
+        <location filename="import_gml.py" line="113"/>
+        <source>Warning</source>
+        <translation type="obsolete">Attention</translation>
+    </message>
+    <message>
+        <location filename="import_gml.py" line="113"/>
+        <source>Some errors encountered during importation</source>
+        <translation type="obsolete">Il y&apos;a eu des erreurs durant l&apos;importation</translation>
     </message>
 </context>
 <context>
@@ -486,42 +504,42 @@
 <context>
     <name>ImportShpDialog</name>
     <message>
-        <location filename="import_shp_dialog.py" line="493"/>
+        <location filename="import_shp_dialog.py" line="496"/>
         <source>Success</source>
         <translation>Succès</translation>
     </message>
     <message>
         <location filename="import_shp_dialog.py" line="419"/>
         <source>Importation was successful</source>
-        <translation>L&apos;importation du Shapefile s&apos;est déroulée avec succès</translation>
+        <translation type="obsolete">L&apos;importation du Shapefile s&apos;est déroulée avec succès</translation>
     </message>
     <message>
-        <location filename="import_shp_dialog.py" line="66"/>
+        <location filename="import_shp_dialog.py" line="67"/>
         <source>SHP Field</source>
         <translation>Attribut SHP</translation>
     </message>
     <message>
-        <location filename="import_shp_dialog.py" line="66"/>
+        <location filename="import_shp_dialog.py" line="67"/>
         <source>QGIS Field</source>
         <translation>Attribut QGIS</translation>
     </message>
     <message>
-        <location filename="import_shp_dialog.py" line="66"/>
+        <location filename="import_shp_dialog.py" line="67"/>
         <source>Enabled</source>
         <translation>Activé</translation>
     </message>
     <message>
-        <location filename="import_shp_dialog.py" line="151"/>
+        <location filename="import_shp_dialog.py" line="152"/>
         <source>Error</source>
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="import_shp_dialog.py" line="86"/>
+        <location filename="import_shp_dialog.py" line="87"/>
         <source>Shapefile is not valid</source>
         <translation>Le shapefile n&apos;est pas valide</translation>
     </message>
     <message>
-        <location filename="import_shp_dialog.py" line="151"/>
+        <location filename="import_shp_dialog.py" line="152"/>
         <source>Destination layer {} not found.</source>
         <translation>La couche QGIS {} est introuvable</translation>
     </message>
@@ -536,67 +554,117 @@
         <translation type="obsolete">Plusieurs attributs SHP ne peuvent être reliés au même attribut QGIS {}.</translation>
     </message>
     <message>
-        <location filename="import_shp_dialog.py" line="434"/>
+        <location filename="import_shp_dialog.py" line="437"/>
         <source>Select the configuration file to load</source>
         <translation>Sélectionnez le fichier de configuration à charger</translation>
     </message>
     <message>
-        <location filename="import_shp_dialog.py" line="471"/>
+        <location filename="import_shp_dialog.py" line="474"/>
         <source>Select the json location</source>
         <translation>Sélectionnez le fichier de configuration à enregistrer</translation>
     </message>
     <message>
-        <location filename="import_shp_dialog.py" line="493"/>
+        <location filename="import_shp_dialog.py" line="496"/>
         <source>Mapping configuration saved</source>
         <translation>Fichier de configuration enregistré</translation>
     </message>
     <message>
-        <location filename="import_shp_dialog.py" line="66"/>
+        <location filename="import_shp_dialog.py" line="67"/>
         <source>Value</source>
         <translation>Valeur</translation>
     </message>
     <message>
-        <location filename="import_shp_dialog.py" line="75"/>
+        <location filename="import_shp_dialog.py" line="76"/>
         <source>SHP Value</source>
         <translation>Valeur SHP</translation>
     </message>
     <message>
-        <location filename="import_shp_dialog.py" line="75"/>
+        <location filename="import_shp_dialog.py" line="76"/>
         <source>QGIS Value</source>
         <translation>Valeur QGIS</translation>
     </message>
     <message>
-        <location filename="import_shp_dialog.py" line="229"/>
+        <location filename="import_shp_dialog.py" line="230"/>
         <source>&lt;None&gt;</source>
         <translation>&lt;Aucun&gt;</translation>
+    </message>
+    <message>
+        <location filename="import_shp_dialog.py" line="406"/>
+        <source>Importing {}</source>
+        <translation>Importation de {}</translation>
     </message>
 </context>
 <context>
     <name>Importer</name>
     <message>
-        <location filename="importer.py" line="168"/>
+        <location filename="importer.py" line="92"/>
         <source>Error</source>
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="importer.py" line="158"/>
+        <location filename="importer.py" line="259"/>
         <source>Commit error on layer {}</source>
         <translation>Erreur lors du commit sur la couche {}</translation>
     </message>
     <message>
         <location filename="importer.py" line="112"/>
         <source>Invalid geometry : Handle = {}</source>
-        <translation>Géométrie invalide : Handle = {}</translation>
+        <translation type="obsolete">Géométrie invalide : Handle = {}</translation>
     </message>
     <message>
         <location filename="importer.py" line="168"/>
         <source>Some features were not imported, open the message log (bubble on bottom right of the screen)</source>
-        <translation>Des entités n&apos;ont pas été importées, ouvrir le log de message (bulle en bas à droite de l&apos;écran)</translation>
+        <translation type="obsolete">Des entités n&apos;ont pas été importées, ouvrir le log de message (bulle en bas à droite de l&apos;écran)</translation>
     </message>
     <message>
         <location filename="importer.py" line="126"/>
         <source>Invalid geometry : FID = {}</source>
-        <translation>Géométrie invalide : FID = {}</translation>
+        <translation type="obsolete">Géométrie invalide : FID = {}</translation>
+    </message>
+    <message>
+        <location filename="importer.py" line="83"/>
+        <source>Warning</source>
+        <translation>Attention</translation>
+    </message>
+    <message>
+        <location filename="importer.py" line="83"/>
+        <source>Import was successful, but some features could not be imported</source>
+        <translation>L'import s'est terminé, mais quelques objets n'ont pu être importés</translation>
+    </message>
+    <message>
+        <location filename="importer.py" line="85"/>
+        <source>Export to CSV</source>
+        <translation>Exporter en CSV</translation>
+    </message>
+    <message>
+        <location filename="importer.py" line="94"/>
+        <source>Open log</source>
+        <translation>Ouvrir le log</translation>
+    </message>
+    <message>
+        <location filename="importer.py" line="150"/>
+        <source>Success</source>
+        <translation>Succès</translation>
+    </message>
+    <message>
+        <location filename="importer.py" line="101"/>
+        <source>Import was successful</source>
+        <translation>L'import s'est terminé avec succés</translation>
+    </message>
+    <message>
+        <location filename="importer.py" line="110"/>
+        <source>Select the csv location</source>
+        <translation>Sélectionner l&apos;emplacement du fichier CSV</translation>
+    </message>
+    <message>
+        <location filename="importer.py" line="150"/>
+        <source>CSV export was successful</source>
+        <translation>L&apos;export CSV s&apos;est déroulé avec succès</translation>
+    </message>
+    <message>
+        <location filename="importer.py" line="217"/>
+        <source>Invalid geometry</source>
+        <translation>Géométrie invalide</translation>
     </message>
 </context>
 <context>
@@ -694,12 +762,12 @@
     <message>
         <location filename="main.py" line="219"/>
         <source>Import manager</source>
-        <translation>Gestionnaire d'import</translation>
+        <translation>Gestionnaire d&apos;import</translation>
     </message>
     <message>
         <location filename="main.py" line="219"/>
         <source>Open the import manager</source>
-        <translation>Ouvre le gestionnaire d'import</translation>
+        <translation>Ouvre le gestionnaire d&apos;import</translation>
     </message>
     <message>
         <location filename="main.py" line="246"/>
@@ -709,7 +777,7 @@
     <message>
         <location filename="main.py" line="246"/>
         <source>Clean the topology of a layer</source>
-        <translation>Nettoie la topologie d'une couche</translation>
+        <translation>Nettoie la topologie d&apos;une couche</translation>
     </message>
 </context>
 <context>

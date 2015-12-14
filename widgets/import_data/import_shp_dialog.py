@@ -414,23 +414,15 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         self._startImportSession()
         
         # Import the layer, and get the imported extent
-        imported_extent, import_errors = self._importLayer(
-                                                           self.shplayer, 
-                                                           qgis_layer, 
-                                                           self.mapping.asIndexFieldMappings(qgis_layer.dataProvider().fields(), self.shpfields),
-                                                           progress
-                                                           )
+        self._importLayer(
+                          self.shplayer, 
+                          qgis_layer, 
+                          self.mapping.asIndexFieldMappings(qgis_layer.dataProvider().fields(), self.shpfields),
+                          progress
+                          )
         
         # Commit import session
         self._commitImport()
-        
-        # Zoom to selected
-        if imported_extent is not None:
-            PagLuxembourg.main.qgis_interface.mapCanvas().setExtent(imported_extent)
-            if not import_errors:
-                PagLuxembourg.main.qgis_interface.messageBar().clearWidgets()
-                PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('ImportShpDialog','Success'), 
-                                                                           QCoreApplication.translate('ImportShpDialog','Importation was successful'))
     
     def _loadConfig(self):
         '''
