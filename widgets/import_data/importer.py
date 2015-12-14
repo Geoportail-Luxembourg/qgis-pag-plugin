@@ -59,7 +59,7 @@ class Importer(object):
                 QgsMessageLog.logMessage(error, 'PAG Luxembourg', QgsMessageLog.CRITICAL)
             PagLuxembourg.main.qgis_interface.openMessageLog()
         
-    def _importLayer(self, src_layer, dst_layer, mapping):
+    def _importLayer(self, src_layer, dst_layer, mapping, progressbar = None):
         '''
         Launch the import
         '''
@@ -144,6 +144,10 @@ class Importer(object):
             
             # Add feature to new features list
             newfeatures.append(dst_feature)
+            
+            # Increment progress bar
+            if progressbar is not None:
+                progressbar.setValue(progressbar.value() + 1)
         
         # Start editing session
         if not dst_layer.isEditable():

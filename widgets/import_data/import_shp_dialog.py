@@ -24,10 +24,11 @@
 import os
 
 from PyQt4 import QtGui, uic
-from PyQt4.QtGui import QFileDialog, QMessageBox, QTableWidgetItem, QHeaderView, QColor, QCheckBox, QWidget, QHBoxLayout, QComboBox
+from PyQt4.QtGui import QFileDialog, QMessageBox, QTableWidgetItem, QHeaderView, QColor, QCheckBox, QWidget, QHBoxLayout, QComboBox, QProgressBar
 from PyQt4.QtCore import QCoreApplication, Qt, QVariant
 
 from qgis.core import *
+from qgis.gui import *
 
 import PagLuxembourg.main
 import PagLuxembourg.project
@@ -399,6 +400,16 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         
         qgis_layer = self.qgislayers[self.cbbLayers.currentIndex()]
         
+        self.close()
+        
+        # Progress bar + message
+        progressMessageBar = PagLuxembourg.main.qgis_interface.messageBar().createMessage(QCoreApplication.translate('ImportShpDialog','Importing {}').format(self.shplayer.source()))
+        progress = QProgressBar()
+        progress.setMaximum(self.shplayer.featureCount())
+        progress.setAlignment(Qt.AlignLeft|Qt.AlignVCenter)
+        progressMessageBar.layout().addWidget(progress)
+        PagLuxembourg.main.qgis_interface.messageBar().pushWidget(progressMessageBar, QgsMessageBar.INFO)
+        
         # Start import session
         self._startImportSession()
         
@@ -406,7 +417,8 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         imported_extent, import_errors = self._importLayer(
                                                            self.shplayer, 
                                                            qgis_layer, 
-                                                           self.mapping.asIndexFieldMappings(qgis_layer.dataProvider().fields(), self.shpfields)
+                                                           self.mapping.asIndexFieldMappings(qgis_layer.dataProvider().fields(), self.shpfields),
+                                                           progress
                                                            )
         
         # Commit import session
@@ -416,10 +428,9 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         if imported_extent is not None:
             PagLuxembourg.main.qgis_interface.mapCanvas().setExtent(imported_extent)
             if not import_errors:
+                PagLuxembourg.main.qgis_interface.messageBar().clearWidgets()
                 PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('ImportShpDialog','Success'), 
                                                                            QCoreApplication.translate('ImportShpDialog','Importation was successful'))
-        
-        self.close()
     
     def _loadConfig(self):
         '''
