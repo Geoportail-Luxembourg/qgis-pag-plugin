@@ -235,7 +235,7 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
                 if field.type() == shp_type and qgisfield.type() == qgis_type:
                     combobox.addItem(field.name(), field.name())
                     # Select field if same name
-                    if field.name() == qgisfield.name() and selected_index == -1:
+                    if field.name() == qgisfield.name() and selected_index == 0:
                         selected_index = current_item_index
                     if field.name() == selected_shpfield:
                         selected_index = current_item_index
