@@ -112,6 +112,19 @@
     <column/>
    </widget>
   </widget>
+  <widget class="QPushButton" name="btnExport">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>570</y>
+     <width>101</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Export to CSV</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections>
@@ -131,5 +144,24 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>btnExport</sender>
+   <signal>clicked()</signal>
+   <receiver>Dialog</receiver>
+   <slot>exportToCsv()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>70</x>
+     <y>581</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>176</x>
+     <y>578</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
+ <slots>
+  <slot>exportToCsv()</slot>
+ </slots>
 </ui>

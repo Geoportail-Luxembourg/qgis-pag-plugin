@@ -6,7 +6,7 @@
   xmlns:ili2c="http://www.interlis.ch/ili2c"
   >
 <xsd:annotation>
-  <xsd:appinfo source="http://www.interlis.ch/ili2c/ili2cversion">4.4.14-20130831</xsd:appinfo>
+  <xsd:appinfo source="http://www.interlis.ch/ili2c/ili2cversion">4.5.14-20150810</xsd:appinfo>
   <xsd:appinfo source="http://www.interlis.ch/ili2c">
     <ili2c:model>PAG</ili2c:model>
     <ili2c:modelVersion>2015-04-01</ili2c:modelVersion>
@@ -148,6 +148,12 @@
           </xsd:simpleType>
         </xsd:element>
         <xsd:element name="DATE">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:date">
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="DATE_MUTATION_FOND_DE_PLAN">
           <xsd:simpleType>
             <xsd:restriction base="xsd:date">
             </xsd:restriction>
@@ -299,7 +305,6 @@
           <xsd:element ref="BIOTOPE_LIGNE"/>
           <xsd:element ref="BIOTOPE_POINT"/>
           <xsd:element ref="BIOTOPE_POLY"/>
-          <xsd:element ref="BIOTOPE_POLY.GEOMETRIE"/>
         </xsd:choice>
       </xsd:sequence>
     </xsd:extension>
@@ -454,6 +459,24 @@
           <xsd:simpleType>
             <xsd:restriction base="xsd:normalizedString">
               <xsd:maxLength value="100"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="GEOMETRIE" type="gml:SurfacePropertyType">
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="FOND_DE_PLAN" type="FOND_DE_PLANType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="FOND_DE_PLANType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="NUM_CADAST">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="20"/>
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:element>
@@ -649,30 +672,6 @@
     </xsd:extension>
   </xsd:complexContent>
 </xsd:complexType>
-<xsd:element name="PCN" type="PCNType" substitutionGroup="gml:AbstractFeature"/>
-<xsd:complexType  name="PCNType">
-  <xsd:complexContent>
-    <xsd:extension base="gml:AbstractFeatureType">
-      <xsd:sequence>
-        <xsd:element name="NUM_CADAST">
-          <xsd:simpleType>
-            <xsd:restriction base="xsd:normalizedString">
-              <xsd:maxLength value="20"/>
-            </xsd:restriction>
-          </xsd:simpleType>
-        </xsd:element>
-        <xsd:element name="GEOMETRIE" type="gml:SurfacePropertyType">
-        </xsd:element>
-        <xsd:element name="DATE_MUTATION">
-          <xsd:simpleType>
-            <xsd:restriction base="xsd:date">
-            </xsd:restriction>
-          </xsd:simpleType>
-        </xsd:element>
-      </xsd:sequence>
-    </xsd:extension>
-  </xsd:complexContent>
-</xsd:complexType>
 <xsd:element name="PERIMETRE" type="PERIMETREType" substitutionGroup="gml:AbstractFeature"/>
 <xsd:complexType  name="PERIMETREType">
   <xsd:complexContent>
@@ -757,38 +756,6 @@
               <xsd:maxLength value="10"/>
             </xsd:restriction>
           </xsd:simpleType>
-        </xsd:element>
-      </xsd:sequence>
-    </xsd:extension>
-  </xsd:complexContent>
-</xsd:complexType>
-<xsd:element name="ZONE_SERV_ECO" type="ZONE_SERV_ECOType" substitutionGroup="gml:AbstractFeature"/>
-<xsd:complexType  name="ZONE_SERV_ECOType">
-  <xsd:complexContent>
-    <xsd:extension base="gml:AbstractFeatureType">
-      <xsd:sequence>
-        <xsd:element name="CODE">
-          <xsd:simpleType>
-            <xsd:restriction base="xsd:normalizedString">
-              <xsd:maxLength value="20"/>
-            </xsd:restriction>
-          </xsd:simpleType>
-        </xsd:element>
-        <xsd:element name="LIB" minOccurs="0">
-          <xsd:simpleType>
-            <xsd:restriction base="xsd:normalizedString">
-              <xsd:maxLength value="100"/>
-            </xsd:restriction>
-          </xsd:simpleType>
-        </xsd:element>
-        <xsd:element name="NOM_FICHIER">
-          <xsd:simpleType>
-            <xsd:restriction base="xsd:normalizedString">
-              <xsd:maxLength value="100"/>
-            </xsd:restriction>
-          </xsd:simpleType>
-        </xsd:element>
-        <xsd:element name="GEOMETRIE" type="gml:SurfacePropertyType">
         </xsd:element>
       </xsd:sequence>
     </xsd:extension>
@@ -909,34 +876,18 @@
           <xsd:element ref="CONST_A_CONS_POLY"/>
           <xsd:element ref="COULOIRS_ET_ESP_RES"/>
           <xsd:element ref="EMPLAC_STAT"/>
+          <xsd:element ref="FOND_DE_PLAN"/>
           <xsd:element ref="GABARIT_A_SAUV_POINT"/>
           <xsd:element ref="GABARIT_A_SAUV_POLY"/>
           <xsd:element ref="MODIFICATION_PAG"/>
           <xsd:element ref="NQ_PAP"/>
           <xsd:element ref="PAP_APPROUVE"/>
-          <xsd:element ref="PCN"/>
           <xsd:element ref="PERIMETRE"/>
           <xsd:element ref="ZAD"/>
           <xsd:element ref="ZONAGE"/>
-          <xsd:element ref="ZONE_SERV_ECO"/>
           <xsd:element ref="ZONE_SERV_URB"/>
           <xsd:element ref="ZONES_QE"/>
           <xsd:element ref="ZONES_SUPERPOSEES"/>
-          <xsd:element ref="BATIMENT.GEOMETRIE"/>
-          <xsd:element ref="CONST_A_CONS_POLY.GEOMETRIE"/>
-          <xsd:element ref="EMPLAC_STAT.GEOMETRIE"/>
-          <xsd:element ref="GABARIT_A_SAUV_POLY.GEOMETRIE"/>
-          <xsd:element ref="MODIFICATION_PAG.GEOMETRIE"/>
-          <xsd:element ref="NQ_PAP.GEOMETRIE"/>
-          <xsd:element ref="PAP_APPROUVE.GEOMETRIE"/>
-          <xsd:element ref="PCN.GEOMETRIE"/>
-          <xsd:element ref="PERIMETRE.GEOMETRIE"/>
-          <xsd:element ref="ZAD.GEOMETRIE"/>
-          <xsd:element ref="ZONAGE.GEOMETRIE"/>
-          <xsd:element ref="ZONE_SERV_ECO.GEOMETRIE"/>
-          <xsd:element ref="ZONE_SERV_URB.GEOMETRIE"/>
-          <xsd:element ref="ZONES_QE.GEOMETRIE"/>
-          <xsd:element ref="ZONES_SUPERPOSEES.GEOMETRIE"/>
         </xsd:choice>
       </xsd:sequence>
     </xsd:extension>
@@ -950,278 +901,6 @@
         <xsd:element name="member" type="PAGMemberType" minOccurs="0" maxOccurs="unbounded"/>
       </xsd:sequence>
       <xsd:attributeGroup ref="gml:AggregationAttributeGroup"/>
-    </xsd:extension>
-  </xsd:complexContent>
-</xsd:complexType>
-<xsd:element name="BIOTOPE_POLY.GEOMETRIE" type="BIOTOPE_POLY.GEOMETRIEType" substitutionGroup="gml:AbstractFeature"/>
-<xsd:complexType  name="BIOTOPE_POLY.GEOMETRIEType">
-  <xsd:complexContent>
-    <xsd:extension base="gml:AbstractFeatureType">
-      <xsd:sequence>
-        <xsd:element name="mainTable" type="gml:ReferenceType">
-          <xsd:annotation>
-            <xsd:appinfo>
-              <gml:targetElement>BIOTOPE_POLY</gml:targetElement>
-            </xsd:appinfo>
-          </xsd:annotation>
-        </xsd:element>
-        <xsd:element name="geometry" type="gml:CurvePropertyType"/>
-      </xsd:sequence>
-    </xsd:extension>
-  </xsd:complexContent>
-</xsd:complexType>
-<xsd:element name="BATIMENT.GEOMETRIE" type="BATIMENT.GEOMETRIEType" substitutionGroup="gml:AbstractFeature"/>
-<xsd:complexType  name="BATIMENT.GEOMETRIEType">
-  <xsd:complexContent>
-    <xsd:extension base="gml:AbstractFeatureType">
-      <xsd:sequence>
-        <xsd:element name="mainTable" type="gml:ReferenceType">
-          <xsd:annotation>
-            <xsd:appinfo>
-              <gml:targetElement>BATIMENT</gml:targetElement>
-            </xsd:appinfo>
-          </xsd:annotation>
-        </xsd:element>
-        <xsd:element name="geometry" type="gml:CurvePropertyType"/>
-      </xsd:sequence>
-    </xsd:extension>
-  </xsd:complexContent>
-</xsd:complexType>
-<xsd:element name="CONST_A_CONS_POLY.GEOMETRIE" type="CONST_A_CONS_POLY.GEOMETRIEType" substitutionGroup="gml:AbstractFeature"/>
-<xsd:complexType  name="CONST_A_CONS_POLY.GEOMETRIEType">
-  <xsd:complexContent>
-    <xsd:extension base="gml:AbstractFeatureType">
-      <xsd:sequence>
-        <xsd:element name="mainTable" type="gml:ReferenceType">
-          <xsd:annotation>
-            <xsd:appinfo>
-              <gml:targetElement>CONST_A_CONS_POLY</gml:targetElement>
-            </xsd:appinfo>
-          </xsd:annotation>
-        </xsd:element>
-        <xsd:element name="geometry" type="gml:CurvePropertyType"/>
-      </xsd:sequence>
-    </xsd:extension>
-  </xsd:complexContent>
-</xsd:complexType>
-<xsd:element name="EMPLAC_STAT.GEOMETRIE" type="EMPLAC_STAT.GEOMETRIEType" substitutionGroup="gml:AbstractFeature"/>
-<xsd:complexType  name="EMPLAC_STAT.GEOMETRIEType">
-  <xsd:complexContent>
-    <xsd:extension base="gml:AbstractFeatureType">
-      <xsd:sequence>
-        <xsd:element name="mainTable" type="gml:ReferenceType">
-          <xsd:annotation>
-            <xsd:appinfo>
-              <gml:targetElement>EMPLAC_STAT</gml:targetElement>
-            </xsd:appinfo>
-          </xsd:annotation>
-        </xsd:element>
-        <xsd:element name="geometry" type="gml:CurvePropertyType"/>
-      </xsd:sequence>
-    </xsd:extension>
-  </xsd:complexContent>
-</xsd:complexType>
-<xsd:element name="GABARIT_A_SAUV_POLY.GEOMETRIE" type="GABARIT_A_SAUV_POLY.GEOMETRIEType" substitutionGroup="gml:AbstractFeature"/>
-<xsd:complexType  name="GABARIT_A_SAUV_POLY.GEOMETRIEType">
-  <xsd:complexContent>
-    <xsd:extension base="gml:AbstractFeatureType">
-      <xsd:sequence>
-        <xsd:element name="mainTable" type="gml:ReferenceType">
-          <xsd:annotation>
-            <xsd:appinfo>
-              <gml:targetElement>GABARIT_A_SAUV_POLY</gml:targetElement>
-            </xsd:appinfo>
-          </xsd:annotation>
-        </xsd:element>
-        <xsd:element name="geometry" type="gml:CurvePropertyType"/>
-      </xsd:sequence>
-    </xsd:extension>
-  </xsd:complexContent>
-</xsd:complexType>
-<xsd:element name="MODIFICATION_PAG.GEOMETRIE" type="MODIFICATION_PAG.GEOMETRIEType" substitutionGroup="gml:AbstractFeature"/>
-<xsd:complexType  name="MODIFICATION_PAG.GEOMETRIEType">
-  <xsd:complexContent>
-    <xsd:extension base="gml:AbstractFeatureType">
-      <xsd:sequence>
-        <xsd:element name="mainTable" type="gml:ReferenceType">
-          <xsd:annotation>
-            <xsd:appinfo>
-              <gml:targetElement>MODIFICATION_PAG</gml:targetElement>
-            </xsd:appinfo>
-          </xsd:annotation>
-        </xsd:element>
-        <xsd:element name="geometry" type="gml:CurvePropertyType"/>
-      </xsd:sequence>
-    </xsd:extension>
-  </xsd:complexContent>
-</xsd:complexType>
-<xsd:element name="NQ_PAP.GEOMETRIE" type="NQ_PAP.GEOMETRIEType" substitutionGroup="gml:AbstractFeature"/>
-<xsd:complexType  name="NQ_PAP.GEOMETRIEType">
-  <xsd:complexContent>
-    <xsd:extension base="gml:AbstractFeatureType">
-      <xsd:sequence>
-        <xsd:element name="mainTable" type="gml:ReferenceType">
-          <xsd:annotation>
-            <xsd:appinfo>
-              <gml:targetElement>NQ_PAP</gml:targetElement>
-            </xsd:appinfo>
-          </xsd:annotation>
-        </xsd:element>
-        <xsd:element name="geometry" type="gml:CurvePropertyType"/>
-      </xsd:sequence>
-    </xsd:extension>
-  </xsd:complexContent>
-</xsd:complexType>
-<xsd:element name="PAP_APPROUVE.GEOMETRIE" type="PAP_APPROUVE.GEOMETRIEType" substitutionGroup="gml:AbstractFeature"/>
-<xsd:complexType  name="PAP_APPROUVE.GEOMETRIEType">
-  <xsd:complexContent>
-    <xsd:extension base="gml:AbstractFeatureType">
-      <xsd:sequence>
-        <xsd:element name="mainTable" type="gml:ReferenceType">
-          <xsd:annotation>
-            <xsd:appinfo>
-              <gml:targetElement>PAP_APPROUVE</gml:targetElement>
-            </xsd:appinfo>
-          </xsd:annotation>
-        </xsd:element>
-        <xsd:element name="geometry" type="gml:CurvePropertyType"/>
-      </xsd:sequence>
-    </xsd:extension>
-  </xsd:complexContent>
-</xsd:complexType>
-<xsd:element name="PCN.GEOMETRIE" type="PCN.GEOMETRIEType" substitutionGroup="gml:AbstractFeature"/>
-<xsd:complexType  name="PCN.GEOMETRIEType">
-  <xsd:complexContent>
-    <xsd:extension base="gml:AbstractFeatureType">
-      <xsd:sequence>
-        <xsd:element name="mainTable" type="gml:ReferenceType">
-          <xsd:annotation>
-            <xsd:appinfo>
-              <gml:targetElement>PCN</gml:targetElement>
-            </xsd:appinfo>
-          </xsd:annotation>
-        </xsd:element>
-        <xsd:element name="geometry" type="gml:CurvePropertyType"/>
-      </xsd:sequence>
-    </xsd:extension>
-  </xsd:complexContent>
-</xsd:complexType>
-<xsd:element name="PERIMETRE.GEOMETRIE" type="PERIMETRE.GEOMETRIEType" substitutionGroup="gml:AbstractFeature"/>
-<xsd:complexType  name="PERIMETRE.GEOMETRIEType">
-  <xsd:complexContent>
-    <xsd:extension base="gml:AbstractFeatureType">
-      <xsd:sequence>
-        <xsd:element name="mainTable" type="gml:ReferenceType">
-          <xsd:annotation>
-            <xsd:appinfo>
-              <gml:targetElement>PERIMETRE</gml:targetElement>
-            </xsd:appinfo>
-          </xsd:annotation>
-        </xsd:element>
-        <xsd:element name="geometry" type="gml:CurvePropertyType"/>
-      </xsd:sequence>
-    </xsd:extension>
-  </xsd:complexContent>
-</xsd:complexType>
-<xsd:element name="ZAD.GEOMETRIE" type="ZAD.GEOMETRIEType" substitutionGroup="gml:AbstractFeature"/>
-<xsd:complexType  name="ZAD.GEOMETRIEType">
-  <xsd:complexContent>
-    <xsd:extension base="gml:AbstractFeatureType">
-      <xsd:sequence>
-        <xsd:element name="mainTable" type="gml:ReferenceType">
-          <xsd:annotation>
-            <xsd:appinfo>
-              <gml:targetElement>ZAD</gml:targetElement>
-            </xsd:appinfo>
-          </xsd:annotation>
-        </xsd:element>
-        <xsd:element name="geometry" type="gml:CurvePropertyType"/>
-      </xsd:sequence>
-    </xsd:extension>
-  </xsd:complexContent>
-</xsd:complexType>
-<xsd:element name="ZONAGE.GEOMETRIE" type="ZONAGE.GEOMETRIEType" substitutionGroup="gml:AbstractFeature"/>
-<xsd:complexType  name="ZONAGE.GEOMETRIEType">
-  <xsd:complexContent>
-    <xsd:extension base="gml:AbstractFeatureType">
-      <xsd:sequence>
-        <xsd:element name="mainTable" type="gml:ReferenceType">
-          <xsd:annotation>
-            <xsd:appinfo>
-              <gml:targetElement>ZONAGE</gml:targetElement>
-            </xsd:appinfo>
-          </xsd:annotation>
-        </xsd:element>
-        <xsd:element name="geometry" type="gml:CurvePropertyType"/>
-      </xsd:sequence>
-    </xsd:extension>
-  </xsd:complexContent>
-</xsd:complexType>
-<xsd:element name="ZONE_SERV_ECO.GEOMETRIE" type="ZONE_SERV_ECO.GEOMETRIEType" substitutionGroup="gml:AbstractFeature"/>
-<xsd:complexType  name="ZONE_SERV_ECO.GEOMETRIEType">
-  <xsd:complexContent>
-    <xsd:extension base="gml:AbstractFeatureType">
-      <xsd:sequence>
-        <xsd:element name="mainTable" type="gml:ReferenceType">
-          <xsd:annotation>
-            <xsd:appinfo>
-              <gml:targetElement>ZONE_SERV_ECO</gml:targetElement>
-            </xsd:appinfo>
-          </xsd:annotation>
-        </xsd:element>
-        <xsd:element name="geometry" type="gml:CurvePropertyType"/>
-      </xsd:sequence>
-    </xsd:extension>
-  </xsd:complexContent>
-</xsd:complexType>
-<xsd:element name="ZONE_SERV_URB.GEOMETRIE" type="ZONE_SERV_URB.GEOMETRIEType" substitutionGroup="gml:AbstractFeature"/>
-<xsd:complexType  name="ZONE_SERV_URB.GEOMETRIEType">
-  <xsd:complexContent>
-    <xsd:extension base="gml:AbstractFeatureType">
-      <xsd:sequence>
-        <xsd:element name="mainTable" type="gml:ReferenceType">
-          <xsd:annotation>
-            <xsd:appinfo>
-              <gml:targetElement>ZONE_SERV_URB</gml:targetElement>
-            </xsd:appinfo>
-          </xsd:annotation>
-        </xsd:element>
-        <xsd:element name="geometry" type="gml:CurvePropertyType"/>
-      </xsd:sequence>
-    </xsd:extension>
-  </xsd:complexContent>
-</xsd:complexType>
-<xsd:element name="ZONES_QE.GEOMETRIE" type="ZONES_QE.GEOMETRIEType" substitutionGroup="gml:AbstractFeature"/>
-<xsd:complexType  name="ZONES_QE.GEOMETRIEType">
-  <xsd:complexContent>
-    <xsd:extension base="gml:AbstractFeatureType">
-      <xsd:sequence>
-        <xsd:element name="mainTable" type="gml:ReferenceType">
-          <xsd:annotation>
-            <xsd:appinfo>
-              <gml:targetElement>ZONES_QE</gml:targetElement>
-            </xsd:appinfo>
-          </xsd:annotation>
-        </xsd:element>
-        <xsd:element name="geometry" type="gml:CurvePropertyType"/>
-      </xsd:sequence>
-    </xsd:extension>
-  </xsd:complexContent>
-</xsd:complexType>
-<xsd:element name="ZONES_SUPERPOSEES.GEOMETRIE" type="ZONES_SUPERPOSEES.GEOMETRIEType" substitutionGroup="gml:AbstractFeature"/>
-<xsd:complexType  name="ZONES_SUPERPOSEES.GEOMETRIEType">
-  <xsd:complexContent>
-    <xsd:extension base="gml:AbstractFeatureType">
-      <xsd:sequence>
-        <xsd:element name="mainTable" type="gml:ReferenceType">
-          <xsd:annotation>
-            <xsd:appinfo>
-              <gml:targetElement>ZONES_SUPERPOSEES</gml:targetElement>
-            </xsd:appinfo>
-          </xsd:annotation>
-        </xsd:element>
-        <xsd:element name="geometry" type="gml:CurvePropertyType"/>
-      </xsd:sequence>
     </xsd:extension>
   </xsd:complexContent>
 </xsd:complexType>

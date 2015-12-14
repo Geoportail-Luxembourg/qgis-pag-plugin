@@ -29,6 +29,7 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
         '''
         
         super(ImportDxfDialog, self).__init__(parent)
+        Importer.__init__(self, filename)
         # Set up the user interface from Designer.
         # After setupUI you can access any designer object by doing
         # self.<objectname>, and you can use autoconnect slots - see
@@ -49,7 +50,7 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
                                                          QCoreApplication.translate('ImportDxfDialog','Value'),
                                                          QCoreApplication.translate('ImportDxfDialog','Enabled')])
         self.tabFieldsMapping.setColumnWidth(0, 200)
-        self.tabFieldsMapping.setColumnWidth(1, 490)
+        self.tabFieldsMapping.setColumnWidth(1, 460)
         
         # Load dxf layers
         self._loadDxfLayers(filename)
@@ -58,11 +59,14 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
         if not self.valid :
             return
         
+        # Don't trigger events if loading from config file
+        self.is_loading_mapping = False
+        
         # Load the QGIS layers
         self._loadQgisLayers()
         
         # Load the default mapping
-        self.mapping = Mapping()#self._generateDefaultMapping()
+        self.mapping = Mapping()
         
         self._loadLayersMapping()
             
@@ -148,7 +152,9 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
         for layer in self.qgislayers:
             layers[PagLuxembourg.main.current_project.getLayerTableName(layer)]=layer.name()
             
-        return self._getCombobox(layers, selected_layer, self._comboboxQgisLayersIndexChanged)
+        return self._getCombobox(layers,
+                                 primary_selected_value=selected_layer, 
+                                 currentindex_changed_callback=self._comboboxQgisLayersIndexChanged)
         
     def _getLayerMappingFromSourceDxfLayer(self, dxf_layername):
         '''
@@ -170,11 +176,13 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
         Loads the layers mapping
         '''
         
-        #self.is_loading_mapping = True
+        self.is_loading_mapping = True
         
         # Clear the table
         self.tabLayersMapping.clearContents()
         self.tabLayersMapping.setRowCount(len(self.dxf_layernames))
+        self.tabFieldsMapping.clearContents()
+        self.tabFieldsMapping.setRowCount(0)
         
         rowindex = 0
         
@@ -188,9 +196,12 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
             
             rowindex +=  1
         
-        #self.is_loading_mapping = False
+        self.is_loading_mapping = False
     
     def _tabLayersMappingCellChanged(self, currentRow, currentColumn, previousRow, previousColumn):
+        
+        if self.is_loading_mapping:
+            return
         
         # Update mapping
         self._updateMappingFromUI(previousRow)
@@ -221,7 +232,7 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
             layersmapping_rowindex = self.tabLayersMapping.currentRow()
             
         dxf_layername = self._getCellValue(self.tabLayersMapping, layersmapping_rowindex, 0)
-        qgis_layer = self._getQgisLayerFromTableName(self._getCellValue(self.tabLayersMapping, layersmapping_rowindex, 1)[1])
+        qgis_layer = self._getQgisLayerFromTableName(self._getCellValue(self.tabLayersMapping, layersmapping_rowindex, 1))
         qgis_tablename = PagLuxembourg.main.current_project.getLayerTableName(qgis_layer)
         
         layer_mapping = self._getLayerMappingFromSourceDxfLayer(dxf_layername)
@@ -238,11 +249,14 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
                 # Skip PK field
                 if field.name() == PagLuxembourg.project.PK:
                     continue
+                # Skip IMPORT_ID field
+                if field.name() == PagLuxembourg.project.IMPORT_ID:
+                    continue                
                 
                 # Add or update mapping for every fields
-                source, destination, constant_value, enabled = layer_mapping.getFieldMappingForDestination(field.name())
+                source, destination, constant_value, enabled, valuemap = layer_mapping.getFieldMappingForDestination(field.name())
                 if destination is None:
-                    layer_mapping.addFieldMapping(None, field.name(), None, True)
+                    layer_mapping.addFieldMapping(None, field.name(), None, True, valuemap)
         
         layer_mapping.setDestinationLayerName(qgis_tablename)
         
@@ -302,49 +316,19 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
             # Skip PK field
             if field.name() == PagLuxembourg.project.PK:
                 continue
-                
-            source, destination, constant_value, enabled = layer_mapping.getFieldMappingForDestination(field.name())
+            # Skip IMPORT_ID field
+            if field.name() == PagLuxembourg.project.IMPORT_ID:
+                continue 
+                    
+            source, destination, constant_value, enabled, valuemap = layer_mapping.getFieldMappingForDestination(field.name())
             
             self.tabFieldsMapping.setItem(rowindex, 0, QTableWidgetItem(destination)) # QGIS field
-            self.tabFieldsMapping.setCellWidget(rowindex, 1, self._getFieldsMappingTableItemWidget(qgis_layer, field, constant_value)) # Constant value
+            self.tabFieldsMapping.setCellWidget(rowindex, 1, self._getFieldsMappingTableItemWidget(qgis_layer, field.name(), constant_value)) # Constant value
             self.tabFieldsMapping.setCellWidget(rowindex, 2, self._getCenteredCheckbox(enabled)) # Enabled checkbox
             
             rowindex +=  1
         
         layer_mapping.setValid(True)
-    
-    def _getFieldsMappingTableItemWidget(self, layer, field, value):
-        '''
-        Gets the table widget corresponding to the current field
-        
-        :param layer: The QGIS layer
-        :type layer: QgsVectorLayer
-        
-        :param field: The QGIS field
-        :type field: QgsField
-        '''
-        
-        field_index = layer.fieldNameIndex(field.name())
-        
-        # Field editor is ValueMap
-        if layer.editorWidgetV2(field_index) == 'ValueMap':
-            config = layer.editorWidgetV2Config(field_index)
-            config = dict((v, k) for k, v in config.iteritems())
-            ordered_config = OrderedDict(sorted(config.items(), key=lambda t: t[1]))
-            return self._getCombobox(ordered_config, value)
-        
-        # Field editor is range
-        elif layer.editorWidgetV2(field_index) == 'Range':
-            config = layer.editorWidgetV2Config(field_index)
-            return self._getSpinbox(config['Min'], config['Max'], config['Step'], value)
-        
-        # Field editor is datetime
-        elif layer.editorWidgetV2(field_index) == 'DateTime':
-            config = layer.editorWidgetV2Config(field_index)
-            return self._getCalendar(config['display_format'], value)
-        
-        # Other editors
-        return self._getTextbox(value)
         
     def _updateMappingFromUI(self, layersmapping_rowindex = None):
         
@@ -359,7 +343,7 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
             # Layer mapping
             layer_mapping = self._getLayerMappingFromSourceDxfLayer(dxf_layername)
             
-            qgis_layer = self._getQgisLayerFromTableName(self._getCellValue(self.tabLayersMapping, layermapping_rowindex, 1)[1])
+            qgis_layer = self._getQgisLayerFromTableName(self._getCellValue(self.tabLayersMapping, layermapping_rowindex, 1))
             qgis_tablename = PagLuxembourg.main.current_project.getLayerTableName(qgis_layer)
         
             # Check whether the destination layer is the same
@@ -417,6 +401,9 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
         # Define imported extent
         imported_extent = None
         
+        # Start import session
+        self._startImportSession()
+        
         for layer_mapping in self.mapping.layerMappings():
             # Skip if not enabled
             if not layer_mapping.isEnabled():
@@ -429,12 +416,12 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
             
             # Import features according to geometry type
             if qgis_layer.geometryType() == QGis.Point:
-                extent = self._importLayer(self.dxflayer_points, qgis_layer, layer_indexmapping)
+                extent, errors = self._importLayer(self.dxflayer_points, qgis_layer, layer_indexmapping)
             elif qgis_layer.geometryType() == QGis.Line:
-                extent = self._importLayer(self.dxflayer_linestrings, qgis_layer, layer_indexmapping)
+                extent, errors = self._importLayer(self.dxflayer_linestrings, qgis_layer, layer_indexmapping)
             elif qgis_layer.geometryType() == QGis.Polygon:
-                extent = self._importLayer(self.dxflayer_linestrings, qgis_layer, layer_indexmapping)
-                extent = self._importLayer(self.dxflayer_polygons, qgis_layer, layer_indexmapping)
+                extent, errors = self._importLayer(self.dxflayer_linestrings, qgis_layer, layer_indexmapping)
+                extent, errors = self._importLayer(self.dxflayer_polygons, qgis_layer, layer_indexmapping)
             
             # Update imported extent
             if extent is not None:
@@ -443,11 +430,16 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
                     else:
                         imported_extent.combineExtentWith(extent)
         
+        # Commit import session
+        self._commitImport()
+            
         # Zoom to selected
         if imported_extent is not None:
+            # Display message
             PagLuxembourg.main.qgis_interface.mapCanvas().setExtent(imported_extent)
-            PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('ImportDxfDialog','Success'), 
-                                                                       QCoreApplication.translate('ImportDxfDialog','Importation was successful'))
+            if not errors:
+                PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('ImportDxfDialog','Success'), 
+                                                                           QCoreApplication.translate('ImportDxfDialog','Importation was successful'))
         
         self.close()
     

@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
-    <height>440</height>
+    <width>800</width>
+    <height>695</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -21,14 +21,14 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>600</width>
-    <height>440</height>
+    <width>800</width>
+    <height>695</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>600</width>
-    <height>440</height>
+    <width>800</width>
+    <height>695</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -39,7 +39,7 @@
     <rect>
      <x>100</x>
      <y>10</y>
-     <width>491</width>
+     <width>691</width>
      <height>20</height>
     </rect>
    </property>
@@ -65,7 +65,7 @@
     <rect>
      <x>100</x>
      <y>35</y>
-     <width>491</width>
+     <width>311</width>
      <height>22</height>
     </rect>
    </property>
@@ -76,33 +76,11 @@
     </sizepolicy>
    </property>
   </widget>
-  <widget class="QTableWidget" name="tabMapping">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>70</y>
-     <width>581</width>
-     <height>261</height>
-    </rect>
-   </property>
-   <property name="selectionMode">
-    <enum>QAbstractItemView::NoSelection</enum>
-   </property>
-   <property name="columnCount">
-    <number>3</number>
-   </property>
-   <attribute name="horizontalHeaderStretchLastSection">
-    <bool>true</bool>
-   </attribute>
-   <column/>
-   <column/>
-   <column/>
-  </widget>
   <widget class="QPushButton" name="btnImport">
    <property name="geometry">
     <rect>
-     <x>480</x>
-     <y>370</y>
+     <x>680</x>
+     <y>620</y>
      <width>111</width>
      <height>51</height>
     </rect>
@@ -118,7 +96,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>360</y>
+     <y>610</y>
      <width>151</width>
      <height>31</height>
     </rect>
@@ -131,7 +109,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>400</y>
+     <y>650</y>
      <width>151</width>
      <height>31</height>
     </rect>
@@ -153,24 +131,116 @@
     <string>File :</string>
    </property>
   </widget>
-  <widget class="QCheckBox" name="chkEnableAllFieldsMapping">
+  <widget class="QGroupBox" name="groupBox_2">
    <property name="geometry">
     <rect>
-     <x>520</x>
-     <y>340</y>
-     <width>70</width>
-     <height>17</height>
+     <x>10</x>
+     <y>70</y>
+     <width>781</width>
+     <height>281</height>
     </rect>
    </property>
-   <property name="layoutDirection">
-    <enum>Qt::RightToLeft</enum>
+   <property name="title">
+    <string>Fields mapping</string>
    </property>
-   <property name="text">
-    <string>Enable all</string>
-   </property>
-   <property name="checked">
+   <widget class="QTableWidget" name="tabMapping">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>761</width>
+      <height>231</height>
+     </rect>
+    </property>
+    <property name="selectionMode">
+     <enum>QAbstractItemView::SingleSelection</enum>
+    </property>
+    <property name="selectionBehavior">
+     <enum>QAbstractItemView::SelectRows</enum>
+    </property>
+    <property name="columnCount">
+     <number>4</number>
+    </property>
+    <attribute name="horizontalHeaderStretchLastSection">
+     <bool>true</bool>
+    </attribute>
+    <column/>
+    <column/>
+    <column/>
+    <column/>
+   </widget>
+   <widget class="QCheckBox" name="chkEnableAllFieldsMapping">
+    <property name="geometry">
+     <rect>
+      <x>700</x>
+      <y>255</y>
+      <width>70</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="layoutDirection">
+     <enum>Qt::RightToLeft</enum>
+    </property>
+    <property name="text">
+     <string>Enable all</string>
+    </property>
+    <property name="checked">
+     <bool>true</bool>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_4">
+   <property name="enabled">
     <bool>true</bool>
    </property>
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>360</y>
+     <width>781</width>
+     <height>231</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Value map</string>
+   </property>
+   <widget class="QTableWidget" name="tabValueMap">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>511</width>
+      <height>201</height>
+     </rect>
+    </property>
+    <property name="selectionMode">
+     <enum>QAbstractItemView::NoSelection</enum>
+    </property>
+    <property name="columnCount">
+     <number>2</number>
+    </property>
+    <attribute name="horizontalHeaderStretchLastSection">
+     <bool>true</bool>
+    </attribute>
+    <column/>
+    <column/>
+   </widget>
+   <widget class="QLabel" name="lblValueMap">
+    <property name="geometry">
+     <rect>
+      <x>530</x>
+      <y>20</y>
+      <width>241</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Select a field mapping to edit its value map</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>
@@ -255,6 +325,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>tabMapping</sender>
+   <signal>currentCellChanged(int,int,int,int)</signal>
+   <receiver>Dialog</receiver>
+   <slot>_tabMappingCellChanged(int,int,int,int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>270</x>
+     <y>196</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>311</x>
+     <y>639</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>_selectedLayerIndexChanged(int)</slot>
@@ -262,5 +348,6 @@
   <slot>_saveConfig()</slot>
   <slot>_loadConfig()</slot>
   <slot>_toggleFieldsMappingCheckboxes()</slot>
+  <slot>_tabMappingCellChanged(int,int,int,int)</slot>
  </slots>
 </ui>

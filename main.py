@@ -29,11 +29,15 @@ import os.path
 # Widgets
 from widgets.create_project.create_project import *
 from widgets.import_data.import_data import *
+from widgets.import_manager.import_manager import *
 from widgets.export_gml.export_gml import *
 from widgets.stylize.stylize import *
 from widgets.data_checker.data_checker import *
+from widgets.topoclean.topoclean import *
 from widgets.topology.topology import *
 from widgets.about.about import *
+import editor.simple_filename
+import editor.precise_range
 # Schema
 from PagLuxembourg.schema import *
 from PagLuxembourg.project import *
@@ -78,6 +82,8 @@ class PAGLuxembourg(object):
             if qVersion() > '4.3.3':
                 QCoreApplication.installTranslator(self.translator)
 
+        # Register custom editors widgets
+        
         # Declare instance attributes
         self.actions = []
         self.pag_actions = [] #PAG actions, disabled if the project is not PAG
@@ -91,6 +97,9 @@ class PAGLuxembourg(object):
         self.iface.projectRead.connect(current_project.open)
         self.iface.newProjectCreated.connect(current_project.open)
         current_project.ready.connect(self.updateGui)
+        
+        # Load current project
+        current_project.open()
 
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
@@ -205,6 +214,15 @@ class PAGLuxembourg(object):
             status_tip=self.tr(u'Import data from files (GML, SHP, DXF)'),
             parent=self.iface.mainWindow()))
         
+        # Import manager
+        self.import_manager_widget = ImportManager()
+        self.pag_actions.append(self.add_action(
+            ':/plugins/PagLuxembourg/widgets/import_manager/icon.png',
+            text=self.tr(u'Import manager'),
+            callback=self.import_manager_widget.run,
+            status_tip=self.tr(u'Open the import manager'),
+            parent=self.iface.mainWindow()))
+        
         # Export GML
         self.export_gml_widget = ExportGML()
         self.pag_actions.append(self.add_action(
@@ -223,13 +241,13 @@ class PAGLuxembourg(object):
             status_tip=self.tr(u'Apply predefined styles to the project'),
             parent=self.iface.mainWindow()))
         
-        # Data checker
-        self.data_checker_widget = DataChecker()
+        # Topo clean tool
+        self.topoclean_widget = TopoClean()
         self.pag_actions.append(self.add_action(
-            ':/plugins/PagLuxembourg/widgets/data_checker/icon.png',
-            text=self.tr(u'Check data'),
-            callback=self.data_checker_widget.run,
-            status_tip=self.tr(u'Check project data for errors'),
+            ':/plugins/PagLuxembourg/widgets/topoclean/icon.png',
+            text=self.tr(u'Clean topology'),
+            callback=self.topoclean_widget.run,
+            status_tip=self.tr(u'Clean the topology of a layer'),
             parent=self.iface.mainWindow()))
         
         # Topology checker
@@ -248,6 +266,15 @@ class PAGLuxembourg(object):
         # Topology checker plugin is not enabled, ask the user to install it
         if not found:
             self.iface.initializationCompleted.connect(self._showMissingTopolPluginMessage)
+        
+        # Data checker
+        self.data_checker_widget = DataChecker()
+        self.pag_actions.append(self.add_action(
+            ':/plugins/PagLuxembourg/widgets/data_checker/icon.png',
+            text=self.tr(u'Check data'),
+            callback=self.data_checker_widget.run,
+            status_tip=self.tr(u'Check project data for errors'),
+            parent=self.iface.mainWindow()))
         
         # About
         self.about_widget = About()
@@ -297,3 +324,8 @@ class PAGLuxembourg(object):
             
         # remove the toolbar
         del self.toolbar
+        
+        # Disconnect Signals
+        self.iface.projectRead.disconnect(current_project.open)
+        self.iface.newProjectCreated.disconnect(current_project.open)
+        current_project.ready.disconnect(self.updateGui)

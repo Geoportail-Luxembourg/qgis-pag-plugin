@@ -4,20 +4,61 @@ Created on 04 nov. 2015
 @author: arxit
 '''
 
+import os.path
 import json
+from collections import OrderedDict
+import uuid
 
-from PyQt4.QtCore import QCoreApplication, QVariant, Qt, QDate
+from PyQt4.QtCore import QCoreApplication, QVariant, Qt, QDate, QDateTime, QSettings
 from PyQt4.QtGui import QCheckBox, QWidget, QHBoxLayout, QComboBox, QDoubleSpinBox, QDateTimeEdit, QLineEdit
 
 from qgis.core import *
 
 import PagLuxembourg.main
+import PagLuxembourg.project
+from PagLuxembourg.controls.filename import SimpleFilenamePicker
 
 class Importer(object):
     '''
     Base class for the differents importers (GML, SHP, DXF)
     '''
 
+    def __init__(self, filename):
+        '''
+        Constructor.
+        '''
+        self.import_filename = os.path.basename(filename.strip())
+        
+    def _startImportSession(self):
+        self.importid = str(uuid.uuid1())
+        self.import_date = QDateTime.currentDateTime().toString('yyyy-MM-dd hh:mm:ss')
+        self.imported_layers = set()
+    
+    def _commitImport(self):
+        importlog_layer = PagLuxembourg.main.current_project.getImportLogLayer()
+        dst_feature = QgsFeature(importlog_layer.fields())
+        dst_feature.setAttribute(1, self.importid)
+        dst_feature.setAttribute(2, self.import_date)
+        dst_feature.setAttribute(3, self.import_filename)
+        dst_feature.setAttribute(4, "|".join(self.imported_layers))
+        
+        # Start editing session
+        if not importlog_layer.isEditable():
+            importlog_layer.startEditing()
+        
+        # Add features    
+        importlog_layer.addFeatures([dst_feature], False)
+        
+        # Commit    
+        if not importlog_layer.commitChanges():
+            importlog_layer.rollBack()
+            PagLuxembourg.main.qgis_interface.messageBar().pushCritical(QCoreApplication.translate('Importer','Error'), 
+                                                                        QCoreApplication.translate('Importer','Commit error on layer {}').format(importlog_layer.name()))
+            errors = importlog_layer.commitErrors()
+            for error in errors:
+                QgsMessageLog.logMessage(error, 'PAG Luxembourg', QgsMessageLog.CRITICAL)
+            PagLuxembourg.main.qgis_interface.openMessageLog()
+        
     def _importLayer(self, src_layer, dst_layer, mapping):
         '''
         Launch the import
@@ -32,6 +73,8 @@ class Importer(object):
         
         feature_request = None
         
+        importid_index = dst_layer.fieldNameIndex(PagLuxembourg.project.IMPORT_ID)
+        
         # Set layer filter if existing, for DXF
         if mapping.sourceLayerFilter() is None:
             feature_request = QgsFeatureRequest()
@@ -42,8 +85,13 @@ class Importer(object):
         # Iterate source features
         for src_feature in src_dp.getFeatures(feature_request):
             dst_feature = QgsFeature(dst_layer_fields)
-            for src_index, dst_index, constant_value, enabled in mapping.fieldMappings():
+            for src_index, dst_index, constant_value, enabled, value_map in mapping.fieldMappings():
                 value = constant_value if src_index is None else src_feature[src_index]
+                
+                # Manage value map
+                for shp, qgis in value_map:
+                    if value == shp:
+                        value = qgis
                 
                 # Check if numeric value needs to be casted
                 if value == NULL or value is None:
@@ -62,7 +110,7 @@ class Importer(object):
                         src_polygon = QgsGeometry.fromPolygon([src_polyline])
                         if src_polygon is None:
                             QgsMessageLog.logMessage(QCoreApplication.translate('Importer','Invalid geometry : Handle = {}').format(src_feature.attribute('EntityHandle')), 'PAG Luxembourg', QgsMessageLog.CRITICAL)
-                            # PagLuxembourg.main.qgis_interface.openMessageLog() QGIS 2.12
+                            PagLuxembourg.main.qgis_interface.openMessageLog()
                             import_errors = True
                             del dst_feature
                             continue
@@ -78,7 +126,7 @@ class Importer(object):
                             QgsMessageLog.logMessage(QCoreApplication.translate('Importer','Invalid geometry : FID = {}').format(src_feature.id()), 'PAG Luxembourg', QgsMessageLog.CRITICAL)
                             #for geometry_error in geometry_errors:
                             #    QgsMessageLog.logMessage(geometry_error.what(), 'PAG Luxembourg', QgsMessageLog.CRITICAL)
-                            # PagLuxembourg.main.qgis_interface.openMessageLog() QGIS 2.12
+                            PagLuxembourg.main.qgis_interface.openMessageLog()
                             import_errors = True
                             del dst_feature
                             continue
@@ -90,6 +138,11 @@ class Importer(object):
                 else:
                     imported_extent.combineExtentWith(src_feature.geometry().boundingBox())
             
+            
+            # Add import ID
+            dst_feature.setAttribute(importid_index, self.importid)
+            
+            # Add feature to new features list
             newfeatures.append(dst_feature)
         
         # Start editing session
@@ -107,6 +160,7 @@ class Importer(object):
             errors = dst_layer.commitErrors()
             for error in errors:
                 QgsMessageLog.logMessage(error, 'PAG Luxembourg', QgsMessageLog.CRITICAL)
+            PagLuxembourg.main.qgis_interface.openMessageLog()
             return None
         
         # On error
@@ -117,9 +171,49 @@ class Importer(object):
         # Reload layer
         dst_layer.reload()
         
-        # Return extent
-        return imported_extent
+        # Add layer to imported layers
+        self.imported_layers.add(dst_layer.name())
         
+        # Return extent
+        return imported_extent, import_errors
+        
+    def _getFieldsMappingTableItemWidget(self, layer, fieldname, value, secondary_value = None):
+        '''
+        Gets the table widget corresponding to the current field
+        
+        :param layer: The QGIS layer
+        :type layer: QgsVectorLayer
+        
+        :param field: The QGIS field
+        :type field: QgsField
+        '''
+        
+        field_index = layer.fieldNameIndex(fieldname)
+        
+        # Field editor is ValueMap
+        if layer.editorWidgetV2(field_index) == 'ValueMap':
+            config = layer.editorWidgetV2Config(field_index)
+            config = dict((v, k) for k, v in config.iteritems())
+            ordered_config = OrderedDict(sorted(config.items(), key=lambda t: t[1]))
+            return self._getCombobox(ordered_config, value, secondary_value)
+        
+        # Field editor is range
+        elif layer.editorWidgetV2(field_index) == 'PreciseRange':
+            config = layer.editorWidgetV2Config(field_index)
+            return self._getSpinbox(config['Min'], config['Max'], config['Step'], config['AllowNull'], value)
+        
+        # Field editor is datetime
+        elif layer.editorWidgetV2(field_index) == 'DateTime':
+            config = layer.editorWidgetV2Config(field_index)
+            return self._getCalendar(config['display_format'], value)
+        
+        # Field editor is simple filename
+        elif layer.editorWidgetV2(field_index) == 'SimpleFilename':
+            return self._getSimpleFilenamePicker(value)
+        
+        # Other editors
+        return self._getTextbox(value)
+    
     def _getCenteredCheckbox(self, checked = True):
         '''
         Get a centered checkbox to insert in a table widget
@@ -160,7 +254,7 @@ class Importer(object):
         for row in range(table.rowCount()):
             self._setCheckboxChecked(table, row, column, checked)
     
-    def _getCombobox(self, values, selected_value = None, currentindex_changed_callback = None):
+    def _getCombobox(self, values, primary_selected_value = None, secondary_selected_value = None, currentindex_changed_callback = None):
         '''
         Get a combobox filled with the given values
         
@@ -180,26 +274,27 @@ class Importer(object):
         widget.setLayout(layout);
         
         current_item_index = 0
-        selected_index = -1
+        selected_index = 0
         
         for key, value in values.iteritems():
             combobox.addItem(value, key)
             
-            # Select layer
-            if key == selected_value:
+            # Select value
+            if key == secondary_selected_value and selected_index == 0:
+                selected_index = current_item_index
+            if key == primary_selected_value:
                 selected_index = current_item_index
                 
             current_item_index += 1
         
-        if selected_value is not None:
-            combobox.setCurrentIndex(selected_index)
+        combobox.setCurrentIndex(selected_index)
             
         if currentindex_changed_callback is not None:
             combobox.currentIndexChanged.connect(currentindex_changed_callback)
                 
         return widget
     
-    def _getSpinbox(self, minvalue, maxvalue, step, value = 0):
+    def _getSpinbox(self, minvalue, maxvalue, step, nullable = True, value = 0):
         '''
         Get a combobox filled with the given values
         
@@ -216,6 +311,10 @@ class Importer(object):
         spinbox.setMaximum(maxvalue)
         spinbox.setSingleStep(step)
         spinbox.setDecimals(len(str(step).split('.')[1]) if len(str(step).split('.'))==2 else 0)
+        if nullable:
+            spinbox.setMinimum(minvalue - step)
+            spinbox.setValue(spinbox.minimum())
+            spinbox.setSpecialValueText(str(QSettings().value('qgis/nullValue', 'NULL' )))
         if value is not None:
             spinbox.setValue(value)
         layout = QHBoxLayout(widget)
@@ -276,6 +375,22 @@ class Importer(object):
                 
         return widget
     
+    def _getSimpleFilenamePicker(self, value = None):
+        '''
+        Get a combobox filled with the given values
+        
+        :param values: The filename
+        :type values: str
+        
+        :returns: A simple filename picker
+        :rtype: SimpleFilenamePicker
+        '''
+        
+        widget = SimpleFilenamePicker()
+        widget.setValue(value)
+                
+        return widget
+    
     def _getCellValue(self, table, row, column):
         '''
         Get the selected combobox text
@@ -300,16 +415,26 @@ class Importer(object):
             return text if not text == '' else None
         
         # It is a widget
-        for child in table.cellWidget(row, column).children():
+        widget = table.cellWidget(row, column)
+        if type(widget) is SimpleFilenamePicker:
+            return widget.value()
+        
+        for child in widget.children():
             if type(child) is QCheckBox:
                 return child.isChecked()
             elif type(child) is QComboBox:
-                return child.currentText(), child.itemData(child.currentIndex())
+                return child.itemData(child.currentIndex())
+            elif type(child) is SimpleFilenamePicker:
+                return child.value()
             elif type(child) is QLineEdit:
                 text = child.text().strip()
                 return text if not text == '' else None
             elif type(child) is QDoubleSpinBox:
-                return child.value()
+                value = child.value()
+                if value == child.minimum() and child.specialValueText() != '':
+                    return None
+                else:
+                    return value
             elif type(child) is QDateTimeEdit:
                 return child.date().toString(child.displayFormat())
         
@@ -419,20 +544,27 @@ class LayerMapping(object):
         return self._mapping['FieldMapping']
     
     def getFieldMappingForSource(self, source_fieldname):
-        for source, destination, constant_value, enabled in self._mapping['FieldMapping']:
+        for source, destination, constant_value, enabled, value_map in self._mapping['FieldMapping']:
             if source == source_fieldname:
-                return source, destination, constant_value, enabled
+                return source, destination, constant_value, enabled, value_map
         
-        return None, None, None, None
+        return None, None, None, None, None
     
     def getFieldMappingForDestination(self, destination_fieldname):
-        for source, destination, constant_value, enabled in self._mapping['FieldMapping']:
+        for source, destination, constant_value, enabled, value_map in self._mapping['FieldMapping']:
             if destination == destination_fieldname:
-                return source, destination, constant_value, enabled
+                return source, destination, constant_value, enabled, value_map
         
-        return None, None, None, None
+        return None, None, None, None, None
     
-    def asIndexFieldMappings(self, destination_fields):
+    def getValueMapForDestination(self, destination_fieldname):
+        for source, destination, constant_value, enabled, value_map in self._mapping['FieldMapping']:
+            if destination == destination_fieldname:
+                return value_map
+        
+        return []
+    
+    def asIndexFieldMappings(self, destination_fields, source_fields=None):
         mapping = LayerMapping()
         mapping.setSourceLayerName(self.sourceLayerName())
         mapping.setDestinationLayerName(self.destinationLayerName())
@@ -440,13 +572,18 @@ class LayerMapping(object):
         mapping.setEnabled(self.isEnabled())
         mapping.setValid(self.isValid())
         
-        for source, destination, constant_value, enabled in self.fieldMappings():
-            mapping.addFieldMapping(source, destination_fields.fieldNameIndex(destination), constant_value, enabled)
+        for source, destination, constant_value, enabled, value_map in self.fieldMappings():
+            mapping.addFieldMapping(
+                                    source_fields.fieldNameIndex(source) if source is not None else source, 
+                                    destination_fields.fieldNameIndex(destination), 
+                                    constant_value, 
+                                    enabled,
+                                    value_map)
         
         return mapping
         
-    def addFieldMapping(self, source, destination, constant_value, enabled):
-        self._mapping['FieldMapping'].append((source, destination, constant_value, enabled))
+    def addFieldMapping(self, source, destination, constant_value, enabled, value_map = []):
+        self._mapping['FieldMapping'].append((source, destination, constant_value, enabled, value_map))
     
     def clearFieldMapping(self):
         del self._mapping['FieldMapping'][:]

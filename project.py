@@ -20,6 +20,7 @@ from PagLuxembourg.widgets.topology.topology import *
 FILENAME = 'project.qgs'
 DATABASE = 'database.sqlite'
 PK = 'OGC_FID'
+IMPORT_ID = 'ImportId'
 
 class Project(QObject):
     '''
@@ -68,9 +69,6 @@ class Project(QObject):
         # Topological settings
         self._setupTopologicalSettings()
         
-        # Activate the auto Show feature form on feature creation
-        self._activateAutoShowForm()
-        
         QgsProject.instance().write()
         
         self.ready.emit()
@@ -114,10 +112,10 @@ class Project(QObject):
         # Topological settings
         self._setupTopologicalSettings()
         
-        # Activate the auto Show feature form on feature creation
-        self._activateAutoShowForm()
-        
         self.creation_mode = False
+        
+        # Save project and add to recent projects
+        main.qgis_interface.actionSaveProject().trigger()
         
         # Notify project is ready
         self.ready.emit()
@@ -208,6 +206,18 @@ class Project(QObject):
             return None
         
         return self.getUriInfos(layer.source())[1]
+    
+    def getImportLogLayer(self):
+        logimport_table = PAGType()
+        logimport_table.name = 'ImportLog'
+        
+        uri = self.getTypeUri(logimport_table)
+        layer = QgsVectorLayer(uri, logimport_table.friendlyName(), 'spatialite')
+        
+        if not layer.isValid():
+            return None
+        
+        return layer
             
     def _setupTopologicalSettings(self):
         # Topological editing
@@ -220,10 +230,6 @@ class Project(QObject):
         QgsProject.instance().writeEntry('Digitizing', '/DefaultSnapToleranceUnit', QgsTolerance.Pixels)
         
         QgsProject.instance().snapSettingsChanged.emit()
-        
-    def _activateAutoShowForm(self):
-        settings = QSettings()
-        settings.setValue("/Map/identifyAutoFeatureForm", True)
         
     def _updateDatabase(self):
         '''
@@ -250,11 +256,14 @@ class Project(QObject):
             if not layer.isValid():
                 self._createTable(conn, type)
                 layer = QgsVectorLayer(uri, type.friendlyName(), 'spatialite')
-                
-            self._updateTable(type, layer)
+            
+            self._updateTable(type, layer, True)
             
         # Check and update metadata
         self._updateMetadataTable(conn)
+        
+        # Check and update the import log table
+        self._updateImportLogTable(conn)
         
         conn.close()
         del conn
@@ -369,7 +378,58 @@ class Project(QObject):
             changes = {layer.fieldNameIndex('Value'):main.PLUGIN_VERSION}
             layer.dataProvider().changeAttributeValues({ feat.id() : changes })
         
-    def _updateTable(self, type, layer):
+    def _updateImportLogTable(self, conn):
+        '''
+        Update the import table
+        
+        :param conn: The database connection
+        :type conn: Connection
+        '''
+        
+        # Log import table
+        logimport_table = PAGType()
+        logimport_table.name = 'ImportLog'
+        
+        # Import ID field
+        field = PAGField()
+        field.name = IMPORT_ID
+        field.type = DataType.STRING
+        field.nullable = False
+        logimport_table.fields.append(field)
+        
+        # Date field
+        field = PAGField()
+        field.name = 'Date'
+        field.type = DataType.STRING
+        field.nullable = False
+        logimport_table.fields.append(field)
+        
+        # Type field
+        field = PAGField()
+        field.name = 'Filename'
+        field.type = DataType.STRING
+        field.nullable = False
+        logimport_table.fields.append(field)
+        
+        # Layers field
+        field = PAGField()
+        field.name = 'Layers'
+        field.type = DataType.STRING
+        field.nullable = True
+        logimport_table.fields.append(field)
+        
+        uri = self.getTypeUri(logimport_table)
+        layer = QgsVectorLayer(uri, logimport_table.friendlyName(), 'spatialite')
+        
+        # Create table if not valid
+        if not layer.isValid():
+            self._createTable(conn, logimport_table)
+            layer = QgsVectorLayer(uri, logimport_table.friendlyName(), 'spatialite')
+        
+        # Update fields
+        self._updateTable(logimport_table, layer)
+            
+    def _updateTable(self, type, layer, add_importid = False):
         '''
         Updates the layer's table according to the XSD
         
@@ -381,6 +441,15 @@ class Project(QObject):
         '''
         
         for field in type.fields:
+            if layer.fieldNameIndex(field.name)<0:
+                layer.dataProvider().addAttributes([self._getField(field)])
+        
+        # Add import id field
+        if add_importid:
+            field = PAGField()
+            field.name = IMPORT_ID
+            field.type = DataType.STRING
+            field.nullable = True
             if layer.fieldNameIndex(field.name)<0:
                 layer.dataProvider().addAttributes([self._getField(field)])
         
@@ -480,6 +549,9 @@ class Project(QObject):
                 
                 # Update attributes editors
                 self._updateLayerEditors(layer, xsd_type)
+                
+                # Activate the auto Show feature form on feature creation
+                layer.setFeatureFormSuppress(QgsVectorLayer.SuppressOff)
         
     def _addOrthoBasemap(self):
         ortho_url = 'url=http://wsinspire.geoportail.lu/oi&SLegend=0&crs=EPSG:2169&dpiMode=7&featureCount=10&format=image/jpeg&layers=1&styles='
@@ -551,7 +623,7 @@ class Project(QObject):
         '''
         
         # Hide fields
-        hidden = [PK,]
+        hidden = [PK, IMPORT_ID]
         for field in layer.pendingFields():
             if field.name() in hidden:
                 layer.setEditorWidgetV2(layer.fieldNameIndex(field.name()),'Hidden')
@@ -588,7 +660,7 @@ class Project(QObject):
             # File
             for fileField in self.fileFields:
                 if field.name.startswith(fileField):
-                    editor = 'FileName'
+                    editor = 'SimpleFilename'
             
             # Enumeration
             if field.listofvalues is not None:
@@ -607,8 +679,7 @@ class Project(QObject):
             
         # Integer
         elif field.type == DataType.INTEGER:
-            editor = 'Range'
-            config['Style'] = 'SpinBox'
+            editor = 'PreciseRange'
             config['Min'] = int(field.minvalue) if field.minvalue is not None else -sys.maxint-1
             config['Max'] = int(field.maxvalue) if field.maxvalue is not None else sys.maxint
             config['Step'] = 1
@@ -616,8 +687,7 @@ class Project(QObject):
             
         # Double
         elif field.type == DataType.DOUBLE:
-            editor = 'Range'
-            config['Style'] = 'SpinBox'
+            editor = 'PreciseRange'
             config['Min'] = float(field.minvalue) if field.minvalue is not None else -sys.maxint-1
             config['Max'] = float(field.maxvalue) if field.maxvalue is not None else sys.maxint
             mindecimal = len(field.minvalue.split('.')[1]) if field.minvalue is not None and len(field.minvalue.split('.'))==2 else 0

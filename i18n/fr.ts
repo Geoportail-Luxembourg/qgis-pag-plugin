@@ -159,82 +159,127 @@
         <translation>Erreurs de données</translation>
     </message>
     <message>
-        <location filename="import_dxf_dialog.ui" line="23"/>
+        <location filename="import_dxf_dialog.ui" line="35"/>
         <source>Import DXF file</source>
         <translation>Importer un fichier DXF</translation>
     </message>
     <message>
-        <location filename="import_shp_dialog.ui" line="35"/>
+        <location filename="import_shp_dialog.ui" line="47"/>
         <source>C:\Users\arxit\Documents\test.shp</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="import_shp_dialog.ui" line="99"/>
+        <location filename="import_shp_dialog.ui" line="89"/>
         <source>Import</source>
         <translation>Importer</translation>
     </message>
     <message>
-        <location filename="import_shp_dialog.ui" line="115"/>
+        <location filename="import_shp_dialog.ui" line="105"/>
         <source>Load configuration</source>
         <translation>Charger configuration</translation>
     </message>
     <message>
-        <location filename="import_shp_dialog.ui" line="128"/>
+        <location filename="import_shp_dialog.ui" line="118"/>
         <source>Save configuration</source>
         <translation>Sauvegarder configuration</translation>
     </message>
     <message>
-        <location filename="import_shp_dialog.ui" line="141"/>
+        <location filename="import_shp_dialog.ui" line="131"/>
         <source>File :</source>
         <translation>Fichier :</translation>
     </message>
     <message>
-        <location filename="import_dxf_dialog.ui" line="103"/>
+        <location filename="import_dxf_dialog.ui" line="115"/>
         <source>Layers mapping</source>
         <translation>Mapping des calques / couches</translation>
     </message>
     <message>
-        <location filename="import_dxf_dialog.ui" line="141"/>
+        <location filename="import_shp_dialog.ui" line="144"/>
         <source>Fields mapping</source>
         <translation>Mapping des attributs</translation>
     </message>
     <message>
-        <location filename="import_dxf_dialog.ui" line="153"/>
+        <location filename="import_dxf_dialog.ui" line="184"/>
         <source>Click on a layer mapping to edit its field mapping</source>
         <translation>Cliquez sur un mapping de couche pour éditer son mapping d&apos;attributs</translation>
     </message>
     <message>
-        <location filename="import_shp_dialog.ui" line="23"/>
+        <location filename="import_shp_dialog.ui" line="35"/>
         <source>Import Shapefile</source>
         <translation>Importer un Shapefile</translation>
     </message>
     <message>
-        <location filename="import_shp_dialog.ui" line="48"/>
+        <location filename="import_shp_dialog.ui" line="60"/>
         <source>QGIS layer :</source>
         <translation>Couche QGIS :</translation>
+    </message>
+    <message>
+        <location filename="import_shp_dialog.ui" line="185"/>
+        <source>Enable all</source>
+        <translation>Activer tout</translation>
+    </message>
+    <message>
+        <location filename="error_summary_dialog.ui" line="125"/>
+        <source>Export to CSV</source>
+        <translation>Exporter en CSV</translation>
+    </message>
+    <message>
+        <location filename="import_shp_dialog.ui" line="205"/>
+        <source>Value map</source>
+        <translation>Mapping des valeurs</translation>
+    </message>
+    <message>
+        <location filename="import_shp_dialog.ui" line="241"/>
+        <source>Select a field mapping to edit its value map</source>
+        <translation>Sélectionner un mapping d'attribut pour éditer son mapping de valeurs</translation>
+    </message>
+    <message>
+        <location filename="import_manager_dialog.ui" line="26"/>
+        <source>List of imports</source>
+        <translation>Liste des imports</translation>
+    </message>
+    <message>
+        <location filename="import_manager_dialog.ui" line="70"/>
+        <source>Rollback import</source>
+        <translation>Annuler import</translation>
     </message>
 </context>
 <context>
     <name>ErrorSummaryDialog</name>
     <message>
-        <location filename="error_summary_dialog.py" line="63"/>
+        <location filename="error_summary_dialog.py" line="66"/>
         <source>Layer</source>
         <translation>Couche</translation>
     </message>
     <message>
-        <location filename="error_summary_dialog.py" line="63"/>
+        <location filename="error_summary_dialog.py" line="66"/>
         <source>Field name</source>
         <translation>Attribut</translation>
     </message>
     <message>
-        <location filename="error_summary_dialog.py" line="63"/>
+        <location filename="error_summary_dialog.py" line="66"/>
         <source>Error</source>
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="error_summary_dialog.py" line="63"/>
+        <location filename="error_summary_dialog.py" line="66"/>
         <source>Feature ID</source>
         <translation>ID entité</translation>
+    </message>
+    <message>
+        <location filename="error_summary_dialog.py" line="135"/>
+        <source>Select the csv location</source>
+        <translation>Sélectionner l&apos;emplacement du fichier CSV</translation>
+    </message>
+    <message>
+        <location filename="error_summary_dialog.py" line="176"/>
+        <source>Success</source>
+        <translation>Succès</translation>
+    </message>
+    <message>
+        <location filename="error_summary_dialog.py" line="176"/>
+        <source>CSV export was successful</source>
+        <translation>L&apos;export CSV s&apos;est déroulé avec succès</translation>
     </message>
 </context>
 <context>
@@ -266,6 +311,14 @@
     </message>
 </context>
 <context>
+    <name>Filename</name>
+    <message>
+        <location filename="filename.py" line="49"/>
+        <source>Select a file</source>
+        <translation>Sélectionner un fichier</translation>
+    </message>
+</context>
+<context>
     <name>ImportDXF</name>
     <message>
         <location filename="import_dxf.py" line="38"/>
@@ -286,32 +339,32 @@
         <translation>Sélectionner le fichier à importer</translation>
     </message>
     <message>
-        <location filename="import_gml.py" line="58"/>
+        <location filename="import_gml.py" line="59"/>
         <source>Importing GML</source>
         <translation>Import GML</translation>
     </message>
     <message>
-        <location filename="import_gml.py" line="76"/>
+        <location filename="import_gml.py" line="80"/>
         <source>Importing {}</source>
         <translation>Importation de {}</translation>
     </message>
     <message>
-        <location filename="import_gml.py" line="99"/>
+        <location filename="import_gml.py" line="109"/>
         <source>Success</source>
         <translation>Succès</translation>
     </message>
     <message>
-        <location filename="import_gml.py" line="99"/>
+        <location filename="import_gml.py" line="109"/>
         <source>Importation was successful</source>
         <translation>L&apos;importation GML s&apos;est déroulée avec succès</translation>
     </message>
     <message>
-        <location filename="import_gml.py" line="103"/>
+        <location filename="import_gml.py" line="113"/>
         <source>Warning</source>
         <translation>Attention</translation>
     </message>
     <message>
-        <location filename="import_gml.py" line="103"/>
+        <location filename="import_gml.py" line="113"/>
         <source>Some errors encountered during importation</source>
         <translation>Il y&apos;a eu des erreurs durant l&apos;importation</translation>
     </message>
@@ -344,138 +397,204 @@
         <translation>Valeur</translation>
     </message>
     <message>
-        <location filename="import_dxf_dialog.py" line="288"/>
+        <location filename="import_dxf_dialog.py" line="307"/>
         <source>Mapping for DXF layer &quot;{}&quot; to QGIS layer &quot;{}&quot;</source>
         <translation>Mapping du calque DXF &quot;{}&quot; vers la couche QGIS &quot;{}&quot;</translation>
     </message>
     <message>
-        <location filename="import_dxf_dialog.py" line="396"/>
+        <location filename="import_dxf_dialog.py" line="386"/>
         <source>Error</source>
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="import_dxf_dialog.py" line="396"/>
+        <location filename="import_dxf_dialog.py" line="386"/>
         <source>Mapping for DXF layer {} is not valid, please check it again.</source>
         <translation>Le mapping pour le calque DXF {} n&apos;est pas valide, veuillez le vérifier.</translation>
     </message>
     <message>
-        <location filename="import_dxf_dialog.py" line="510"/>
+        <location filename="import_dxf_dialog.py" line="508"/>
         <source>Success</source>
         <translation>Succès</translation>
     </message>
     <message>
-        <location filename="import_dxf_dialog.py" line="443"/>
+        <location filename="import_dxf_dialog.py" line="441"/>
         <source>Importation was successful</source>
         <translation>L&apos;importation DXF s&apos;est déroulée avec succès</translation>
     </message>
     <message>
-        <location filename="import_dxf_dialog.py" line="458"/>
+        <location filename="import_dxf_dialog.py" line="456"/>
         <source>Select the configuration file to load</source>
         <translation>Sélectionnez le fichier de configuration à charger</translation>
     </message>
     <message>
-        <location filename="import_dxf_dialog.py" line="490"/>
+        <location filename="import_dxf_dialog.py" line="488"/>
         <source>Select the json location</source>
         <translation>Sélectionnez le fichier de configuration à enregistrer</translation>
     </message>
     <message>
-        <location filename="import_dxf_dialog.py" line="510"/>
+        <location filename="import_dxf_dialog.py" line="508"/>
         <source>Mapping configuration saved</source>
         <translation>Configuration du mapping enregistrée</translation>
     </message>
 </context>
 <context>
-    <name>ImportShpDialog</name>
+    <name>ImportManager</name>
     <message>
-        <location filename="import_shp_dialog.py" line="404"/>
+        <location filename="import_manager.py" line="56"/>
         <source>Success</source>
         <translation>Succès</translation>
     </message>
     <message>
-        <location filename="import_shp_dialog.py" line="331"/>
-        <source>Importation was successful</source>
-        <translation>L&apos;importation du Shapefile s&apos;est déroulée avec succès</translation>
+        <location filename="import_manager.py" line="56"/>
+        <source>Rollback was successful</source>
+        <translation>Import annulé</translation>
     </message>
     <message>
-        <location filename="import_shp_dialog.py" line="65"/>
-        <source>SHP Field</source>
-        <translation>Attribut SHP</translation>
-    </message>
-    <message>
-        <location filename="import_shp_dialog.py" line="65"/>
-        <source>QGIS Field</source>
-        <translation>Attribut QGIS</translation>
-    </message>
-    <message>
-        <location filename="import_shp_dialog.py" line="65"/>
-        <source>Enabled</source>
-        <translation>Activé</translation>
-    </message>
-    <message>
-        <location filename="import_shp_dialog.py" line="306"/>
+        <location filename="import_manager.py" line="78"/>
         <source>Error</source>
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="import_shp_dialog.py" line="76"/>
+        <location filename="import_manager.py" line="78"/>
+        <source>Commit error on layer {}</source>
+        <translation>Erreur lors du commit sur la couche {}</translation>
+    </message>
+</context>
+<context>
+    <name>ImportManagerDialog</name>
+    <message>
+        <location filename="import_manager_dialog.py" line="55"/>
+        <source>Import Id</source>
+        <translation>Id import</translation>
+    </message>
+    <message>
+        <location filename="import_manager_dialog.py" line="55"/>
+        <source>Date</source>
+        <translation>Date</translation>
+    </message>
+    <message>
+        <location filename="import_manager_dialog.py" line="55"/>
+        <source>Filename</source>
+        <translation>Nom de fichier</translation>
+    </message>
+    <message>
+        <location filename="import_manager_dialog.py" line="55"/>
+        <source>Imported layers</source>
+        <translation>Couches importées</translation>
+    </message>
+</context>
+<context>
+    <name>ImportShpDialog</name>
+    <message>
+        <location filename="import_shp_dialog.py" line="493"/>
+        <source>Success</source>
+        <translation>Succès</translation>
+    </message>
+    <message>
+        <location filename="import_shp_dialog.py" line="419"/>
+        <source>Importation was successful</source>
+        <translation>L&apos;importation du Shapefile s&apos;est déroulée avec succès</translation>
+    </message>
+    <message>
+        <location filename="import_shp_dialog.py" line="66"/>
+        <source>SHP Field</source>
+        <translation>Attribut SHP</translation>
+    </message>
+    <message>
+        <location filename="import_shp_dialog.py" line="66"/>
+        <source>QGIS Field</source>
+        <translation>Attribut QGIS</translation>
+    </message>
+    <message>
+        <location filename="import_shp_dialog.py" line="66"/>
+        <source>Enabled</source>
+        <translation>Activé</translation>
+    </message>
+    <message>
+        <location filename="import_shp_dialog.py" line="151"/>
+        <source>Error</source>
+        <translation>Erreur</translation>
+    </message>
+    <message>
+        <location filename="import_shp_dialog.py" line="86"/>
         <source>Shapefile is not valid</source>
         <translation>Le shapefile n&apos;est pas valide</translation>
     </message>
     <message>
-        <location filename="import_shp_dialog.py" line="136"/>
+        <location filename="import_shp_dialog.py" line="151"/>
         <source>Destination layer {} not found.</source>
         <translation>La couche QGIS {} est introuvable</translation>
     </message>
     <message>
-        <location filename="import_shp_dialog.py" line="299"/>
+        <location filename="import_shp_dialog.py" line="303"/>
         <source>No QGIS field selected for SHP field {}.</source>
-        <translation>Aucun attribut QGIS sélectionné pour l&apos;attribut SHP {}.</translation>
+        <translation type="obsolete">Aucun attribut QGIS sélectionné pour l&apos;attribut SHP {}.</translation>
     </message>
     <message>
-        <location filename="import_shp_dialog.py" line="306"/>
+        <location filename="import_shp_dialog.py" line="310"/>
         <source>QGIS field {} is selected more than one time.</source>
-        <translation>Plusieurs attributs SHP ne peuvent être reliés au même attribut QGIS {}.</translation>
+        <translation type="obsolete">Plusieurs attributs SHP ne peuvent être reliés au même attribut QGIS {}.</translation>
     </message>
     <message>
-        <location filename="import_shp_dialog.py" line="346"/>
+        <location filename="import_shp_dialog.py" line="434"/>
         <source>Select the configuration file to load</source>
         <translation>Sélectionnez le fichier de configuration à charger</translation>
     </message>
     <message>
-        <location filename="import_shp_dialog.py" line="382"/>
+        <location filename="import_shp_dialog.py" line="471"/>
         <source>Select the json location</source>
         <translation>Sélectionnez le fichier de configuration à enregistrer</translation>
     </message>
     <message>
-        <location filename="import_shp_dialog.py" line="404"/>
+        <location filename="import_shp_dialog.py" line="493"/>
         <source>Mapping configuration saved</source>
         <translation>Fichier de configuration enregistré</translation>
+    </message>
+    <message>
+        <location filename="import_shp_dialog.py" line="66"/>
+        <source>Value</source>
+        <translation>Valeur</translation>
+    </message>
+    <message>
+        <location filename="import_shp_dialog.py" line="75"/>
+        <source>SHP Value</source>
+        <translation>Valeur SHP</translation>
+    </message>
+    <message>
+        <location filename="import_shp_dialog.py" line="75"/>
+        <source>QGIS Value</source>
+        <translation>Valeur QGIS</translation>
+    </message>
+    <message>
+        <location filename="import_shp_dialog.py" line="229"/>
+        <source>&lt;None&gt;</source>
+        <translation>&lt;Aucun&gt;</translation>
     </message>
 </context>
 <context>
     <name>Importer</name>
     <message>
-        <location filename="importer.py" line="111"/>
+        <location filename="importer.py" line="168"/>
         <source>Error</source>
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="importer.py" line="102"/>
+        <location filename="importer.py" line="158"/>
         <source>Commit error on layer {}</source>
         <translation>Erreur lors du commit sur la couche {}</translation>
     </message>
     <message>
-        <location filename="importer.py" line="64"/>
+        <location filename="importer.py" line="112"/>
         <source>Invalid geometry : Handle = {}</source>
         <translation>Géométrie invalide : Handle = {}</translation>
     </message>
     <message>
-        <location filename="importer.py" line="111"/>
+        <location filename="importer.py" line="168"/>
         <source>Some features were not imported, open the message log (bubble on bottom right of the screen)</source>
         <translation>Des entités n&apos;ont pas été importées, ouvrir le log de message (bulle en bas à droite de l&apos;écran)</translation>
     </message>
     <message>
-        <location filename="importer.py" line="77"/>
+        <location filename="importer.py" line="126"/>
         <source>Invalid geometry : FID = {}</source>
         <translation>Géométrie invalide : FID = {}</translation>
     </message>
@@ -483,94 +602,167 @@
 <context>
     <name>PAGLuxembourg</name>
     <message>
-        <location filename="main.py" line="293"/>
+        <location filename="main.py" line="320"/>
         <source>&amp;PAG Luxembourg</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="main.py" line="192"/>
+        <location filename="main.py" line="201"/>
         <source>New project</source>
         <translation>Nouveau projet</translation>
     </message>
     <message>
-        <location filename="main.py" line="192"/>
+        <location filename="main.py" line="201"/>
         <source>Creates a new PAG project</source>
         <translation>Crée un nouveau projet PAG</translation>
     </message>
     <message>
-        <location filename="main.py" line="219"/>
+        <location filename="main.py" line="237"/>
         <source>Apply styles</source>
         <translation>Symboliser les couches</translation>
     </message>
     <message>
-        <location filename="main.py" line="219"/>
+        <location filename="main.py" line="237"/>
         <source>Apply predefined styles to the project</source>
         <translation>Applique les styles prédéfinis aux couches</translation>
     </message>
     <message>
-        <location filename="main.py" line="254"/>
+        <location filename="main.py" line="281"/>
         <source>About</source>
         <translation>A propos</translation>
     </message>
     <message>
-        <location filename="main.py" line="254"/>
+        <location filename="main.py" line="281"/>
         <source>About the PAG plugin</source>
         <translation>A propos du plugin PAGLuxembourg</translation>
     </message>
     <message>
-        <location filename="main.py" line="201"/>
+        <location filename="main.py" line="210"/>
         <source>Import data</source>
         <translation>Importer des données</translation>
     </message>
     <message>
-        <location filename="main.py" line="201"/>
+        <location filename="main.py" line="210"/>
         <source>Import data from files (GML, SHP, DXF)</source>
         <translation>Importer des données depuis un fichier (GML, SHP, DXF)</translation>
     </message>
     <message>
-        <location filename="main.py" line="210"/>
+        <location filename="main.py" line="228"/>
         <source>Export GML</source>
         <translation>Export GML</translation>
     </message>
     <message>
-        <location filename="main.py" line="210"/>
+        <location filename="main.py" line="228"/>
         <source>Export the current project to a GML file</source>
         <translation>Exporter le projet vers un fichier GML</translation>
     </message>
     <message>
-        <location filename="main.py" line="228"/>
+        <location filename="main.py" line="272"/>
         <source>Check data</source>
         <translation>Vérifier les données</translation>
     </message>
     <message>
-        <location filename="main.py" line="228"/>
+        <location filename="main.py" line="272"/>
         <source>Check project data for errors</source>
         <translation>Vérifier les données du projet</translation>
     </message>
     <message>
-        <location filename="main.py" line="241"/>
+        <location filename="main.py" line="259"/>
         <source>Check topology</source>
         <translation>Vérifier la topologie</translation>
     </message>
     <message>
-        <location filename="main.py" line="241"/>
+        <location filename="main.py" line="259"/>
         <source>Check layers topology according to predefined rules</source>
         <translation>Vérifier la topologie selon les règles prédéfinies du PAG</translation>
     </message>
     <message>
-        <location filename="main.py" line="280"/>
+        <location filename="main.py" line="307"/>
         <source>PAG Luxembourg</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="main.py" line="280"/>
+        <location filename="main.py" line="307"/>
         <source>The &quot;Topology Checker&quot; plugin is required by the &quot;PAG Luxembourg&quot;, please install it and restart QGIS.</source>
         <translation>Le plugin &quot;Topology Checker&quot; est requis par le plugin &quot;PAG Luxembourg&quot;, merci de l&apos;installer et de redémarrer QGIS.</translation>
     </message>
     <message>
-        <location filename="main.py" line="282"/>
+        <location filename="main.py" line="309"/>
         <source>Show plugin manager</source>
         <translation>Afficher le gestionnaire de plugins</translation>
+    </message>
+    <message>
+        <location filename="main.py" line="219"/>
+        <source>Import manager</source>
+        <translation>Gestionnaire d'import</translation>
+    </message>
+    <message>
+        <location filename="main.py" line="219"/>
+        <source>Open the import manager</source>
+        <translation>Ouvre le gestionnaire d'import</translation>
+    </message>
+    <message>
+        <location filename="main.py" line="246"/>
+        <source>Clean topology</source>
+        <translation>Nettoyer la topologie</translation>
+    </message>
+    <message>
+        <location filename="main.py" line="246"/>
+        <source>Clean the topology of a layer</source>
+        <translation>Nettoie la topologie d'une couche</translation>
+    </message>
+</context>
+<context>
+    <name>PreciseRangeWidgetWrapperConfig</name>
+    <message>
+        <location filename="precise_range.py" line="63"/>
+        <source>A precise range editor.</source>
+        <translation>Un éditeur de plage précise, nombre de décimales = précision</translation>
+    </message>
+</context>
+<context>
+    <name>PreciseRangeWidgetWrapperFactory</name>
+    <message>
+        <location filename="precise_range.py" line="74"/>
+        <source>Precise Range</source>
+        <translation>Plage précise</translation>
+    </message>
+</context>
+<context>
+    <name>Project</name>
+    <message>
+        <location filename="project.py" line="534"/>
+        <source>Error</source>
+        <translation>Erreur</translation>
+    </message>
+    <message>
+        <location filename="project.py" line="534"/>
+        <source>Type not found in XSD : {}</source>
+        <translation>Type non trouvé dans le XSD : {}</translation>
+    </message>
+</context>
+<context>
+    <name>SimpleFilenameWidgetWrapper</name>
+    <message>
+        <location filename="simple_filename.py" line="88"/>
+        <source>Select a file</source>
+        <translation>Sélectionner un fichier</translation>
+    </message>
+</context>
+<context>
+    <name>SimpleFilenameWidgetWrapperConfig</name>
+    <message>
+        <location filename="simple_filename.py" line="109"/>
+        <source>A filename without extension editor widget.</source>
+        <translation>Un éditeur de sélection de fichier sans extension.</translation>
+    </message>
+</context>
+<context>
+    <name>SimpleFilenameWidgetWrapperFactory</name>
+    <message>
+        <location filename="simple_filename.py" line="120"/>
+        <source>Simple Filename</source>
+        <translation>Nom de fichier simple</translation>
     </message>
 </context>
 <context>
@@ -587,11 +779,39 @@
     </message>
 </context>
 <context>
+    <name>TopoClean</name>
+    <message>
+        <location filename="topoclean.py" line="72"/>
+        <source>Adding cleaned features</source>
+        <translation>Ajout des objets nettoyés</translation>
+    </message>
+    <message>
+        <location filename="topoclean.py" line="93"/>
+        <source>Error</source>
+        <translation>Erreur</translation>
+    </message>
+    <message>
+        <location filename="topoclean.py" line="93"/>
+        <source>Commit error on layer {}</source>
+        <translation>Erreur lors du commit sur la couche {}</translation>
+    </message>
+    <message>
+        <location filename="topoclean.py" line="100"/>
+        <source>Success</source>
+        <translation>Succès</translation>
+    </message>
+    <message>
+        <location filename="topoclean.py" line="100"/>
+        <source>Layer cleaned successfully</source>
+        <translation>Couche nettoyée</translation>
+    </message>
+</context>
+<context>
     <name>rulesDialog</name>
     <message>
-        <location filename="topology.py" line="98"/>
+        <location filename="topology.py" line="99"/>
         <source>No layer</source>
-        <translation type="unfinished"></translation>
+        <translation>Pas de couche</translation>
     </message>
 </context>
 </TS>
