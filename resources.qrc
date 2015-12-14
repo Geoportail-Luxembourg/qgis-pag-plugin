@@ -6,6 +6,7 @@
         <file>widgets/import_manager/icon.png</file>
         <file>widgets/export_gml/icon.png</file>
         <file>widgets/stylize/icon.png</file>
+        <file>widgets/topoclean/icon.png</file>
         <file>widgets/topology/icon.png</file>
         <file>widgets/data_checker/icon.png</file>
         <file>widgets/about/icon.png</file>

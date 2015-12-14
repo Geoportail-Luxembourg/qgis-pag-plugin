@@ -33,6 +33,7 @@ from widgets.import_manager.import_manager import *
 from widgets.export_gml.export_gml import *
 from widgets.stylize.stylize import *
 from widgets.data_checker.data_checker import *
+from widgets.topoclean.topoclean import *
 from widgets.topology.topology import *
 from widgets.about.about import *
 import editor.simple_filename
@@ -240,13 +241,13 @@ class PAGLuxembourg(object):
             status_tip=self.tr(u'Apply predefined styles to the project'),
             parent=self.iface.mainWindow()))
         
-        # Data checker
-        self.data_checker_widget = DataChecker()
+        # Topo clean tool
+        self.topoclean_widget = TopoClean()
         self.pag_actions.append(self.add_action(
-            ':/plugins/PagLuxembourg/widgets/data_checker/icon.png',
-            text=self.tr(u'Check data'),
-            callback=self.data_checker_widget.run,
-            status_tip=self.tr(u'Check project data for errors'),
+            ':/plugins/PagLuxembourg/widgets/topoclean/icon.png',
+            text=self.tr(u'Clean topology'),
+            callback=self.topoclean_widget.run,
+            status_tip=self.tr(u'Clean the topology of a layer'),
             parent=self.iface.mainWindow()))
         
         # Topology checker
@@ -265,6 +266,15 @@ class PAGLuxembourg(object):
         # Topology checker plugin is not enabled, ask the user to install it
         if not found:
             self.iface.initializationCompleted.connect(self._showMissingTopolPluginMessage)
+        
+        # Data checker
+        self.data_checker_widget = DataChecker()
+        self.pag_actions.append(self.add_action(
+            ':/plugins/PagLuxembourg/widgets/data_checker/icon.png',
+            text=self.tr(u'Check data'),
+            callback=self.data_checker_widget.run,
+            status_tip=self.tr(u'Check project data for errors'),
+            parent=self.iface.mainWindow()))
         
         # About
         self.about_widget = About()
