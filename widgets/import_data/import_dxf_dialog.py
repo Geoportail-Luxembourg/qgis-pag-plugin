@@ -438,8 +438,7 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
             elif qgis_layer.geometryType() == QGis.Polygon:
                 self._importLayer(self.dxflayer_linestrings, qgis_layer, layer_indexmapping, progress2)
                 self._importLayer(self.dxflayer_polygons, qgis_layer, layer_indexmapping, progress2)
-            
-            pass
+
         # Commit import session
         self._commitImport()
     
