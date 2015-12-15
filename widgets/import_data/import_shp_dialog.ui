@@ -172,10 +172,10 @@
    <widget class="QCheckBox" name="chkEnableAllFieldsMapping">
     <property name="geometry">
      <rect>
-      <x>700</x>
+      <x>689</x>
       <y>255</y>
-      <width>70</width>
-      <height>17</height>
+      <width>81</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="layoutDirection">
@@ -234,11 +234,17 @@
       <x>530</x>
       <y>20</y>
       <width>241</width>
-      <height>16</height>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
      <string>Select a field mapping to edit its value map</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
     </property>
    </widget>
   </widget>
