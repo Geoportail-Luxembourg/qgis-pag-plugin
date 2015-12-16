@@ -196,38 +196,32 @@
             Pour publier une nouvelle version du plugin, effectuez les étapes suivantes:
         </p>
 
-        <h4>1. Modifier le fichier main.py</h4>
-
-        <p>
-            A la ligne <b>PLUGIN_VERSION</b>, changer le numéro de version <b>en préfixant avec un v</b> (ex v1.1)
-        </p>
-
-        <h4>2. Modifier le fichier metadata.txt</h4>
+        <h4>1. Modifier le fichier metadata.txt</h4>
 
         <p>
             Ajuster la ligne <b>version</b>, avec le nouveau numéro, sans <b>v</b>
         </p>
 
-        <h4>3. Faire une copie du répertoire du plugin</h4>
+        <h4>2. Faire une copie du répertoire du plugin</h4>
 
         <p>
             Faire une copie du répertoire du plugin <b>PagLuxembourg</b> afin de le préparer à la publication.
         </p>
 
-        <h4>4. Nettoyer les fichiers inutiles</h4>
+        <h4>3. Nettoyer les fichiers inutiles</h4>
 
         <p>
             Executer le batch <b>Clean4Publish.bat</b>, le script va supprimer les fichiers inutiles à la publication.
         </p>
 
-        <h4>5. Zipper le plugin</h4>
+        <h4>4. Zipper le plugin</h4>
 
         <p>
             Zipper le répertoire du plugin <b>PagLuxembourg</b>, ce répertoire doit être à la racine du zip, et non son contenu.
             Indiquer la version dans le nom du fichier zip (ex. PagLuxembourg.1.1.zip).
         </p>
 
-        <h4>6. Modifier le fichier qgis-repository.xml</h4>
+        <h4>5. Modifier le fichier qgis-repository.xml</h4>
 
         <p>
             Ce fichier contient les métadonnées du plugin.
@@ -236,7 +230,7 @@
             Ils sont identifiés par un commentaire <b>&lt;!-- Mettre à jour --&gt;</b>
         </p>
         
-        <h4>7. Publier le fichier zip</h4>
+        <h4>6. Publier le fichier zip</h4>
 
         <p>
             Le fichier zip du plugin doit être accessible à l'url indiquée dans le fichier qgis-repository.xml.

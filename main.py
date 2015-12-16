@@ -43,7 +43,6 @@ from PagLuxembourg.schema import *
 from PagLuxembourg.project import *
 
 # Global variables
-PLUGIN_VERSION = 'v1.0'
 plugin_dir = os.path.dirname(__file__)
 xsd_schema = PAGSchema()
 qgis_interface = None
