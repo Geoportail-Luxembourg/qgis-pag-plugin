@@ -122,10 +122,12 @@ class Importer(object):
         # CSV filename and directory
         csv_filename = selected_files[0]
         csvfile = open(csv_filename, 'wb')
-        csvwriter = csv.writer(csvfile, delimiter=';')
+        #csvwriter = csv.writer(csvfile, delimiter=';')
         
         # Header
-        csvwriter.writerow(['Layer name', 'Feature ID', 'Message', 'Centroid X', 'Centroid Y'])
+        #csvwriter.writerow(['Layer name', 'Feature ID', 'Message', 'Centroid X', 'Centroid Y'])
+        csvfile.write(';'.join(['Layer name', 'Feature ID', 'Message', 'Centroid X', 'Centroid Y']))
+        csvfile.write('\n')
         
         # Iterate errors
         for layer, featureid, messsage, centroid in self.features_errors:
@@ -133,15 +135,17 @@ class Importer(object):
             
             # Feature info
             row.append(layer)
-            row.append(featureid)
+            row.append(str(featureid))
             row.append(messsage)
                 
             # Centroid
             if centroid is not None:
-                row.append(centroid.x())
-                row.append(centroid.y())
+                row.append(str(centroid.x()))
+                row.append(str(centroid.y()))
                            
-            csvwriter.writerow(row)
+            #csvwriter.writerow(row)
+            csvfile.write(';'.join(row).encode('UTF-8'))
+            csvfile.write('\n')
             
         csvfile.close()
         
@@ -197,13 +201,7 @@ class Importer(object):
                     if src_polyline[0] == src_polyline[-1]:
                         # It's a closed polyline
                         src_polygon = QgsGeometry.fromPolygon([src_polyline])
-                        if src_polygon is None:
-                            self.features_errors.append((
-                                                         mapping.sourceLayerName(),
-                                                         src_feature.attribute('EntityHandle'),
-                                                         QCoreApplication.translate('Importer','Invalid geometry'),
-                                                         self._getCentroid(src_feature.geometry())
-                                                         ))
+                        if not self._validateGeometry(mapping.sourceLayerName(), src_polygon):
                             del dst_feature
                             continue
                         
@@ -213,14 +211,7 @@ class Importer(object):
                         del dst_feature
                         continue
                 else:
-                    if not src_feature.geometry().isGeosValid():
-                        self.features_errors.append((
-                                                     src_layer.name(),
-                                                     src_feature.id(),
-                                                     QCoreApplication.translate('Importer','Invalid geometry'),
-                                                     self._getCentroid(src_feature.geometry())
-                                                     ))
-                        #import_errors = True
+                    if not self._validateGeometry(src_layer.name(), src_feature):
                         del dst_feature
                         continue
                     
@@ -264,6 +255,19 @@ class Importer(object):
         # Reload layer
         dst_layer.reload()
         
+    def _validateGeometry(self, layer_name, feature):
+        errors = feature.geometry().validateGeometry()
+                    
+        for error in errors:
+            self.features_errors.append((
+                                         layer_name,
+                                         feature.id(),
+                                         error.what(),
+                                         error.where()
+                                         ))
+        
+        return len(errors) == 0
+    
     def _getCentroid(self, geometry):
         try:
             return geometry.centroid().asPoint()
