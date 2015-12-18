@@ -8,7 +8,6 @@ import os.path
 import json
 from collections import OrderedDict
 import uuid
-import csv
 
 from PyQt4.QtCore import QCoreApplication, QVariant, Qt, QDate, QDateTime, QSettings
 from PyQt4.QtGui import QCheckBox, QWidget, QHBoxLayout, QComboBox, QDoubleSpinBox, QDateTimeEdit, QLineEdit, QPushButton, QFileDialog
@@ -118,41 +117,43 @@ class Importer(object):
         
         if len(selected_files)==0:
             return
-        
-        # CSV filename and directory
-        csv_filename = selected_files[0]
-        csvfile = open(csv_filename, 'wb')
-        #csvwriter = csv.writer(csvfile, delimiter=';')
-        
-        # Header
-        #csvwriter.writerow(['Layer name', 'Feature ID', 'Message', 'Centroid X', 'Centroid Y'])
-        csvfile.write(';'.join(['Layer name', 'Feature ID', 'Message', 'Centroid X', 'Centroid Y']))
-        csvfile.write('\n')
-        
-        # Iterate errors
-        for layer, featureid, messsage, centroid in self.features_errors:
-            row = []
+        try:
+            # CSV filename and directory
+            csv_filename = selected_files[0]
+            csvfile = open(csv_filename, 'wb')
             
-            # Feature info
-            row.append(layer)
-            row.append(str(featureid))
-            row.append(messsage)
-                
-            # Centroid
-            if centroid is not None:
-                row.append(str(centroid.x()))
-                row.append(str(centroid.y()))
-                           
-            #csvwriter.writerow(row)
-            csvfile.write(';'.join(row).encode('UTF-8'))
+            # Header
+            csvfile.write(';'.join(['Layer name', 'Feature ID', 'Message', 'Centroid X', 'Centroid Y']))
             csvfile.write('\n')
             
-        csvfile.close()
-        
-        # Success message
-        PagLuxembourg.main.qgis_interface.messageBar().clearWidgets()
-        PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('Importer','Success'),
-                                                                   QCoreApplication.translate('Importer','CSV export was successful'))
+            # Iterate errors
+            for layer, featureid, messsage, centroid in self.features_errors:
+                row = []
+                
+                # Feature info
+                row.append(layer)
+                row.append(str(featureid))
+                row.append(messsage)
+                    
+                # Centroid
+                if centroid is not None:
+                    row.append(str(centroid.x()))
+                    row.append(str(centroid.y()))
+                               
+                csvfile.write(';'.join(row).encode('UTF-8'))
+                csvfile.write('\n')
+                
+            csvfile.close()
+            
+            # Success message
+            PagLuxembourg.main.qgis_interface.messageBar().clearWidgets()
+            PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('Importer','Success'),
+                                                                       QCoreApplication.translate('Importer','CSV export was successful'))
+        except:
+            # Error message
+            PagLuxembourg.main.qgis_interface.messageBar().clearWidgets()
+            PagLuxembourg.main.qgis_interface.messageBar().pushCritical(QCoreApplication.translate('Importer','Error'),
+                                                                        QCoreApplication.translate('Importer','Error writing CSV file'))
         
     def _importLayer(self, src_layer, dst_layer, mapping, progressbar = None):
         '''
