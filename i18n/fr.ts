@@ -243,6 +243,21 @@
         <source>Rollback import</source>
         <translation>Annuler import</translation>
     </message>
+    <message>
+        <location filename="topoclean_dialog.ui" line="29"/>
+        <source>Cleaning configuration</source>
+        <translation>Configuration du nettoyage</translation>
+    </message>
+    <message>
+        <location filename="topoclean_dialog.ui" line="41"/>
+        <source>Threshold (m2):</source>
+        <translation>Tolérance (m2):</translation>
+    </message>
+    <message>
+        <location filename="topoclean_dialog.ui" line="76"/>
+        <source>Clean</source>
+        <translation>Nettoyer</translation>
+    </message>
 </context>
 <context>
     <name>ErrorSummaryDialog</name>
@@ -669,7 +684,7 @@
     <message>
         <location filename="importer.py" line="155"/>
         <source>Error writing CSV file</source>
-        <translation>Error lors de l'écriture du fichier CSV</translation>
+        <translation>Error lors de l&apos;écriture du fichier CSV</translation>
     </message>
 </context>
 <context>
@@ -854,29 +869,39 @@
 <context>
     <name>TopoClean</name>
     <message>
-        <location filename="topoclean.py" line="75"/>
+        <location filename="topoclean.py" line="80"/>
         <source>Adding cleaned features</source>
         <translation>Ajout des objets nettoyés</translation>
     </message>
     <message>
-        <location filename="topoclean.py" line="96"/>
+        <location filename="topoclean.py" line="101"/>
         <source>Error</source>
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="topoclean.py" line="96"/>
+        <location filename="topoclean.py" line="101"/>
         <source>Commit error on layer {}</source>
         <translation>Erreur lors du commit sur la couche {}</translation>
     </message>
     <message>
-        <location filename="topoclean.py" line="103"/>
+        <location filename="topoclean.py" line="108"/>
         <source>Success</source>
         <translation>Succès</translation>
     </message>
     <message>
-        <location filename="topoclean.py" line="103"/>
+        <location filename="topoclean.py" line="108"/>
         <source>Layer cleaned successfully</source>
         <translation>Couche nettoyée</translation>
+    </message>
+    <message>
+        <location filename="topoclean.py" line="43"/>
+        <source>Warning</source>
+        <translation>Attention</translation>
+    </message>
+    <message>
+        <location filename="topoclean.py" line="43"/>
+        <source>Please select a layer</source>
+        <translation>Merci de sélectionner une couche</translation>
     </message>
 </context>
 <context>

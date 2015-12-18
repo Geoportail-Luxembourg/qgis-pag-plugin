@@ -16,6 +16,8 @@ from PyQt4.QtCore import *
 import PagLuxembourg.main
 import PagLuxembourg.project
 
+from topoclean_dialog import TopoCleanDialog
+
 class TopoClean(object):
     '''
     Main class for the snapping widget
@@ -35,17 +37,20 @@ class TopoClean(object):
         if not PagLuxembourg.main.current_project.isPagProject():
             return
         
-        #self.dlg = ImportManagerDialog()
-        #self.dlg.show()
-        
         layer = PagLuxembourg.main.qgis_interface.layerTreeView().currentLayer()
         
-        self.cleanLayer(layer)
-    
-    def cleanLayer(self, layer):
+        if layer is None:
+            PagLuxembourg.main.qgis_interface.messageBar().pushWarning(QCoreApplication.translate('TopoClean','Warning'), 
+                                                                       QCoreApplication.translate('TopoClean','Please select a layer'))
+            return
+        
         if not (layer.type() == QgsMapLayer.VectorLayer and PagLuxembourg.main.current_project.isPagLayer(layer)):
             return
         
+        self.dlg = TopoCleanDialog(self, layer)
+        self.dlg.show()
+    
+    def cleanLayer(self, layer, threshold = 0.1):
         # Deselect all
         layer.setSelectedFeatures([])
         
@@ -53,7 +58,7 @@ class TopoClean(object):
         result = processing.runalg('grass:v.clean.advanced', # Processing
                                    layer, # Layer
                                    'rmarea', # Tools
-                                   0.1, # Threshold
+                                   threshold, # Threshold
                                    None, # Extent
                                    -1, # Snapping tolerance
                                    0.0001, # Min area
