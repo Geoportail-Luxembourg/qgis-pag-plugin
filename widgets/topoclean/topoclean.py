@@ -46,6 +46,9 @@ class TopoClean(object):
         if not (layer.type() == QgsMapLayer.VectorLayer and PagLuxembourg.main.current_project.isPagLayer(layer)):
             return
         
+        # Deselect all
+        layer.setSelectedFeatures([])
+        
         # Run the GRASS clean topology tool
         result = processing.runalg('grass:v.clean.advanced', # Processing
                                    layer, # Layer
