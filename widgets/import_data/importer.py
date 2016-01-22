@@ -202,7 +202,7 @@ class Importer(object):
                     if src_polyline[0] == src_polyline[-1]:
                         # It's a closed polyline
                         src_polygon = QgsGeometry.fromPolygon([src_polyline])
-                        if not self._validateGeometry(mapping.sourceLayerName(), src_polygon):
+                        if not self._validateGeometry(mapping.sourceLayerName(), src_polygon, src_feature.id()):
                             del dst_feature
                             continue
                         
@@ -212,7 +212,7 @@ class Importer(object):
                         del dst_feature
                         continue
                 else:
-                    if not self._validateGeometry(src_layer.name(), src_feature):
+                    if not self._validateGeometry(src_layer.name(), src_feature.geometry(), src_feature.id()):
                         del dst_feature
                         continue
                     
@@ -256,13 +256,13 @@ class Importer(object):
         # Reload layer
         dst_layer.reload()
         
-    def _validateGeometry(self, layer_name, feature):
-        errors = feature.geometry().validateGeometry()
+    def _validateGeometry(self, layer_name, geometry, feature_id):
+        errors = geometry.validateGeometry()
                     
         for error in errors:
             self.features_errors.append((
                                          layer_name,
-                                         feature.id(),
+                                         feature_id,
                                          error.what(),
                                          error.where()
                                          ))
