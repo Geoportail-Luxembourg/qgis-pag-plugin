@@ -283,7 +283,20 @@ class Importer(object):
         return clean_geometry if len(errors) == 0 else None
     
     def _getCleanGeometry(self, geometry, simplify_tolerance=0.001):
-        return geometry.simplify(simplify_tolerance)
+        clean_geometry = geometry.simplify(simplify_tolerance)
+        
+        if clean_geometry is None:
+            return None
+        
+        # Simplify seems to corrupt some geometries, so we have to recreate the geometry
+        if geometry.type() == QGis.Point:
+            return QgsGeometry.fromPoint(clean_geometry.asPoint())
+        elif geometry.type() == QGis.Line:
+            return QgsGeometry.fromPolyline(clean_geometry.asPolyline())
+        elif geometry.type() == QGis.Polygon:
+            return QgsGeometry.fromPolygon(clean_geometry.asPolygon())
+        
+        return None
     
     def _getCentroid(self, geometry):
         try:
