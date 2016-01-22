@@ -1,8 +1,8 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis version="2.8.2-Wien" minimumScale="-4.65661e-10" maximumScale="1e+08" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
+<qgis version="2.12.1-Lyon" minimumScale="-4.65661e-10" maximumScale="1e+08" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
   <edittypes>
-    <edittype widgetv2type="TextEdit" name="gml_id">
-      <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+    <edittype widgetv2type="Hidden" name="OGC_FID">
+      <widgetv2config fieldEditable="1" labelOnTop="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="CODE">
       <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
@@ -13,8 +13,14 @@
     <edittype widgetv2type="TextEdit" name="LARGEUR">
       <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
     </edittype>
+    <edittype widgetv2type="TextEdit" name="GENRE">
+      <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+    </edittype>
+    <edittype widgetv2type="Hidden" name="ImportId">
+      <widgetv2config fieldEditable="1" labelOnTop="0"/>
+    </edittype>
   </edittypes>
-  <renderer-v2 attr="CODE" symbollevels="0" type="categorizedSymbol">
+  <renderer-v2 attr="CODE" forceraster="0" symbollevels="0" type="categorizedSymbol">
     <categories>
       <category render="true" symbol="0" value="CP_R_EP" label="CP_R_EP"/>
       <category render="true" symbol="1" value="CP_EU" label="CP_EU"/>
@@ -22,145 +28,161 @@
       <category render="true" symbol="3" value="CPR" label="CPR"/>
     </categories>
     <symbols>
-      <symbol alpha="1" type="line" name="0">
+      <symbol alpha="1" clip_to_extent="1" type="line" name="0">
         <layer pass="0" class="MarkerLine" locked="0">
           <prop k="interval" v="1"/>
-          <prop k="interval_map_unit_scale" v="0,0"/>
+          <prop k="interval_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="interval_unit" v="MM"/>
           <prop k="offset" v="0"/>
           <prop k="offset_along_line" v="0"/>
-          <prop k="offset_along_line_map_unit_scale" v="0,0"/>
+          <prop k="offset_along_line_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="offset_along_line_unit" v="MM"/>
-          <prop k="offset_map_unit_scale" v="0,0"/>
+          <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="offset_unit" v="MM"/>
           <prop k="placement" v="interval"/>
           <prop k="rotate" v="1"/>
-          <symbol alpha="1" type="marker" name="@0@0">
+          <symbol alpha="1" clip_to_extent="1" type="marker" name="@0@0">
             <layer pass="0" class="SimpleMarker" locked="0">
               <prop k="angle" v="0"/>
               <prop k="color" v="0,169,230,255"/>
               <prop k="horizontal_anchor_point" v="1"/>
               <prop k="name" v="line"/>
               <prop k="offset" v="0,0"/>
-              <prop k="offset_map_unit_scale" v="0,0"/>
+              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
               <prop k="offset_unit" v="MM"/>
               <prop k="outline_color" v="0,169,230,255"/>
               <prop k="outline_style" v="solid"/>
               <prop k="outline_width" v="0"/>
-              <prop k="outline_width_map_unit_scale" v="0,0"/>
+              <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
               <prop k="outline_width_unit" v="MM"/>
               <prop k="scale_method" v="area"/>
               <prop k="size" v="1"/>
-              <prop k="size_map_unit_scale" v="0,0"/>
-              <prop k="size_unit" v="MM"/>
+              <prop k="size_dd_active" v="1"/>
+              <prop k="size_dd_expression" v="&quot;LARGEUR&quot; * 2"/>
+              <prop k="size_dd_field" v="LARGEUR"/>
+              <prop k="size_dd_useexpr" v="0"/>
+              <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="size_unit" v="MapUnit"/>
               <prop k="vertical_anchor_point" v="1"/>
             </layer>
           </symbol>
         </layer>
       </symbol>
-      <symbol alpha="1" type="line" name="1">
+      <symbol alpha="1" clip_to_extent="1" type="line" name="1">
         <layer pass="0" class="MarkerLine" locked="0">
           <prop k="interval" v="1"/>
-          <prop k="interval_map_unit_scale" v="0,0"/>
+          <prop k="interval_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="interval_unit" v="MM"/>
           <prop k="offset" v="0"/>
           <prop k="offset_along_line" v="0"/>
-          <prop k="offset_along_line_map_unit_scale" v="0,0"/>
+          <prop k="offset_along_line_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="offset_along_line_unit" v="MM"/>
-          <prop k="offset_map_unit_scale" v="0,0"/>
+          <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="offset_unit" v="MM"/>
           <prop k="placement" v="interval"/>
           <prop k="rotate" v="1"/>
-          <symbol alpha="1" type="marker" name="@1@0">
+          <symbol alpha="1" clip_to_extent="1" type="marker" name="@1@0">
             <layer pass="0" class="SimpleMarker" locked="0">
               <prop k="angle" v="0"/>
               <prop k="color" v="168,112,0,255"/>
               <prop k="horizontal_anchor_point" v="1"/>
               <prop k="name" v="line"/>
               <prop k="offset" v="0,0"/>
-              <prop k="offset_map_unit_scale" v="0,0"/>
+              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
               <prop k="offset_unit" v="MM"/>
               <prop k="outline_color" v="168,112,0,255"/>
               <prop k="outline_style" v="solid"/>
               <prop k="outline_width" v="0"/>
-              <prop k="outline_width_map_unit_scale" v="0,0"/>
+              <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
               <prop k="outline_width_unit" v="MM"/>
               <prop k="scale_method" v="area"/>
               <prop k="size" v="1"/>
-              <prop k="size_map_unit_scale" v="0,0"/>
-              <prop k="size_unit" v="MM"/>
+              <prop k="size_dd_active" v="1"/>
+              <prop k="size_dd_expression" v="&quot;LARGEUR&quot;  * 2"/>
+              <prop k="size_dd_field" v="LARGEUR"/>
+              <prop k="size_dd_useexpr" v="0"/>
+              <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="size_unit" v="MapUnit"/>
               <prop k="vertical_anchor_point" v="1"/>
             </layer>
           </symbol>
         </layer>
       </symbol>
-      <symbol alpha="1" type="line" name="2">
+      <symbol alpha="1" clip_to_extent="1" type="line" name="2">
         <layer pass="0" class="MarkerLine" locked="0">
           <prop k="interval" v="1"/>
-          <prop k="interval_map_unit_scale" v="0,0"/>
+          <prop k="interval_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="interval_unit" v="MM"/>
           <prop k="offset" v="0"/>
           <prop k="offset_along_line" v="0"/>
-          <prop k="offset_along_line_map_unit_scale" v="0,0"/>
+          <prop k="offset_along_line_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="offset_along_line_unit" v="MM"/>
-          <prop k="offset_map_unit_scale" v="0,0"/>
+          <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="offset_unit" v="MM"/>
           <prop k="placement" v="interval"/>
           <prop k="rotate" v="1"/>
-          <symbol alpha="1" type="marker" name="@2@0">
+          <symbol alpha="1" clip_to_extent="1" type="marker" name="@2@0">
             <layer pass="0" class="SimpleMarker" locked="0">
               <prop k="angle" v="0"/>
               <prop k="color" v="255,0,0,255"/>
               <prop k="horizontal_anchor_point" v="1"/>
               <prop k="name" v="line"/>
               <prop k="offset" v="0,0"/>
-              <prop k="offset_map_unit_scale" v="0,0"/>
+              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
               <prop k="offset_unit" v="MM"/>
               <prop k="outline_color" v="0,0,0,255"/>
               <prop k="outline_style" v="solid"/>
               <prop k="outline_width" v="0"/>
-              <prop k="outline_width_map_unit_scale" v="0,0"/>
+              <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
               <prop k="outline_width_unit" v="MM"/>
               <prop k="scale_method" v="area"/>
               <prop k="size" v="1"/>
-              <prop k="size_map_unit_scale" v="0,0"/>
-              <prop k="size_unit" v="MM"/>
+              <prop k="size_dd_active" v="1"/>
+              <prop k="size_dd_expression" v="&quot;LARGEUR&quot;  * 4"/>
+              <prop k="size_dd_field" v="LARGEUR"/>
+              <prop k="size_dd_useexpr" v="0"/>
+              <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="size_unit" v="MapUnit"/>
               <prop k="vertical_anchor_point" v="1"/>
             </layer>
           </symbol>
         </layer>
       </symbol>
-      <symbol alpha="1" type="line" name="3">
+      <symbol alpha="1" clip_to_extent="1" type="line" name="3">
         <layer pass="0" class="MarkerLine" locked="0">
           <prop k="interval" v="2"/>
-          <prop k="interval_map_unit_scale" v="0,0"/>
+          <prop k="interval_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="interval_unit" v="MM"/>
           <prop k="offset" v="0"/>
           <prop k="offset_along_line" v="0"/>
-          <prop k="offset_along_line_map_unit_scale" v="0,0"/>
+          <prop k="offset_along_line_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="offset_along_line_unit" v="MM"/>
-          <prop k="offset_map_unit_scale" v="0,0"/>
+          <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="offset_unit" v="MM"/>
           <prop k="placement" v="interval"/>
           <prop k="rotate" v="1"/>
-          <symbol alpha="1" type="marker" name="@3@0">
+          <symbol alpha="1" clip_to_extent="1" type="marker" name="@3@0">
             <layer pass="0" class="SimpleMarker" locked="0">
               <prop k="angle" v="0"/>
               <prop k="color" v="255,0,0,255"/>
               <prop k="horizontal_anchor_point" v="1"/>
               <prop k="name" v="line"/>
               <prop k="offset" v="0,0"/>
-              <prop k="offset_map_unit_scale" v="0,0"/>
+              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
               <prop k="offset_unit" v="MM"/>
               <prop k="outline_color" v="0,0,0,255"/>
               <prop k="outline_style" v="solid"/>
               <prop k="outline_width" v="5.55112e-17"/>
-              <prop k="outline_width_map_unit_scale" v="0,0"/>
+              <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
               <prop k="outline_width_unit" v="MM"/>
               <prop k="scale_method" v="area"/>
               <prop k="size" v="1"/>
-              <prop k="size_map_unit_scale" v="0,0"/>
-              <prop k="size_unit" v="MM"/>
+              <prop k="size_dd_active" v="1"/>
+              <prop k="size_dd_expression" v="&quot;LARGEUR&quot; * 2"/>
+              <prop k="size_dd_field" v="LARGEUR"/>
+              <prop k="size_dd_useexpr" v="0"/>
+              <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="size_unit" v="MapUnit"/>
               <prop k="vertical_anchor_point" v="1"/>
             </layer>
           </symbol>
@@ -168,11 +190,11 @@
       </symbol>
     </symbols>
     <source-symbol>
-      <symbol alpha="1" type="line" name="0">
+      <symbol alpha="1" clip_to_extent="1" type="line" name="0">
         <layer pass="0" class="SimpleLine" locked="0">
           <prop k="capstyle" v="square"/>
           <prop k="customdash" v="5;2"/>
-          <prop k="customdash_map_unit_scale" v="0,0"/>
+          <prop k="customdash_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="customdash_unit" v="MM"/>
           <prop k="draw_inside_polygon" v="0"/>
           <prop k="joinstyle" v="bevel"/>
@@ -181,10 +203,10 @@
           <prop k="line_width" v="0.26"/>
           <prop k="line_width_unit" v="MM"/>
           <prop k="offset" v="0"/>
-          <prop k="offset_map_unit_scale" v="0,0"/>
+          <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="offset_unit" v="MM"/>
           <prop k="use_custom_dash" v="0"/>
-          <prop k="width_map_unit_scale" v="0,0"/>
+          <prop k="width_map_unit_scale" v="0,0,0,0,0,0"/>
         </layer>
       </symbol>
     </source-symbol>
@@ -196,8 +218,9 @@
     </colorramp>
     <invertedcolorramp value="0"/>
     <rotation/>
-    <sizescale scalemethod="area"/>
+    <sizescale scalemethod="diameter"/>
   </renderer-v2>
+  <labeling type="simple"/>
   <customproperties>
     <property key="labeling" value="pal"/>
     <property key="labeling/addDirectionSymbol" value="false"/>
@@ -224,8 +247,10 @@
     <property key="labeling/distInMapUnits" value="false"/>
     <property key="labeling/distMapUnitMaxScale" value="0"/>
     <property key="labeling/distMapUnitMinScale" value="0"/>
+    <property key="labeling/drawLabels" value="false"/>
     <property key="labeling/enabled" value="false"/>
     <property key="labeling/fieldName" value=""/>
+    <property key="labeling/fitInPolygonOnly" value="false"/>
     <property key="labeling/fontBold" value="false"/>
     <property key="labeling/fontCapitals" value="0"/>
     <property key="labeling/fontFamily" value="MS Shell Dlg 2"/>
@@ -259,6 +284,8 @@
     <property key="labeling/multilineHeight" value="1"/>
     <property key="labeling/namedStyle" value="Normal"/>
     <property key="labeling/obstacle" value="true"/>
+    <property key="labeling/obstacleFactor" value="1"/>
+    <property key="labeling/obstacleType" value="0"/>
     <property key="labeling/placeDirectionSymbol" value="0"/>
     <property key="labeling/placement" value="2"/>
     <property key="labeling/placementFlags" value="10"/>
@@ -340,6 +367,8 @@
     <property key="labeling/wrapChar" value=""/>
     <property key="labeling/xOffset" value="0"/>
     <property key="labeling/yOffset" value="0"/>
+    <property key="variableNames" value="_fields_"/>
+    <property key="variableValues" value=""/>
   </customproperties>
   <blendMode>0</blendMode>
   <featureBlendMode>0</featureBlendMode>
@@ -366,6 +395,12 @@
     <multilineenabled fieldname="" on=""/>
     <selectedonly on=""/>
   </labelattributes>
+  <SingleCategoryDiagramRenderer diagramType="Pie">
+    <DiagramCategory penColor="#000000" labelPlacementMethod="XHeight" penWidth="0" diagramOrientation="Up" minimumSize="0" barWidth="5" penAlpha="255" maxScaleDenominator="1e+08" backgroundColor="#ffffff" transparency="0" width="15" scaleDependency="Area" backgroundAlpha="255" angleOffset="1440" scaleBasedVisibility="0" enabled="0" height="15" sizeType="MM" minScaleDenominator="-4.65661e-10">
+      <fontProperties description="MS Shell Dlg 2,8.25,-1,5,50,0,0,0,0,0" style=""/>
+    </DiagramCategory>
+  </SingleCategoryDiagramRenderer>
+  <DiagramLayerSettings yPosColumn="-1" linePlacementFlags="10" placement="2" dist="0" xPosColumn="-1" priority="0" obstacle="0" showAll="1"/>
   <editform>..</editform>
   <editforminit/>
   <featformsuppress>0</featformsuppress>
@@ -374,4 +409,8 @@
   <excludeAttributesWMS/>
   <excludeAttributesWFS/>
   <attributeactions/>
+  <conditionalstyles>
+    <rowstyles/>
+    <fieldstyles/>
+  </conditionalstyles>
 </qgis>
