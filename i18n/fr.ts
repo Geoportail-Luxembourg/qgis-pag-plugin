@@ -617,7 +617,7 @@
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="importer.py" line="251"/>
+        <location filename="importer.py" line="253"/>
         <source>Commit error on layer {}</source>
         <translation>Erreur lors du commit sur la couche {}</translation>
     </message>
@@ -685,6 +685,11 @@
         <location filename="importer.py" line="155"/>
         <source>Error writing CSV file</source>
         <translation>Error lors de l&apos;écriture du fichier CSV</translation>
+    </message>
+    <message>
+        <location filename="importer.py" line="265"/>
+        <source>Invalid geometry, maybe all vertices have the same coordinates</source>
+        <translation>Géométrie invalide, les sommets ont peut-être tous les mêmes coordonnées</translation>
     </message>
 </context>
 <context>

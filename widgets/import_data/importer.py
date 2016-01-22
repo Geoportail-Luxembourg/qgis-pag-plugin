@@ -202,27 +202,29 @@ class Importer(object):
                     if src_polyline[0] == src_polyline[-1]:
                         # It's a closed polyline
                         src_polygon = QgsGeometry.fromPolygon([src_polyline])
-                        if not self._validateGeometry(mapping.sourceLayerName(), src_polygon, src_feature.id()):
+                        src_geometry = self._validateGeometry(mapping.sourceLayerName(), src_polygon, src_feature.id())
+                        if src_geometry is None:
                             del dst_feature
                             continue
                         
-                        dst_feature.setGeometry(src_polygon)
+                        dst_feature.setGeometry(src_geometry)
                     else:
                         # It's a classical polyline, skip
                         del dst_feature
                         continue
                 else:
-                    if not self._validateGeometry(src_layer.name(), src_feature.geometry(), src_feature.id()):
+                    src_geometry = self._validateGeometry(src_layer.name(), src_feature.geometry(), src_feature.id())
+                    if src_geometry is None:
                         del dst_feature
                         continue
                     
-                    dst_feature.setGeometry(src_feature.geometry())
+                    dst_feature.setGeometry(src_geometry)
                 
                 # Update imported extent
                 if self.imported_extent is None:
-                    self.imported_extent = src_feature.geometry().boundingBox()
+                    self.imported_extent = src_geometry.boundingBox()
                 else:
-                    self.imported_extent.combineExtentWith(src_feature.geometry().boundingBox())
+                    self.imported_extent.combineExtentWith(src_geometry.boundingBox())
             
             
             # Add import ID
@@ -257,7 +259,18 @@ class Importer(object):
         dst_layer.reload()
         
     def _validateGeometry(self, layer_name, geometry, feature_id):
-        errors = geometry.validateGeometry()
+        clean_geometry = self._getCleanGeometry(geometry)
+        
+        if clean_geometry is None:
+            self.features_errors.append((
+                                         layer_name,
+                                         feature_id,
+                                         QCoreApplication.translate('Importer','Invalid geometry, maybe all vertices have the same coordinates'),
+                                         self._getCentroid(geometry)
+                                         ))
+            return None
+        
+        errors = clean_geometry.validateGeometry()
                     
         for error in errors:
             self.features_errors.append((
@@ -267,7 +280,10 @@ class Importer(object):
                                          error.where()
                                          ))
         
-        return len(errors) == 0
+        return clean_geometry if len(errors) == 0 else None
+    
+    def _getCleanGeometry(self, geometry, simplify_tolerance=0.001):
+        return geometry.simplify(simplify_tolerance)
     
     def _getCentroid(self, geometry):
         try:
