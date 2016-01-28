@@ -282,7 +282,7 @@ class Importer(object):
         
         return clean_geometry if len(errors) == 0 else None
     
-    def _getCleanGeometry(self, geometry, simplify_tolerance=0.001):
+    def _getCleanGeometry(self, geometry, simplify_tolerance=0):
         clean_geometry = geometry.simplify(simplify_tolerance)
         
         if clean_geometry is None:
