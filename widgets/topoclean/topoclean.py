@@ -54,7 +54,7 @@ class TopoClean(object):
         # Deselect all
         layer.setSelectedFeatures([])
         
-        # Run the GRASS clean topology tool
+        # 1. Run the GRASS clean topology tool
         result = processing.runalg('grass:v.clean.advanced', # Processing
                                    layer, # Layer
                                    'rmarea', # Tools
@@ -65,6 +65,19 @@ class TopoClean(object):
                                    None, # Output layer (auto)
                                    None) # Output errors (auto)
         
+        # Get cleaned layer
+        vclean_layer = QgsVectorLayer(result['output'], 'VClean', 'ogr')
+        
+        # 2. Dissolve polygons
+        result = processing.runalg('qgis:dissolve', # Processing
+                                   vclean_layer, # Layer
+                                   False, # Dissolve all
+                                   PagLuxembourg.project.PK, # Field to merge
+                                   None)# Output layer (auto)
+        
+        # Get cleaned layer
+        clean_layer = QgsVectorLayer(result['OUTPUT'], 'Clean', 'ogr')
+        
         # Start editing session
         if not layer.isEditable():
             layer.startEditing()
@@ -72,9 +85,6 @@ class TopoClean(object):
         # Empty layer
         layer.selectAll()
         layer.deleteSelectedFeatures()
-        
-        # Add cleaned features
-        clean_layer = QgsVectorLayer(result['output'], 'Clean', 'ogr')
         
         # Progress bar + message
         progressMessageBar = PagLuxembourg.main.qgis_interface.messageBar().createMessage(QCoreApplication.translate('TopoClean','Adding cleaned features'))
