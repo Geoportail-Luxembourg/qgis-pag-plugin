@@ -1,0 +1,17 @@
+{
+  "_AvailableRules": "http://docs.qgis.org/2.8/en/docs/user_manual/plugins/plugins_topology_checker.html",
+  "Rules": [
+   {
+      "Layer1": "PAG.ZONAGE",
+      "Layer2": "",
+      "Rule": "Must not overlap",
+      "Tolerance": 0
+    },
+    {
+      "Layer1": "PAG.ZONAGE",
+      "Layer2": "",
+      "Rule": "Must not have gaps",
+      "Tolerance": 0
+    }
+     ]
+}

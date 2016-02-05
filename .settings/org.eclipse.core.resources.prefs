@@ -1,0 +1,12 @@
+eclipse.preferences.version=1
+encoding//editor/filename.py=utf-8
+encoding//widgets/about/about_dialog.py=utf-8
+encoding//widgets/create_project/create_project_dialog.py=utf-8
+encoding//widgets/data_checker/error_summary_dialog.py=utf-8
+encoding//widgets/import_data/import_dxf_dialog.py=utf-8
+encoding//widgets/import_data/import_shp_dialog.py=utf-8
+encoding//widgets/import_manager/import_manager_dialog.py=utf-8
+encoding//widgets/topoclean/topoclean_dialog.py=utf-8
+encoding/__init__.py=utf-8
+encoding/main.py=utf-8
+encoding/resources.py=utf-8

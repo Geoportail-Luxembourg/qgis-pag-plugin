@@ -1,0 +1,28 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<plugins>
+    <pyqgis_plugin name="PAG Luxembourg" version="1.0" plugin_id="999"><!-- Mettre à jour -->
+        <description>Plugin permettant la gestion de Plans d'Aménagement Généraux (PAG) du Grand Duché de Luxembourg. Développé par arx iT.</description>
+        <about>Grand Duché de Luxembourg, arx iT</about>
+        <version>1.0</version><!-- Mettre à jour -->
+        <qgis_minimum_version>2.12.1</qgis_minimum_version>
+        <qgis_maximum_version>2.12.1</qgis_maximum_version>
+        <homepage>https://github.com/Geoportail-Luxembourg/qgis-pag-plugin</homepage>
+        <file_name>pag.1.0.zip</file_name><!-- Mettre à jour -->
+        <icon>icon.png</icon>
+        <author_name>Grand Duché de Luxenbourg, arx-it</author_name>
+        <download_url>https://pag-upload.mi.public.lu/pag.1.0.zip</download_url><!-- Mettre à jour -->
+        <uploaded_by>arx-it</uploaded_by>
+        <create_date>2015-11-09T09:43:57.251757</create_date>
+        <update_date>2015-12-15T16:19:00</update_date><!-- Mettre à jour -->
+        <experimental>False</experimental>
+        <deprecated>False</deprecated>
+        <tracker>https://github.com/Geoportail-Luxembourg/qgis-pag-plugin/issues</tracker>
+        <repository>https://github.com/Geoportail-Luxembourg/qgis-pag-plugin</repository>
+        <tags>PAG, Luxembourg, Landuse</tags>
+        <downloads>512</downloads>
+        <average_vote>5</average_vote>
+        <rating_votes>5</rating_votes>
+        <external_dependencies></external_dependencies>
+        <server>False</server>
+    </pyqgis_plugin>
+</plugins>
