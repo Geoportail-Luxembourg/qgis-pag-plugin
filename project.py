@@ -552,7 +552,13 @@ class Project(QObject):
         '''
         
         # Hide fields
-        hidden = [PK, IMPORT_ID]
+        #hidden = [PK, IMPORT_ID]
+        ''' Bug http://hub.qgis.org/issues/14235 '''
+        hidden = [PK]
+        for field in layer.pendingFields():
+            if field.name() == IMPORT_ID:
+                layer.setEditorWidgetV2(layer.fieldNameIndex(field.name()),'TextEdit')
+        ''' Bug http://hub.qgis.org/issues/14235 '''
         for field in layer.pendingFields():
             if field.name() in hidden:
                 layer.setEditorWidgetV2(layer.fieldNameIndex(field.name()),'Hidden')
