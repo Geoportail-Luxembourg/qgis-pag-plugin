@@ -5,7 +5,7 @@
         <about>Grand Duché de Luxembourg, arx iT</about>
         <version>1.0</version><!-- Mettre à jour -->
         <qgis_minimum_version>2.12.1</qgis_minimum_version>
-        <qgis_maximum_version>2.12.1</qgis_maximum_version>
+        <qgis_maximum_version>2.99.0</qgis_maximum_version>
         <homepage>https://github.com/Geoportail-Luxembourg/qgis-pag-plugin</homepage>
         <file_name>pag.1.0.zip</file_name><!-- Mettre à jour -->
         <icon>icon.png</icon>
