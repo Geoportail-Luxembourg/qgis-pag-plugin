@@ -10,7 +10,7 @@
 name=PAG Luxembourg
 qgisMinimumVersion=2.12
 description=Gestion de Plans d'Amenagement General du Grand-Duche de Luxembourg
-version=0.1
+version=0.5
 author=arx iT
 email=mba@arxit.com
 
