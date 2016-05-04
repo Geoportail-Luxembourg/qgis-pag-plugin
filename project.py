@@ -69,6 +69,9 @@ class Project(QObject):
         # Topological settings
         self._setupTopologicalSettings()
         
+        # Activate the auto Show feature form on feature creation
+        self._activateAutoShowForm()
+        
         QgsProject.instance().write()
         
         self.ready.emit()
@@ -98,6 +101,9 @@ class Project(QObject):
         main.qgis_interface.mapCanvas().setDestinationCrs(QgsCoordinateReferenceSystem(2169, QgsCoordinateReferenceSystem.EpsgCrsId)) # SRS 2169
         QgsProject.instance().setFileName(self.filename) # Project filename
         
+        # Flag PAG project
+        QgsProject.instance().writeEntry('PAG', '/ProjetPAG', True)
+        
         QgsProject.instance().write()
         
         # Database
@@ -112,6 +118,9 @@ class Project(QObject):
         # Topological settings
         self._setupTopologicalSettings()
         
+        # Activate the auto Show feature form on feature creation
+        self._activateAutoShowForm()
+        
         self.creation_mode = False
         
         # Save project and add to recent projects
@@ -124,36 +133,10 @@ class Project(QObject):
         '''
         Indicates whether this is a PAG project
         '''
-        #return True
-        try:
-            # New project
-            if not os.path.isfile(self.filename):
-                return False
-            
-            # Metadata table
-            metadata_table = PAGType()
-            metadata_table.name = 'Metadata'
-            uri = self.getTypeUri(metadata_table)
-            layer = QgsVectorLayer(uri, metadata_table.name, 'spatialite')
-            
-            if not layer.isValid():
-                return False
-            
-            exp = QgsExpression('Key=\'ProjetPAG\'')
-            features = layer.getFeatures(QgsFeatureRequest(exp))
-            
-            # Features count
-            count = 0
-            for feature in features:
-                count = count + 1
-            
-            if count == 0:
-                return False
-            else:
-                return True
         
-        except AttributeError:
-            return False
+        result, dummy = QgsProject.instance().readBoolEntry('PAG', '/ProjetPAG', False)
+        
+        return result
             
     def getLayer(self, type):
         '''
@@ -231,6 +214,10 @@ class Project(QObject):
         
         QgsProject.instance().snapSettingsChanged.emit()
         
+    def _activateAutoShowForm(self):
+        settings = QSettings()
+        settings.setValue("/Map/identifyAutoFeatureForm", True)
+        
     def _updateDatabase(self):
         '''
         Updates the project database
@@ -258,9 +245,6 @@ class Project(QObject):
                 layer = QgsVectorLayer(uri, type.friendlyName(), 'spatialite')
             
             self._updateTable(type, layer, True)
-            
-        # Check and update metadata
-        self._updateMetadataTable(conn)
         
         # Check and update the import log table
         self._updateImportLogTable(conn)
@@ -322,61 +306,6 @@ class Project(QObject):
             
             cursor.close()
             del cursor
-    
-    def _updateMetadataTable(self, conn):
-        '''
-        Update the metadata table (Metadata)
-        
-        :param conn: The database connection
-        :type conn: Connection
-        '''
-        
-        # Metadata table
-        metadata_table = PAGType()
-        metadata_table.name = 'Metadata'
-        
-        # Key field
-        key_field = PAGField()
-        key_field.name = 'Key'
-        key_field.type = DataType.STRING
-        key_field.nullable = False
-        metadata_table.fields.append(key_field)
-        
-        # Value field
-        value_field = PAGField()
-        value_field.name = 'Value'
-        value_field.type = DataType.STRING
-        value_field.nullable = False
-        metadata_table.fields.append(value_field)
-        
-        uri = self.getTypeUri(metadata_table)
-        layer = QgsVectorLayer(uri, metadata_table.friendlyName(), 'spatialite')
-        
-        # Create table if not valid
-        if not layer.isValid():
-            self._createTable(conn, metadata_table)
-            layer = QgsVectorLayer(uri, metadata_table.friendlyName(), 'spatialite')
-        
-        # Update fields
-        self._updateTable(metadata_table, layer)
-        
-        features = layer.getFeatures()
-        
-        # Add features if empty
-        if layer.featureCount() == 0:
-            feat = QgsFeature(layer.pendingFields())
-            feat.setAttribute('Key', 'ProjetPAG')
-            feat.setAttribute('Value', '1')
-            layer.dataProvider().addFeatures([feat])
-            feat = QgsFeature(layer.pendingFields())
-            feat.setAttribute('Key', 'PluginVersion')
-            feat.setAttribute('Value', main.PLUGIN_VERSION)
-            layer.dataProvider().addFeatures([feat])
-        else:
-            exp = QgsExpression('Key=\'PluginVersion\'')
-            feat = layer.getFeatures(QgsFeatureRequest(exp)).next()
-            changes = {layer.fieldNameIndex('Value'):main.PLUGIN_VERSION}
-            layer.dataProvider().changeAttributeValues({ feat.id() : changes })
         
     def _updateImportLogTable(self, conn):
         '''
@@ -623,7 +552,13 @@ class Project(QObject):
         '''
         
         # Hide fields
-        hidden = [PK, IMPORT_ID]
+        #hidden = [PK, IMPORT_ID]
+        ''' Bug http://hub.qgis.org/issues/14235 '''
+        hidden = [PK]
+        for field in layer.pendingFields():
+            if field.name() == IMPORT_ID:
+                layer.setEditorWidgetV2(layer.fieldNameIndex(field.name()),'TextEdit')
+        ''' Bug http://hub.qgis.org/issues/14235 '''
         for field in layer.pendingFields():
             if field.name() in hidden:
                 layer.setEditorWidgetV2(layer.fieldNameIndex(field.name()),'Hidden')

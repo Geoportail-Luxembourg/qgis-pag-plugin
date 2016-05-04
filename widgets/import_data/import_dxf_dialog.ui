@@ -142,10 +142,10 @@
    <widget class="QCheckBox" name="chkEnableAllLayersMapping">
     <property name="geometry">
      <rect>
-      <x>700</x>
+      <x>679</x>
       <y>230</y>
-      <width>70</width>
-      <height>17</height>
+      <width>91</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="layoutDirection">
@@ -209,10 +209,10 @@
    <widget class="QCheckBox" name="chkEnableAllFieldsMapping">
     <property name="geometry">
      <rect>
-      <x>700</x>
+      <x>679</x>
       <y>270</y>
-      <width>70</width>
-      <height>17</height>
+      <width>91</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="layoutDirection">

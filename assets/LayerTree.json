@@ -10,6 +10,12 @@
       "Nodes": []
     },
     {
+      "Name": "MODIFICATION PAG",
+      "IsGroup": false,
+      "TableName": "PAG.MODIFICATION_PAG",
+      "Nodes": []
+    },
+    {
       "Name": "PAP_APPROUVE",
       "IsGroup": false,
       "TableName": "PAG.PAP_APPROUVE",

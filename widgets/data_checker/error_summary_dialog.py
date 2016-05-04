@@ -124,7 +124,7 @@ class ErrorSummaryDialog(QtGui.QDialog, FORM_CLASS):
         features = layer.getFeatures(QgsFeatureRequest(feature.id()))
         
         for feature in features:
-            PagLuxembourg.main.qgis_interface.openFeatureForm(layer, feature)
+            PagLuxembourg.main.qgis_interface.openFeatureForm(layer, feature, showModal = False)
     
     def exportToCsv(self):
         # Select CSV file to export

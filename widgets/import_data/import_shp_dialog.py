@@ -24,10 +24,11 @@
 import os
 
 from PyQt4 import QtGui, uic
-from PyQt4.QtGui import QFileDialog, QMessageBox, QTableWidgetItem, QHeaderView, QColor, QCheckBox, QWidget, QHBoxLayout, QComboBox
+from PyQt4.QtGui import QFileDialog, QMessageBox, QTableWidgetItem, QHeaderView, QColor, QCheckBox, QWidget, QHBoxLayout, QComboBox, QProgressBar
 from PyQt4.QtCore import QCoreApplication, Qt, QVariant
 
 from qgis.core import *
+from qgis.gui import *
 
 import PagLuxembourg.main
 import PagLuxembourg.project
@@ -235,7 +236,7 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
                 if field.type() == shp_type and qgisfield.type() == qgis_type:
                     combobox.addItem(field.name(), field.name())
                     # Select field if same name
-                    if field.name() == qgisfield.name() and selected_index == -1:
+                    if field.name() == qgisfield.name() and selected_index == 0:
                         selected_index = current_item_index
                     if field.name() == selected_shpfield:
                         selected_index = current_item_index
@@ -399,27 +400,29 @@ class ImportShpDialog(QtGui.QDialog, FORM_CLASS, Importer):
         
         qgis_layer = self.qgislayers[self.cbbLayers.currentIndex()]
         
+        self.close()
+        
+        # Progress bar + message
+        progressMessageBar = PagLuxembourg.main.qgis_interface.messageBar().createMessage(QCoreApplication.translate('ImportShpDialog','Importing {}').format(self.shplayer.source()))
+        progress = QProgressBar()
+        progress.setMaximum(self.shplayer.featureCount())
+        progress.setAlignment(Qt.AlignLeft|Qt.AlignVCenter)
+        progressMessageBar.layout().addWidget(progress)
+        PagLuxembourg.main.qgis_interface.messageBar().pushWidget(progressMessageBar, QgsMessageBar.INFO)
+        
         # Start import session
         self._startImportSession()
         
         # Import the layer, and get the imported extent
-        imported_extent, import_errors = self._importLayer(
-                                                           self.shplayer, 
-                                                           qgis_layer, 
-                                                           self.mapping.asIndexFieldMappings(qgis_layer.dataProvider().fields(), self.shpfields)
-                                                           )
+        self._importLayer(
+                          self.shplayer, 
+                          qgis_layer, 
+                          self.mapping.asIndexFieldMappings(qgis_layer.dataProvider().fields(), self.shpfields),
+                          progress
+                          )
         
         # Commit import session
         self._commitImport()
-        
-        # Zoom to selected
-        if imported_extent is not None:
-            PagLuxembourg.main.qgis_interface.mapCanvas().setExtent(imported_extent)
-            if not import_errors:
-                PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('ImportShpDialog','Success'), 
-                                                                           QCoreApplication.translate('ImportShpDialog','Importation was successful'))
-        
-        self.close()
     
     def _loadConfig(self):
         '''

@@ -16,6 +16,8 @@ from PyQt4.QtCore import *
 import PagLuxembourg.main
 import PagLuxembourg.project
 
+from topoclean_dialog import TopoCleanDialog
+
 class TopoClean(object):
     '''
     Main class for the snapping widget
@@ -35,27 +37,46 @@ class TopoClean(object):
         if not PagLuxembourg.main.current_project.isPagProject():
             return
         
-        #self.dlg = ImportManagerDialog()
-        #self.dlg.show()
-        
         layer = PagLuxembourg.main.qgis_interface.layerTreeView().currentLayer()
         
-        self.cleanLayer(layer)
-    
-    def cleanLayer(self, layer):
+        if layer is None:
+            PagLuxembourg.main.qgis_interface.messageBar().pushWarning(QCoreApplication.translate('TopoClean','Warning'), 
+                                                                       QCoreApplication.translate('TopoClean','Please select a layer'))
+            return
+        
         if not (layer.type() == QgsMapLayer.VectorLayer and PagLuxembourg.main.current_project.isPagLayer(layer)):
             return
         
-        # Run the GRASS clean topology tool
+        self.dlg = TopoCleanDialog(self, layer)
+        self.dlg.show()
+    
+    def cleanLayer(self, layer, threshold = 0.1):
+        # Deselect all
+        layer.setSelectedFeatures([])
+        
+        # 1. Run the GRASS clean topology tool
         result = processing.runalg('grass:v.clean.advanced', # Processing
                                    layer, # Layer
                                    'rmarea', # Tools
-                                   0.1, # Threshold
+                                   threshold, # Threshold
                                    None, # Extent
                                    -1, # Snapping tolerance
                                    0.0001, # Min area
                                    None, # Output layer (auto)
                                    None) # Output errors (auto)
+        
+        # Get cleaned layer
+        vclean_layer = QgsVectorLayer(result['output'], 'VClean', 'ogr')
+        
+        # 2. Dissolve polygons
+        result = processing.runalg('qgis:dissolve', # Processing
+                                   vclean_layer, # Layer
+                                   False, # Dissolve all
+                                   PagLuxembourg.project.PK, # Field to merge
+                                   None)# Output layer (auto)
+        
+        # Get cleaned layer
+        clean_layer = QgsVectorLayer(result['OUTPUT'], 'Clean', 'ogr')
         
         # Start editing session
         if not layer.isEditable():
@@ -64,9 +85,6 @@ class TopoClean(object):
         # Empty layer
         layer.selectAll()
         layer.deleteSelectedFeatures()
-        
-        # Add cleaned features
-        clean_layer = QgsVectorLayer(result['output'], 'Clean', 'ogr')
         
         # Progress bar + message
         progressMessageBar = PagLuxembourg.main.qgis_interface.messageBar().createMessage(QCoreApplication.translate('TopoClean','Adding cleaned features'))

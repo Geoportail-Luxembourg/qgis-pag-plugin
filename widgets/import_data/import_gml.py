@@ -56,16 +56,16 @@ class ImportGML(Importer):
         layer_structure_errors = list()
         
         # Progress bar + message
-        progressMessageBar = PagLuxembourg.main.qgis_interface.messageBar().createMessage(QCoreApplication.translate('ImportData','Importing GML'))
+        progressMessageBar = PagLuxembourg.main.qgis_interface.messageBar().createMessage(QCoreApplication.translate('ImportGML','Importing GML'))
         progress = QProgressBar()
         progress.setMaximum(len(gmlschema.typeNames()))
         progress.setAlignment(Qt.AlignLeft|Qt.AlignVCenter)
         progressMessageBar.layout().addWidget(progress)
+        progress2 = QProgressBar()
+        progress2.setAlignment(Qt.AlignLeft|Qt.AlignVCenter)
+        progressMessageBar.layout().addWidget(progress2)
         PagLuxembourg.main.qgis_interface.messageBar().pushWidget(progressMessageBar, QgsMessageBar.INFO)
 
-        # Define imported extent
-        imported_extent = None
-        
         # Start import session
         self._startImportSession()
         
@@ -77,46 +77,25 @@ class ImportGML(Importer):
                 continue
             
             # Progression message
-            progressMessageBar.setText(QCoreApplication.translate('ImportData','Importing {}').format(gmltype))
+            progressMessageBar.setText(QCoreApplication.translate('ImportGML','Importing {}').format(gmltype))
             
             gmllayer = QgsVectorLayer('{}|layername={}'.format(self.filename,gmltype), gmltype, "ogr")
             
             # Check schema structure table and datatypes
             warn_errors, fatal_errors = self.data_checker.checkLayerStructure(gmllayer, xsdtype)
-            layer_structure_errors = layer_structure_errors + fatal_errors
             
             if len(fatal_errors) == 0:
-                extent, errors = self._importGmlLayer(gmllayer, xsdtype)
-                
-                if extent is not None:
-                    if imported_extent is None:
-                        imported_extent = extent
-                    else:
-                        imported_extent.combineExtentWith(extent)
+                self._importGmlLayer(gmllayer, xsdtype, progress2)
+            else:
+                for layer, field, message in fatal_errors:
+                    self.commit_errors.append(message)
             
             progress.setValue(progress.value() + 1)
-            
-        PagLuxembourg.main.qgis_interface.messageBar().clearWidgets()
         
         # Commit import session
         self._commitImport()
-            
-        # Success message
-        if len(layer_structure_errors) == 0:
-            PagLuxembourg.main.qgis_interface.mapCanvas().setExtent(imported_extent)
-            
-            if not errors:
-                PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('ImportData','Success'), 
-                                                                           QCoreApplication.translate('ImportData','Importation was successful'))
-            
-        else:
-            PagLuxembourg.main.qgis_interface.messageBar().pushWarning(QCoreApplication.translate('ImportData','Warning'), 
-                                                                       QCoreApplication.translate('ImportData','Some errors encountered during importation'))
-            
-            self.dlg = ErrorSummaryDialog(layer_structure_errors, list())
-            self.dlg.show()
     
-    def _importGmlLayer(self, gml_layer, xsdtype):
+    def _importGmlLayer(self, gml_layer, xsdtype, progress):
         '''
         Import a GML layer
         
@@ -132,11 +111,13 @@ class ImportGML(Importer):
         if xsd_layer is None:
             return
         
-        result = self._importLayer(gml_layer,
-                                    xsd_layer,
-                                    self._getFieldMap(gml_layer, xsd_layer, xsdtype))
+        progress.setMaximum(gml_layer.featureCount())
+        progress.setValue(0)
         
-        return result
+        self._importLayer(gml_layer,
+                          xsd_layer,
+                          self._getFieldMap(gml_layer, xsd_layer, xsdtype),
+                          progress)
     
     def _getFieldMap(self, source_layer, destination_layer, xsdtype):
         '''
