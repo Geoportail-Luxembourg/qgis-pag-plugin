@@ -1,6 +1,8 @@
 '''
 Created on 25 sept. 2015
 
+Updated on 11 may 2015
+
 @author: arxit
 '''
 
@@ -8,9 +10,9 @@ import os
 import json
 
 from qgis.core import *
+import qgis.utils
 from PyQt4.QtGui import QAction
 from PyQt4.QtCore import QCoreApplication
-
 import PagLuxembourg.main
 
 TOPOL_SECTION = "Topol"
@@ -37,6 +39,13 @@ class TopologyChecker(object):
             return
         
         self.topology_action.trigger()
+        
+        # Zoom to selected onclick button
+        wb=QgsVectorLayer()
+        canvas = qgis.utils.iface.mapCanvas()
+        layer = mapCanvas.layer(0)
+        canvas.zoomToSelected(layer)
+        
         
     def updateProjectRules(self):
         '''
