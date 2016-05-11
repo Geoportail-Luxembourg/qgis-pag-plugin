@@ -42,12 +42,18 @@ class TopologyChecker(object):
         
         # Zoom to selected onclick button
         wb=PagLuxembourg.main.current_project.getLayer(PagLuxembourg.main.xsd_schema.getTypeFromTableName('PAG.MODIFICATION_PAG'))
-        qgis.utils.iface.messageBar().pushMessage("Sucess", "There is selected entities in layer MODIFICATION PAG. You can now check topology ")
-        if wb.isValid() :
+        if wb.isValid():
+            test=wb.selectedFeatureCount()
+            
             canvas = qgis.utils.iface.mapCanvas()
             canvas.zoomToSelected(wb)
-            
-        
+            if test==1:
+                qgis.utils.iface.messageBar().pushMessage("Sucess", "There is " + str(test) + " selected entity in MODIFICATION PAG layer. You can now check topology")
+            else:
+                qgis.utils.iface.messageBar().pushMessage("Sucess", "There are " + str(test) + " selected entities in MODIFICATION PAG layer. You can now check topology")
+        else :
+            qgis.utils.iface.messageBar().pushMessage("Error", "MODIFICATION PAG layer is not correct")
+    
     def updateProjectRules(self):
         '''
         Updates the topology check rules of the project
