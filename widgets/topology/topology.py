@@ -1,6 +1,8 @@
 '''
 Created on 25 sept. 2015
 
+Updated on 11 may 2015
+
 @author: arxit
 '''
 
@@ -8,9 +10,9 @@ import os
 import json
 
 from qgis.core import *
+import qgis.utils
 from PyQt4.QtGui import QAction
 from PyQt4.QtCore import QCoreApplication
-
 import PagLuxembourg.main
 
 TOPOL_SECTION = "Topol"
@@ -38,6 +40,19 @@ class TopologyChecker(object):
         
         self.topology_action.trigger()
         
+        # Zoom to selected onclick button
+        wb=PagLuxembourg.main.current_project.getLayer(PagLuxembourg.main.xsd_schema.getTypeFromTableName('PAG.MODIFICATION_PAG'))
+        if wb.isValid():
+            entity_count = wb.selectedFeatureCount()
+            canvas = qgis.utils.iface.mapCanvas()
+            canvas.zoomToSelected(wb)
+            if entity_count==1:
+                qgis.utils.iface.messageBar().pushMessage("Sucess", "There is " + str(entity_count) + " selected entity in MODIFICATION PAG layer. You can now check topology")
+            else:
+                qgis.utils.iface.messageBar().pushMessage("Sucess", "There are " + str(entity_count) + " selected entities in MODIFICATION PAG layer. You can now check topology")
+        else :
+            qgis.utils.iface.messageBar().pushMessage("Error", "MODIFICATION PAG layer is not correct")
+    
     def updateProjectRules(self):
         '''
         Updates the topology check rules of the project
