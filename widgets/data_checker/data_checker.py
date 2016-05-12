@@ -158,10 +158,10 @@ class DataChecker(object):
         errors = list()
         
         # Layer definition        
-        layer_PAG=PagLuxembourg.main.current_project.getLayer(PagLuxembourg.main.xsd_schema.getTypeFromTableName('PAG.MODIFICATION_PAG'))
-        layer_ZONAGE=PagLuxembourg.main.current_project.getLayer(PagLuxembourg.main.xsd_schema.getTypeFromTableName('PAG.CONST_A_CONS_POINT'))
+        layer_PAG = PagLuxembourg.main.current_project.getLayer(PagLuxembourg.main.xsd_schema.getTypeFromTableName('PAG.MODIFICATION_PAG'))
+                
         # Selection definition
-        layer_PAG.selectedFeatures()
+        #selection_PAG = layer_PAG.selectedFeatures()
         
         # Selection by intersection with 'MODIFICATION PAG' layer
         if layer.name() != 'MODIFICATION PAG' :
@@ -170,9 +170,9 @@ class DataChecker(object):
             for PAG_feature in layer_PAG.getFeatures():
                 #qgis.utils.iface.messageBar().pushMessage("HEY")
                 cands = layer.getFeatures()
-                for ZONAGE_feature in cands:
-                    if PAG_feature.geometry().intersects(ZONAGE_feature.geometry()):
-                        areas.append(ZONAGE_feature.id())
+                for layer_features in cands:
+                    if PAG_feature.geometry().intersects(layer_features.geometry()):
+                        areas.append(layer_features.id())
 
             layer.select(areas)
         
