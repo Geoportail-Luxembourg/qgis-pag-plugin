@@ -1,12 +1,18 @@
 '''
 Created on 23 oct. 2015
 
+Updated on 11 may 2015
+
 @author: arxit
 '''
 
 import os
 
+import processing
+from processing.tools import *
+
 from qgis.core import *
+import qgis.utils
 from PyQt4.QtGui import QAction
 from PyQt4.QtCore import QCoreApplication
 
@@ -150,6 +156,26 @@ class DataChecker(object):
         '''
         
         errors = list()
+        
+        # Layer definition        
+        layer_PAG=PagLuxembourg.main.current_project.getLayer(PagLuxembourg.main.xsd_schema.getTypeFromTableName('PAG.MODIFICATION_PAG'))
+        layer_ZONAGE=PagLuxembourg.main.current_project.getLayer(PagLuxembourg.main.xsd_schema.getTypeFromTableName('PAG.CONST_A_CONS_POINT'))
+        # Selection definition
+        layer_PAG.selectedFeatures()
+        
+        # Selection by intersection with 'MODIFICATION PAG' layer
+        if layer.name() != 'MODIFICATION PAG' :
+            qgis.utils.iface.messageBar().pushMessage("HEY2")
+            areas = []
+            for PAG_feature in layer_PAG.getFeatures():
+                #qgis.utils.iface.messageBar().pushMessage("HEY")
+                cands = layer.getFeatures()
+                for ZONAGE_feature in cands:
+                    if PAG_feature.geometry().intersects(ZONAGE_feature.geometry()):
+                        areas.append(ZONAGE_feature.id())
+
+            layer.select(areas)
+        
         
         for feature in layer.dataProvider().getFeatures():
             errors += self.checkFeatureData(feature, xsd_type)
