@@ -156,29 +156,39 @@ class DataChecker(object):
         '''
         
         errors = list()
+        selection_entities_from_PAG = {}
+        areas = []
         
-        # Layer definition        
+        # 'MODIFICATION_PAG' layer definition        
         layer_PAG = PagLuxembourg.main.current_project.getLayer(PagLuxembourg.main.xsd_schema.getTypeFromTableName('PAG.MODIFICATION_PAG'))
                 
-        # Selection definition
-        #selection_PAG = layer_PAG.selectedFeatures()
+        # 'MODIFICATION_PAG' selection definition
+        selection_PAG = layer_PAG.selectedFeatures()
+        
+        
         
         # Selection by intersection with 'MODIFICATION PAG' layer
         if layer.name() != 'MODIFICATION PAG' :
-            qgis.utils.iface.messageBar().pushMessage("HEY2")
-            areas = []
-            for PAG_feature in layer_PAG.getFeatures():
-                #qgis.utils.iface.messageBar().pushMessage("HEY")
+            
+            for PAG_feature in selection_PAG:
                 cands = layer.getFeatures()
                 for layer_features in cands:
                     if PAG_feature.geometry().intersects(layer_features.geometry()):
                         areas.append(layer_features.id())
 
             layer.select(areas)
+            selection_entities_from_PAG=layer.selectedFeatures()
         
+        entity_count_PAG = layer_PAG.selectedFeatureCount()
         
-        for feature in layer.dataProvider().getFeatures():
-            errors += self.checkFeatureData(feature, xsd_type)
+        # Check if a selection exists
+        if entity_count_PAG > 0 :
+            qgis.utils.iface.messageBar().pushMessage("Sucess", "There is " + str(entity_count_PAG) + " selected entity in MODIFICATION PAG layer. Data checkers are based on intersections between these entities and the other layers entities")
+            for feature in selection_entities_from_PAG :
+                errors += self.checkFeatureData(feature, xsd_type)
+        else:
+            for feature in layer.dataProvider().getFeatures() :
+                errors += self.checkFeatureData(feature, xsd_type)
         
         return layer, errors
     
