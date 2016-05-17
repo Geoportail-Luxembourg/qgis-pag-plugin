@@ -47,6 +47,21 @@ class DataChecker(object):
         layer_structure_errors = list()
         data_errors = list()
         
+        # 'MODIFICATION PAG' layer definition        
+        layer_PAG = PagLuxembourg.main.current_project.getLayer(PagLuxembourg.main.xsd_schema.getTypeFromTableName('PAG.MODIFICATION_PAG'))
+                
+        # 'MODIFICATION PAG' selection definition
+        selection_PAG = layer_PAG.selectedFeatures()
+        
+        # Counting number entities in 'MODIFICATION PAG' selection
+        entity_count_PAG = layer_PAG.selectedFeatureCount()
+        
+        # Messages display for number of selected entities
+        if entity_count_PAG == 1 :
+            qgis.utils.iface.messageBar().pushMessage("Sucess", "There is " + str(entity_count_PAG) + " selected entity in MODIFICATION PAG layer. Data checkers are based on intersections between these entities and the other layers entities")
+        else :
+            qgis.utils.iface.messageBar().pushMessage("Sucess", "There are " + str(entity_count_PAG) + " selected entities in MODIFICATION PAG layer. Data checkers are based on intersections between these entities and the other layers entities")
+        
         # Iterates through XSD types
         for type in PagLuxembourg.main.xsd_schema.types:
             layer = project.getLayer(type)
@@ -60,7 +75,7 @@ class DataChecker(object):
             if len(fatal_errors)>0:
                 continue
             
-            layer_data_errors = self.checkLayerData(layer, type)
+            layer_data_errors = self.checkLayerData(selection_PAG, layer, type)
             data_errors.append(layer_data_errors)
         
         # Flatten data errors
@@ -141,7 +156,7 @@ class DataChecker(object):
         
         return warn_errors, fatal_errors
     
-    def checkLayerData(self, layer, xsd_type):
+    def checkLayerData(self, selection_PAG, layer, xsd_type):
         '''
         Checks the data of a layer against the XSD type
         
@@ -156,37 +171,28 @@ class DataChecker(object):
         '''
         
         errors = list()
-        selection_entities_from_PAG = {}
         areas = []
         
-        # 'MODIFICATION_PAG' layer definition        
-        layer_PAG = PagLuxembourg.main.current_project.getLayer(PagLuxembourg.main.xsd_schema.getTypeFromTableName('PAG.MODIFICATION_PAG'))
-                
-        # 'MODIFICATION_PAG' selection definition
-        selection_PAG = layer_PAG.selectedFeatures()
-        
-        
-        
-        # Selection by intersection with 'MODIFICATION PAG' layer
-        if layer.name() != 'MODIFICATION PAG' :
+        # Check if a selection exists in 'MODIFICATION PAG'
+        if len(selection_PAG) > 0 :
             
-            for PAG_feature in selection_PAG:
-                cands = layer.getFeatures()
-                for layer_features in cands:
-                    if PAG_feature.geometry().intersects(layer_features.geometry()):
-                        areas.append(layer_features.id())
+            # Selection by intersection with 'MODIFICATION PAG' layer
+            if layer.name() != 'MODIFICATION PAG' :
+                
+                for PAG_feature in selection_PAG:
+                    cands = layer.getFeatures()
+                    for layer_features in cands:
+                        if PAG_feature.geometry().intersects(layer_features.geometry()):
+                            areas.append(layer_features.id())
+    
+                layer.select(areas)
+                selection_entities_from_PAG = layer.selectedFeatures()
 
-            layer.select(areas)
-            selection_entities_from_PAG=layer.selectedFeatures()
-        
-        entity_count_PAG = layer_PAG.selectedFeatureCount()
-        
-        # Check if a selection exists
-        if entity_count_PAG > 0 :
-            qgis.utils.iface.messageBar().pushMessage("Sucess", "There is " + str(entity_count_PAG) + " selected entity in MODIFICATION PAG layer. Data checkers are based on intersections between these entities and the other layers entities")
-            for feature in selection_entities_from_PAG :
-                errors += self.checkFeatureData(feature, xsd_type)
+                for feature in selection_entities_from_PAG :
+                    errors += self.checkFeatureData(feature, xsd_type)
+                    
         else:
+            
             for feature in layer.dataProvider().getFeatures() :
                 errors += self.checkFeatureData(feature, xsd_type)
         
