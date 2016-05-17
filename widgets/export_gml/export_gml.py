@@ -1,6 +1,8 @@
 '''
 Created on 26 oct. 2015
 
+Updated on 17 may 2016
+
 @author: arxit
 '''
 
@@ -42,7 +44,7 @@ class ExportGML(object):
         if not project.isPagProject():
             return
         
-        # Check data before exporting
+        # Check data and selected entities before exporting
         self.data_checker = DataChecker()
         if not self.data_checker.run():
             return
@@ -92,6 +94,16 @@ class ExportGML(object):
         # Baskets topic
         topic_baskets = dict()
         
+        
+        # 'MODIFICATION PAG' layer definition        
+        layer_PAG = PagLuxembourg.main.current_project.getLayer(PagLuxembourg.main.xsd_schema.getTypeFromTableName('PAG.MODIFICATION_PAG'))
+                
+        # 'MODIFICATION PAG' selection definition
+        selection_PAG = layer_PAG.selectedFeatures()
+        
+        # Counting number entities in 'MODIFICATION PAG' selection
+        entity_count_PAG = layer_PAG.selectedFeatureCount()
+        
         # Iterates through XSD types
         for type in PagLuxembourg.main.xsd_schema.types:
             layer = project.getLayer(type)
@@ -105,18 +117,34 @@ class ExportGML(object):
             filename = os.path.join(temp_dir,
                                     '{}.gml'.format(type.friendlyName()))
             
-            QgsVectorFileWriter.writeAsVectorFormat(layer, 
-                                                    filename, 
-                                                    'utf-8', 
-                                                    None, 
-                                                    'GML',
-                                                    datasourceOptions = ['FORMAT=GML3.2',
-                                                                         'TARGET_NAMESPACE={}'.format(self.DEFAULT_XLMNS),
-                                                                         'GML3_LONGSRS=YES',
-                                                                         'SRSDIMENSION_LOC=GEOMETRY',
-                                                                         'WRITE_FEATURE_BOUNDED_BY=NO',
-                                                                         'STRIP_PREFIX=TRUE',
-                                                                         'SPACE_INDENTATION=NO'])
+            # Selection test in 'MODIFICATION PAG'
+            if entity_count_PAG>0 :
+                QgsVectorFileWriter.writeAsVectorFormat(layer, 
+                                                        filename, 
+                                                        'utf-8', 
+                                                        None, 
+                                                        'GML',
+                                                        True,
+                                                        datasourceOptions = ['FORMAT=GML3.2',
+                                                                             'TARGET_NAMESPACE={}'.format(self.DEFAULT_XLMNS),
+                                                                             'GML3_LONGSRS=YES',
+                                                                             'SRSDIMENSION_LOC=GEOMETRY',
+                                                                             'WRITE_FEATURE_BOUNDED_BY=NO',
+                                                                             'STRIP_PREFIX=TRUE',
+                                                                             'SPACE_INDENTATION=NO'])
+            else :
+                QgsVectorFileWriter.writeAsVectorFormat(layer, 
+                                                        filename, 
+                                                        'utf-8', 
+                                                        None, 
+                                                        'GML',
+                                                        datasourceOptions = ['FORMAT=GML3.2',
+                                                                             'TARGET_NAMESPACE={}'.format(self.DEFAULT_XLMNS),
+                                                                             'GML3_LONGSRS=YES',
+                                                                             'SRSDIMENSION_LOC=GEOMETRY',
+                                                                             'WRITE_FEATURE_BOUNDED_BY=NO',
+                                                                             'STRIP_PREFIX=TRUE',
+                                                                             'SPACE_INDENTATION=NO'])                
             
             members = self._getXsdCompliantGml(filename, gml, type)
             
@@ -139,11 +167,22 @@ class ExportGML(object):
         file.write(gml.toprettyxml('','\n','utf-8'))
         file.close()
         shutil.rmtree(temp_dir)
+
+        # Messages display for number of selected entities
+        if entity_count_PAG == 1 :
+            PagLuxembourg.main.qgis_interface.messageBar().clearWidgets()
+            PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('ExportGML','Success'),
+                                                                       QCoreApplication.translate('ExportGML','GML export was successful with ' + str(entity_count_PAG) + ' selected entity in MODIFICATION PAG layer'))
+        elif entity_count_PAG == 0 :
+            PagLuxembourg.main.qgis_interface.messageBar().clearWidgets()
+            PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('ExportGML2','Success'),
+                                                                       QCoreApplication.translate('ExportGML2','GML export was successful without selected entity in MODIFICATION PAG layer'))
+        else :
+            PagLuxembourg.main.qgis_interface.messageBar().clearWidgets()
+            PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('ExportGML3','Success'),
+                                                                       QCoreApplication.translate('ExportGML3','GML export was successful with ' + str(entity_count_PAG) + ' selected entities in MODIFICATION PAG layer'))
         
-        PagLuxembourg.main.qgis_interface.messageBar().clearWidgets()
-        PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('ExportGML','Success'),
-                                                                   QCoreApplication.translate('ExportGML','GML export was successful'))
-    
+        
     def _getXsdCompliantGml(self, filename, gml, xsdtype):
         '''
         Transform the OGR gml to a XSD compliant GML

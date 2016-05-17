@@ -1,7 +1,7 @@
 '''
 Created on 25 sept. 2015
 
-Updated on 11 may 2015
+Updated on 11 may 2016
 
 @author: arxit
 '''
@@ -47,9 +47,16 @@ class TopologyChecker(object):
             canvas = qgis.utils.iface.mapCanvas()
             canvas.zoomToSelected(wb)
             if entity_count==1:
-                qgis.utils.iface.messageBar().pushMessage("Sucess", "There is " + str(entity_count) + " selected entity in MODIFICATION PAG layer. You can now check topology")
+                
+                PagLuxembourg.main.qgis_interface.messageBar().clearWidgets()
+                PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('Topology','Success'),
+                                                                   QCoreApplication.translate('Topology','There is ' + str(entity_count) + ' selected entity in MODIFICATION PAG layer. You can now check topology'))
+    
             else:
-                qgis.utils.iface.messageBar().pushMessage("Sucess", "There are " + str(entity_count) + " selected entities in MODIFICATION PAG layer. You can now check topology")
+                #qgis.utils.iface.messageBar().pushMessage("Sucess", "There are " + str(entity_count) + " selected entities in MODIFICATION PAG layer. You can now check topology")
+                PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('Topology_count_2','Success'),
+                                                                    QCoreApplication.translate('Topology_count_2',"There are " + str(entity_count) + " selected entities in MODIFICATION PAG layer. You can now check topology"))
+ 
         else :
             qgis.utils.iface.messageBar().pushMessage("Error", "MODIFICATION PAG layer is not correct")
     

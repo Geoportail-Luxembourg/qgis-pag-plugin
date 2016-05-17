@@ -910,6 +910,19 @@
     </message>
 </context>
 <context>
+    <name>Topology</name>
+	   <message>
+		<location filename="topology.py" line="50"/>
+		<source>Success</source>
+        <translation>Succès</translation>
+    </message>
+	<message>
+        <location filename="topology.py" line="50"/>
+        <source>There is</source>
+        <translation>Il y a</translation>
+    </message>
+</context>
+<context>
     <name>rulesDialog</name>
     <message>
         <location filename="topology.py" line="99"/>
