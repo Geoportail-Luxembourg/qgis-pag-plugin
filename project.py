@@ -201,6 +201,9 @@ class Project(QObject):
             return None
         
         return layer
+    
+    def getModificationPagLayer(self):
+        return self.getLayer(main.xsd_schema.getTypeFromTableName('PAG.MODIFICATION_PAG'))
             
     def _setupTopologicalSettings(self):
         # Topological editing
@@ -552,9 +555,7 @@ class Project(QObject):
         '''
         
         # Hide fields
-        #hidden = [PK, IMPORT_ID]
-        ''' Bug http://hub.qgis.org/issues/14235 '''
-        hidden = [PK]
+        hidden = [PK, IMPORT_ID]
         for field in layer.pendingFields():
             if field.name() == IMPORT_ID:
                 layer.setEditorWidgetV2(layer.fieldNameIndex(field.name()),'TextEdit')

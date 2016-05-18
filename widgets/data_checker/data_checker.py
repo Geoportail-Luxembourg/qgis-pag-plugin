@@ -48,7 +48,7 @@ class DataChecker(object):
         data_errors = list()
         
         # 'MODIFICATION PAG' layer definition        
-        layer_PAG = PagLuxembourg.main.current_project.getLayer(PagLuxembourg.main.xsd_schema.getTypeFromTableName('PAG.MODIFICATION_PAG'))
+        layer_PAG = project.getModificationPagLayer()
                 
         # 'MODIFICATION PAG' selection definition
         selection_PAG = layer_PAG.selectedFeatures()
@@ -164,6 +164,9 @@ class DataChecker(object):
         '''
         Checks the data of a layer against the XSD type
         
+        :param selection_PAG: Selected features from the Modification PAG layer
+        :type selection_PAG: QgsFeatureList
+        
         :param layer: The vector layer to check
         :type layer: QgsVectorLayer
         
@@ -181,19 +184,17 @@ class DataChecker(object):
         if len(selection_PAG) > 0 :
             
             # Selection by intersection with 'MODIFICATION PAG' layer
-            if layer.name() != 'MODIFICATION PAG' :
-                
-                for PAG_feature in selection_PAG:
-                    cands = layer.getFeatures()
-                    for layer_features in cands:
-                        if PAG_feature.geometry().intersects(layer_features.geometry()):
-                            areas.append(layer_features.id())
-    
-                layer.select(areas)
-                selection_entities_from_PAG = layer.selectedFeatures()
+            for PAG_feature in selection_PAG:
+                cands = layer.getFeatures()
+                for layer_features in cands:
+                    if PAG_feature.geometry().intersects(layer_features.geometry()):
+                        areas.append(layer_features.id())
 
-                for feature in selection_entities_from_PAG :
-                    errors += self.checkFeatureData(feature, xsd_type)
+            layer.select(areas)
+            selection_entities_from_PAG = layer.selectedFeatures()
+
+            for feature in selection_entities_from_PAG :
+                errors += self.checkFeatureData(feature, xsd_type)
                     
         else:
             

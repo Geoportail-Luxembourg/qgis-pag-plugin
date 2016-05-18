@@ -41,11 +41,12 @@ class TopologyChecker(object):
         self.topology_action.trigger()
         
         # Zoom to selected onclick button
-        wb=PagLuxembourg.main.current_project.getLayer(PagLuxembourg.main.xsd_schema.getTypeFromTableName('PAG.MODIFICATION_PAG'))
-        if wb.isValid():
-            entity_count = wb.selectedFeatureCount()
+        modification_pag_layer=project.getModificationPagLayer()
+        
+        if modification_pag_layer is not None:
+            entity_count = modification_pag_layer.selectedFeatureCount()
             canvas = qgis.utils.iface.mapCanvas()
-            canvas.zoomToSelected(wb)
+            canvas.zoomToSelected(modification_pag_layer)
             if entity_count==1:
                 
                 PagLuxembourg.main.qgis_interface.messageBar().clearWidgets()

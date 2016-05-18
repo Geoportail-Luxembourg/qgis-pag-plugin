@@ -53,7 +53,8 @@ class ExportGML(object):
         dialog = QFileDialog()
         dialog.setFileMode(QFileDialog.AnyFile)
         dialog.setAcceptMode(QFileDialog.AcceptSave)
-        dialog.setNameFilter('GML file (*.gml)');
+        dialog.setNameFilter('GML file (*.gml)')
+        dialog.setDefaultSuffix('gml')
         dialog.setWindowTitle(QCoreApplication.translate('ExportGML','Select the gml location'))
         dialog.setSizeGripEnabled(False)
         result = dialog.exec_()
@@ -96,7 +97,7 @@ class ExportGML(object):
         
         
         # 'MODIFICATION PAG' layer definition        
-        layer_PAG = PagLuxembourg.main.current_project.getLayer(PagLuxembourg.main.xsd_schema.getTypeFromTableName('PAG.MODIFICATION_PAG'))
+        layer_PAG = project.getModificationPagLayer()
                 
         # 'MODIFICATION PAG' selection definition
         selection_PAG = layer_PAG.selectedFeatures()
@@ -118,33 +119,19 @@ class ExportGML(object):
                                     '{}.gml'.format(type.friendlyName()))
             
             # Selection test in 'MODIFICATION PAG'
-            if entity_count_PAG>0 :
-                QgsVectorFileWriter.writeAsVectorFormat(layer, 
+            QgsVectorFileWriter.writeAsVectorFormat(layer, 
                                                         filename, 
                                                         'utf-8', 
                                                         None, 
                                                         'GML',
-                                                        True,
+                                                        entity_count_PAG>0,
                                                         datasourceOptions = ['FORMAT=GML3.2',
                                                                              'TARGET_NAMESPACE={}'.format(self.DEFAULT_XLMNS),
                                                                              'GML3_LONGSRS=YES',
                                                                              'SRSDIMENSION_LOC=GEOMETRY',
                                                                              'WRITE_FEATURE_BOUNDED_BY=NO',
                                                                              'STRIP_PREFIX=TRUE',
-                                                                             'SPACE_INDENTATION=NO'])
-            else :
-                QgsVectorFileWriter.writeAsVectorFormat(layer, 
-                                                        filename, 
-                                                        'utf-8', 
-                                                        None, 
-                                                        'GML',
-                                                        datasourceOptions = ['FORMAT=GML3.2',
-                                                                             'TARGET_NAMESPACE={}'.format(self.DEFAULT_XLMNS),
-                                                                             'GML3_LONGSRS=YES',
-                                                                             'SRSDIMENSION_LOC=GEOMETRY',
-                                                                             'WRITE_FEATURE_BOUNDED_BY=NO',
-                                                                             'STRIP_PREFIX=TRUE',
-                                                                             'SPACE_INDENTATION=NO'])                
+                                                                             'SPACE_INDENTATION=NO'])             
             
             members = self._getXsdCompliantGml(filename, gml, type)
             
