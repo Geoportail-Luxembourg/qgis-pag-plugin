@@ -1,12 +1,18 @@
 '''
 Created on 23 oct. 2015
 
+Updated on 11 may 2016
+
 @author: arxit
 '''
 
 import os
 
+import processing
+from processing.tools import *
+
 from qgis.core import *
+import qgis.utils
 from PyQt4.QtGui import QAction
 from PyQt4.QtCore import QCoreApplication
 
@@ -41,6 +47,15 @@ class DataChecker(object):
         layer_structure_errors = list()
         data_errors = list()
         
+        # 'MODIFICATION PAG' layer definition        
+        layer_PAG = PagLuxembourg.main.current_project.getLayer(PagLuxembourg.main.xsd_schema.getTypeFromTableName('PAG.MODIFICATION_PAG'))
+                
+        # 'MODIFICATION PAG' selection definition
+        selection_PAG = layer_PAG.selectedFeatures()
+        
+        # Counting number entities in 'MODIFICATION PAG' selection
+        entity_count_PAG = layer_PAG.selectedFeatureCount()
+        
         # Iterates through XSD types
         for type in PagLuxembourg.main.xsd_schema.types:
             layer = project.getLayer(type)
@@ -54,7 +69,7 @@ class DataChecker(object):
             if len(fatal_errors)>0:
                 continue
             
-            layer_data_errors = self.checkLayerData(layer, type)
+            layer_data_errors = self.checkLayerData(selection_PAG, layer, type)
             data_errors.append(layer_data_errors)
         
         # Flatten data errors
@@ -65,10 +80,20 @@ class DataChecker(object):
         
         valid = (len(layer_structure_errors) + len(data_errors_flat)) == 0
         
-        if valid:
+        # Messages display for number of selected entities
+        if valid and entity_count_PAG == 1:
             PagLuxembourg.main.qgis_interface.messageBar().clearWidgets()
             PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('DataChecker','Success'),
-                                                                       QCoreApplication.translate('DataChecker','No errors found.'))
+                                                                       QCoreApplication.translate('DataChecker','No errors found on entities that intersect {} selected entity in MODIFICATION PAG layer').format(entity_count_PAG))
+        elif valid and entity_count_PAG == 0 :
+            PagLuxembourg.main.qgis_interface.messageBar().clearWidgets()
+            PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('DataChecker_no','Success'),
+                                                                       QCoreApplication.translate('DataChecker_no','No errors found'))
+        elif valid and entity_count_PAG > 1 :
+            PagLuxembourg.main.qgis_interface.messageBar().clearWidgets()
+            PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('DataChecker_many','Success'),
+                                                                       QCoreApplication.translate('DataChecker_many','No errors found on entities that intersect {} selected entities in MODIFICATION PAG layer').format(entity_count_PAG))
+        
         else:
             self.dlg = ErrorSummaryDialog(layer_structure_errors, data_errors)
             self.dlg.show()
@@ -135,7 +160,7 @@ class DataChecker(object):
         
         return warn_errors, fatal_errors
     
-    def checkLayerData(self, layer, xsd_type):
+    def checkLayerData(self, selection_PAG, layer, xsd_type):
         '''
         Checks the data of a layer against the XSD type
         
@@ -150,9 +175,30 @@ class DataChecker(object):
         '''
         
         errors = list()
+        areas = []
         
-        for feature in layer.dataProvider().getFeatures():
-            errors += self.checkFeatureData(feature, xsd_type)
+        # Check if a selection exists in 'MODIFICATION PAG'
+        if len(selection_PAG) > 0 :
+            
+            # Selection by intersection with 'MODIFICATION PAG' layer
+            if layer.name() != 'MODIFICATION PAG' :
+                
+                for PAG_feature in selection_PAG:
+                    cands = layer.getFeatures()
+                    for layer_features in cands:
+                        if PAG_feature.geometry().intersects(layer_features.geometry()):
+                            areas.append(layer_features.id())
+    
+                layer.select(areas)
+                selection_entities_from_PAG = layer.selectedFeatures()
+
+                for feature in selection_entities_from_PAG :
+                    errors += self.checkFeatureData(feature, xsd_type)
+                    
+        else:
+            
+            for feature in layer.dataProvider().getFeatures() :
+                errors += self.checkFeatureData(feature, xsd_type)
         
         return layer, errors
     
