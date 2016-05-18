@@ -172,15 +172,15 @@ class ExportGML(object):
         if entity_count_PAG == 1 :
             PagLuxembourg.main.qgis_interface.messageBar().clearWidgets()
             PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('ExportGML','Success'),
-                                                                       QCoreApplication.translate('ExportGML','GML export was successful with ' + str(entity_count_PAG) + ' selected entity in MODIFICATION PAG layer'))
+                                                                       QCoreApplication.translate('ExportGML','GML export was successful with 1 selected entity in MODIFICATION PAG layer'))
         elif entity_count_PAG == 0 :
             PagLuxembourg.main.qgis_interface.messageBar().clearWidgets()
-            PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('ExportGML2','Success'),
-                                                                       QCoreApplication.translate('ExportGML2','GML export was successful without selected entity in MODIFICATION PAG layer'))
+            PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('ExportGML_without','Success'),
+                                                                       QCoreApplication.translate('ExportGML_without','GML export was successful without selected entity in MODIFICATION PAG layer'))
         else :
             PagLuxembourg.main.qgis_interface.messageBar().clearWidgets()
-            PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('ExportGML3','Success'),
-                                                                       QCoreApplication.translate('ExportGML3','GML export was successful with ' + str(entity_count_PAG) + ' selected entities in MODIFICATION PAG layer'))
+            PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('ExportGML_many','Success'),
+                                                                       QCoreApplication.translate('ExportGML_many','GML export was successful with {} selected entities in MODIFICATION PAG layer').format(entity_count_PAG))
         
         
     def _getXsdCompliantGml(self, filename, gml, xsdtype):

@@ -56,12 +56,6 @@ class DataChecker(object):
         # Counting number entities in 'MODIFICATION PAG' selection
         entity_count_PAG = layer_PAG.selectedFeatureCount()
         
-        # Messages display for number of selected entities
-        if entity_count_PAG == 1 :
-            qgis.utils.iface.messageBar().pushMessage("Sucess", "There is " + str(entity_count_PAG) + " selected entity in MODIFICATION PAG layer. Data checkers are based on intersections between these entities and the other layers entities")
-        else :
-            qgis.utils.iface.messageBar().pushMessage("Sucess", "There are " + str(entity_count_PAG) + " selected entities in MODIFICATION PAG layer. Data checkers are based on intersections between these entities and the other layers entities")
-        
         # Iterates through XSD types
         for type in PagLuxembourg.main.xsd_schema.types:
             layer = project.getLayer(type)
@@ -86,10 +80,20 @@ class DataChecker(object):
         
         valid = (len(layer_structure_errors) + len(data_errors_flat)) == 0
         
-        if valid:
+        # Messages display for number of selected entities
+        if valid and entity_count_PAG == 1:
             PagLuxembourg.main.qgis_interface.messageBar().clearWidgets()
             PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('DataChecker','Success'),
-                                                                       QCoreApplication.translate('DataChecker','No errors found.'))
+                                                                       QCoreApplication.translate('DataChecker','No errors found on entities that intersect {} selected entity in MODIFICATION PAG layer').format(entity_count_PAG))
+        elif valid and entity_count_PAG == 0 :
+            PagLuxembourg.main.qgis_interface.messageBar().clearWidgets()
+            PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('DataChecker_no','Success'),
+                                                                       QCoreApplication.translate('DataChecker_no','No errors found'))
+        elif valid and entity_count_PAG > 1 :
+            PagLuxembourg.main.qgis_interface.messageBar().clearWidgets()
+            PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('DataChecker_many','Success'),
+                                                                       QCoreApplication.translate('DataChecker_many','No errors found on entities that intersect {} selected entities in MODIFICATION PAG layer').format(entity_count_PAG))
+        
         else:
             self.dlg = ErrorSummaryDialog(layer_structure_errors, data_errors)
             self.dlg.show()
