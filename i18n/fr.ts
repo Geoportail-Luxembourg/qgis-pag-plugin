@@ -26,64 +26,90 @@
 <context>
     <name>DataChecker</name>
     <message>
-        <location filename="data_checker.py" line="70"/>
-        <source>Success</source>
-        <translation>Succès</translation>
-    </message>
-    <message>
-        <location filename="data_checker.py" line="70"/>
-        <source>No errors found.</source>
-        <translation>Aucune erreur trouvée.</translation>
-    </message>
-    <message>
-        <location filename="data_checker.py" line="119"/>
+        <location filename="data_checker.py" line="144"/>
         <source>Nullable field is missing</source>
         <translation>Attribut facultatif manquant</translation>
     </message>
     <message>
-        <location filename="data_checker.py" line="121"/>
+        <location filename="data_checker.py" line="146"/>
         <source>Non nullable field is missing</source>
         <translation>Attribut obligatoire manquant</translation>
     </message>
     <message>
-        <location filename="data_checker.py" line="207"/>
+        <location filename="data_checker.py" line="253"/>
         <source>Null value in non nullable field</source>
         <translation>Valeur nulle dans un attribut obligatoire</translation>
     </message>
     <message>
-        <location filename="data_checker.py" line="259"/>
+        <location filename="data_checker.py" line="305"/>
         <source>Geometry is empty</source>
         <translation>Géometrie vide</translation>
     </message>
     <message>
-        <location filename="data_checker.py" line="111"/>
+        <location filename="data_checker.py" line="136"/>
         <source>Geometry type mismatch, expected : {}</source>
         <translation>Géometrie différente, attendue : {}</translation>
     </message>
     <message>
-        <location filename="data_checker.py" line="134"/>
+        <location filename="data_checker.py" line="159"/>
         <source>Field datatype mismatch, expected : {}</source>
         <translation>Type différent, attendu : {}</translation>
     </message>
     <message>
-        <location filename="data_checker.py" line="219"/>
+        <location filename="data_checker.py" line="265"/>
         <source>Value ({}) less than minimum value ({})</source>
         <translation>Valeur ({}) inférieure à la valeur minimale ({})</translation>
     </message>
     <message>
-        <location filename="data_checker.py" line="225"/>
+        <location filename="data_checker.py" line="271"/>
         <source>Value ({}) greater than maximum value ({})</source>
         <translation>Valeur ({}) supérieure à la valeur maximale ({})</translation>
     </message>
     <message>
-        <location filename="data_checker.py" line="236"/>
+        <location filename="data_checker.py" line="282"/>
         <source>Text length ({}) greater than field length ({})</source>
         <translation>Longueur de texte ({}) supérieure ({})</translation>
     </message>
     <message>
-        <location filename="data_checker.py" line="241"/>
+        <location filename="data_checker.py" line="287"/>
         <source>Text ({}) not in field list of values</source>
         <translation>Valeur ({}) absente de la liste de valeur</translation>
+    </message>
+    <message>
+        <location filename="data_checker.py" line="86"/>
+        <source>Success</source>
+        <translation>Succès</translation>
+    </message>
+    <message>
+        <location filename="data_checker.py" line="86"/>
+        <source>No errors found on entities that intersect {} selected entity in MODIFICATION PAG layer</source>
+        <translation>Aucune erreur trouvée sur les entités intersectant {} entité de la couche MODIFICATION PAG</translation>
+    </message>
+</context>
+<context>
+    <name>DataChecker_many</name>
+    <message>
+        <location filename="data_checker.py" line="94"/>
+        <source>Success</source>
+        <translation>Succès</translation>
+    </message>
+    <message>
+        <location filename="data_checker.py" line="94"/>
+        <source>No errors found on entities that intersect {} selected entities in MODIFICATION PAG layer</source>
+        <translation>Aucune erreur trouvée sur les entités intersectant {} entités de la couche MODIFICATION PAG</translation>
+    </message>
+</context>
+<context>
+    <name>DataChecker_no</name>
+    <message>
+        <location filename="data_checker.py" line="90"/>
+        <source>Success</source>
+        <translation>Succès</translation>
+    </message>
+    <message>
+        <location filename="data_checker.py" line="90"/>
+        <source>No errors found</source>
+        <translation>Aucune erreur trouvée</translation>
     </message>
 </context>
 <context>
@@ -300,29 +326,55 @@
 <context>
     <name>ExportGML</name>
     <message>
-        <location filename="export_gml.py" line="55"/>
+        <location filename="export_gml.py" line="57"/>
         <source>Select the gml location</source>
         <translation>Sélectionner le nom du fichier GML</translation>
     </message>
     <message>
-        <location filename="export_gml.py" line="74"/>
+        <location filename="export_gml.py" line="76"/>
         <source>Exporting to GML</source>
         <translation>Export GML</translation>
     </message>
     <message>
-        <location filename="export_gml.py" line="103"/>
+        <location filename="export_gml.py" line="115"/>
         <source>Exporting {}</source>
-        <translation>Exporation de {}</translation>
+        <translation>Export de {}</translation>
     </message>
     <message>
-        <location filename="export_gml.py" line="144"/>
+        <location filename="export_gml.py" line="174"/>
         <source>Success</source>
         <translation>Succès</translation>
     </message>
     <message>
-        <location filename="export_gml.py" line="144"/>
-        <source>GML export was successful</source>
-        <translation>L&apos;export GML s&apos;est déroulé avec succès</translation>
+        <location filename="export_gml.py" line="174"/>
+        <source>GML export was successful with 1 selected entity in MODIFICATION PAG layer</source>
+        <translation>L&apos;export GML s&apos;est déroulé avec succès avec 1 entité sélectionnée dans la couche MODIFICATION PAG</translation>
+    </message>
+</context>
+<context>
+    <name>ExportGML_many</name>
+    <message>
+        <location filename="export_gml.py" line="182"/>
+        <source>Success</source>
+        <translation type="unfinished">Succès</translation>
+    </message>
+    <message>
+        <location filename="export_gml.py" line="182"/>
+        <source>GML export was successful with {} selected entities in MODIFICATION PAG layer</source>
+        <translation>L&apos;export GML s&apos;est déroulé avec succès avec {} entités sélectionnées dans la couche MODIFICATION PAG</translation>
+    </message>
+</context>
+<context>
+    <name>ExportGML_without</name>
+    <message>
+        <location filename="export_gml.py" line="178"/>
+        <source>Success</source>
+        <translation type="unfinished">Succès</translation>
+    </message>
+    <message>
+        <location filename="export_gml.py" line="178"/>
+        <source>GML export was successful without selected entity in MODIFICATION PAG layer</source>
+        <translation type="unfinished">L&apos;export GML s&apos;est déroulé avec succès sans entité sélectionnée dans la couche MODIFICATION PAG</translation>
     </message>
 </context>
 <context>
@@ -617,7 +669,7 @@
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="importer.py" line="253"/>
+        <location filename="importer.py" line="263"/>
         <source>Commit error on layer {}</source>
         <translation>Erreur lors du commit sur la couche {}</translation>
     </message>
@@ -687,7 +739,7 @@
         <translation>Error lors de l&apos;écriture du fichier CSV</translation>
     </message>
     <message>
-        <location filename="importer.py" line="265"/>
+        <location filename="importer.py" line="275"/>
         <source>Invalid geometry, maybe all vertices have the same coordinates</source>
         <translation>Géométrie invalide, les sommets ont peut-être tous les mêmes coordonnées</translation>
     </message>
@@ -824,12 +876,12 @@
 <context>
     <name>Project</name>
     <message>
-        <location filename="project.py" line="453"/>
+        <location filename="project.py" line="463"/>
         <source>Error</source>
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="project.py" line="453"/>
+        <location filename="project.py" line="463"/>
         <source>Type not found in XSD : {}</source>
         <translation>Type non trouvé dans le XSD : {}</translation>
     </message>
@@ -874,27 +926,27 @@
 <context>
     <name>TopoClean</name>
     <message>
-        <location filename="topoclean.py" line="80"/>
+        <location filename="topoclean.py" line="90"/>
         <source>Adding cleaned features</source>
         <translation>Ajout des objets nettoyés</translation>
     </message>
     <message>
-        <location filename="topoclean.py" line="101"/>
+        <location filename="topoclean.py" line="111"/>
         <source>Error</source>
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="topoclean.py" line="101"/>
+        <location filename="topoclean.py" line="111"/>
         <source>Commit error on layer {}</source>
         <translation>Erreur lors du commit sur la couche {}</translation>
     </message>
     <message>
-        <location filename="topoclean.py" line="108"/>
+        <location filename="topoclean.py" line="118"/>
         <source>Success</source>
         <translation>Succès</translation>
     </message>
     <message>
-        <location filename="topoclean.py" line="108"/>
+        <location filename="topoclean.py" line="118"/>
         <source>Layer cleaned successfully</source>
         <translation>Couche nettoyée</translation>
     </message>
@@ -910,9 +962,48 @@
     </message>
 </context>
 <context>
+    <name>Topology</name>
+    <message>
+        <location filename="topology.py" line="52"/>
+        <source>Information</source>
+        <translation type="unfinished">Information</translation>
+    </message>
+    <message>
+        <location filename="topology.py" line="52"/>
+        <source>There is 1 selected entity in MODIFICATION PAG layer. You can now check topology</source>
+        <translation>Il y a 1 entité sélectionnée dans la couche MODIFICATION PAG. Vous pouvez maintenant vérifier la topologie</translation>
+    </message>
+</context>
+<context>
+    <name>Topology_many</name>
+    <message>
+        <location filename="topology.py" line="58"/>
+        <source>Information</source>
+        <translation>Information</translation>
+    </message>
+    <message>
+        <location filename="topology.py" line="58"/>
+        <source>There are {} selected entities in MODIFICATION PAG layer. You can now check topology</source>
+        <translation>Il y a {} entités sélectionnées dans la couche MODIFICATION PAG. Vous pouvez maintenant vérifier la topologie</translation>
+    </message>
+</context>
+<context>
+    <name>Topology_no</name>
+    <message>
+        <location filename="topology.py" line="55"/>
+        <source>Information</source>
+        <translation>Information</translation>
+    </message>
+    <message>
+        <location filename="topology.py" line="55"/>
+        <source>There is no selected entity in MODIFICATION PAG layer. You can now check topology</source>
+        <translation>Il n&apos;y a pas d&apos;entité sélectionnée dans la couche MODIFICATION PAG. Vous pouvez maintenant vérifier la topologie</translation>
+    </message>
+</context>
+<context>
     <name>rulesDialog</name>
     <message>
-        <location filename="topology.py" line="99"/>
+        <location filename="topology.py" line="121"/>
         <source>No layer</source>
         <translation>Pas de couche</translation>
     </message>

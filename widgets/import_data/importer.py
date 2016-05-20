@@ -199,6 +199,10 @@ class Importer(object):
                 # Import closed polylines as polygon
                 if dst_layer.geometryType() == QGis.Polygon and src_layer.geometryType() == QGis.Line:
                     src_polyline = src_feature.geometry().asPolyline()
+                    if len(src_polyline)==0:
+                        del dst_feature
+                        continue
+                    
                     if src_polyline[0] == src_polyline[-1]:
                         # It's a closed polyline
                         src_polygon = QgsGeometry.fromPolygon([src_polyline])
