@@ -47,6 +47,11 @@ class TopoClean(object):
         if not (layer.type() == QgsMapLayer.VectorLayer and PagLuxembourg.main.current_project.isPagLayer(layer)):
             return
         
+        if layer.featureCount()==0:
+            PagLuxembourg.main.qgis_interface.messageBar().pushWarning(QCoreApplication.translate('TopoClean','Warning'), 
+                                                                       QCoreApplication.translate('TopoClean','Selected layer contains no feature'))
+            return
+        
         self.dlg = TopoCleanDialog(self, layer)
         self.dlg.show()
     

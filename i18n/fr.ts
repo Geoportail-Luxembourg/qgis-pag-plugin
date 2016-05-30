@@ -36,12 +36,12 @@
         <translation>Attribut obligatoire manquant</translation>
     </message>
     <message>
-        <location filename="data_checker.py" line="253"/>
+        <location filename="data_checker.py" line="254"/>
         <source>Null value in non nullable field</source>
         <translation>Valeur nulle dans un attribut obligatoire</translation>
     </message>
     <message>
-        <location filename="data_checker.py" line="305"/>
+        <location filename="data_checker.py" line="306"/>
         <source>Geometry is empty</source>
         <translation>Géometrie vide</translation>
     </message>
@@ -56,22 +56,22 @@
         <translation>Type différent, attendu : {}</translation>
     </message>
     <message>
-        <location filename="data_checker.py" line="265"/>
+        <location filename="data_checker.py" line="266"/>
         <source>Value ({}) less than minimum value ({})</source>
         <translation>Valeur ({}) inférieure à la valeur minimale ({})</translation>
     </message>
     <message>
-        <location filename="data_checker.py" line="271"/>
+        <location filename="data_checker.py" line="272"/>
         <source>Value ({}) greater than maximum value ({})</source>
         <translation>Valeur ({}) supérieure à la valeur maximale ({})</translation>
     </message>
     <message>
-        <location filename="data_checker.py" line="282"/>
+        <location filename="data_checker.py" line="283"/>
         <source>Text length ({}) greater than field length ({})</source>
         <translation>Longueur de texte ({}) supérieure ({})</translation>
     </message>
     <message>
-        <location filename="data_checker.py" line="287"/>
+        <location filename="data_checker.py" line="288"/>
         <source>Text ({}) not in field list of values</source>
         <translation>Valeur ({}) absente de la liste de valeur</translation>
     </message>
@@ -326,27 +326,27 @@
 <context>
     <name>ExportGML</name>
     <message>
-        <location filename="export_gml.py" line="57"/>
+        <location filename="export_gml.py" line="58"/>
         <source>Select the gml location</source>
         <translation>Sélectionner le nom du fichier GML</translation>
     </message>
     <message>
-        <location filename="export_gml.py" line="76"/>
+        <location filename="export_gml.py" line="77"/>
         <source>Exporting to GML</source>
         <translation>Export GML</translation>
     </message>
     <message>
-        <location filename="export_gml.py" line="115"/>
+        <location filename="export_gml.py" line="116"/>
         <source>Exporting {}</source>
         <translation>Export de {}</translation>
     </message>
     <message>
-        <location filename="export_gml.py" line="174"/>
+        <location filename="export_gml.py" line="161"/>
         <source>Success</source>
         <translation>Succès</translation>
     </message>
     <message>
-        <location filename="export_gml.py" line="174"/>
+        <location filename="export_gml.py" line="161"/>
         <source>GML export was successful with 1 selected entity in MODIFICATION PAG layer</source>
         <translation>L&apos;export GML s&apos;est déroulé avec succès avec 1 entité sélectionnée dans la couche MODIFICATION PAG</translation>
     </message>
@@ -354,12 +354,12 @@
 <context>
     <name>ExportGML_many</name>
     <message>
-        <location filename="export_gml.py" line="182"/>
+        <location filename="export_gml.py" line="169"/>
         <source>Success</source>
         <translation type="unfinished">Succès</translation>
     </message>
     <message>
-        <location filename="export_gml.py" line="182"/>
+        <location filename="export_gml.py" line="169"/>
         <source>GML export was successful with {} selected entities in MODIFICATION PAG layer</source>
         <translation>L&apos;export GML s&apos;est déroulé avec succès avec {} entités sélectionnées dans la couche MODIFICATION PAG</translation>
     </message>
@@ -367,14 +367,14 @@
 <context>
     <name>ExportGML_without</name>
     <message>
-        <location filename="export_gml.py" line="178"/>
+        <location filename="export_gml.py" line="165"/>
         <source>Success</source>
         <translation type="unfinished">Succès</translation>
     </message>
     <message>
-        <location filename="export_gml.py" line="178"/>
+        <location filename="export_gml.py" line="165"/>
         <source>GML export was successful without selected entity in MODIFICATION PAG layer</source>
-        <translation type="unfinished">L&apos;export GML s&apos;est déroulé avec succès sans entité sélectionnée dans la couche MODIFICATION PAG</translation>
+        <translation>L&apos;export GML s&apos;est déroulé avec succès sans entité sélectionnée dans la couche MODIFICATION PAG</translation>
     </message>
 </context>
 <context>
@@ -876,12 +876,12 @@
 <context>
     <name>Project</name>
     <message>
-        <location filename="project.py" line="463"/>
+        <location filename="project.py" line="466"/>
         <source>Error</source>
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="project.py" line="463"/>
+        <location filename="project.py" line="466"/>
         <source>Type not found in XSD : {}</source>
         <translation>Type non trouvé dans le XSD : {}</translation>
     </message>
@@ -926,32 +926,32 @@
 <context>
     <name>TopoClean</name>
     <message>
-        <location filename="topoclean.py" line="90"/>
+        <location filename="topoclean.py" line="95"/>
         <source>Adding cleaned features</source>
         <translation>Ajout des objets nettoyés</translation>
     </message>
     <message>
-        <location filename="topoclean.py" line="111"/>
+        <location filename="topoclean.py" line="116"/>
         <source>Error</source>
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="topoclean.py" line="111"/>
+        <location filename="topoclean.py" line="116"/>
         <source>Commit error on layer {}</source>
         <translation>Erreur lors du commit sur la couche {}</translation>
     </message>
     <message>
-        <location filename="topoclean.py" line="118"/>
+        <location filename="topoclean.py" line="123"/>
         <source>Success</source>
         <translation>Succès</translation>
     </message>
     <message>
-        <location filename="topoclean.py" line="118"/>
+        <location filename="topoclean.py" line="123"/>
         <source>Layer cleaned successfully</source>
         <translation>Couche nettoyée</translation>
     </message>
     <message>
-        <location filename="topoclean.py" line="43"/>
+        <location filename="topoclean.py" line="51"/>
         <source>Warning</source>
         <translation>Attention</translation>
     </message>
@@ -960,16 +960,21 @@
         <source>Please select a layer</source>
         <translation>Merci de sélectionner une couche</translation>
     </message>
+    <message>
+        <location filename="topoclean.py" line="51"/>
+        <source>Selected layer contains no feature</source>
+        <translation>La couche sélectionnée ne contient aucun objet</translation>
+    </message>
 </context>
 <context>
     <name>Topology</name>
     <message>
-        <location filename="topology.py" line="52"/>
+        <location filename="topology.py" line="53"/>
         <source>Information</source>
         <translation type="unfinished">Information</translation>
     </message>
     <message>
-        <location filename="topology.py" line="52"/>
+        <location filename="topology.py" line="53"/>
         <source>There is 1 selected entity in MODIFICATION PAG layer. You can now check topology</source>
         <translation>Il y a 1 entité sélectionnée dans la couche MODIFICATION PAG. Vous pouvez maintenant vérifier la topologie</translation>
     </message>
@@ -977,12 +982,12 @@
 <context>
     <name>Topology_many</name>
     <message>
-        <location filename="topology.py" line="58"/>
+        <location filename="topology.py" line="59"/>
         <source>Information</source>
         <translation>Information</translation>
     </message>
     <message>
-        <location filename="topology.py" line="58"/>
+        <location filename="topology.py" line="59"/>
         <source>There are {} selected entities in MODIFICATION PAG layer. You can now check topology</source>
         <translation>Il y a {} entités sélectionnées dans la couche MODIFICATION PAG. Vous pouvez maintenant vérifier la topologie</translation>
     </message>
@@ -990,12 +995,12 @@
 <context>
     <name>Topology_no</name>
     <message>
-        <location filename="topology.py" line="55"/>
+        <location filename="topology.py" line="56"/>
         <source>Information</source>
         <translation>Information</translation>
     </message>
     <message>
-        <location filename="topology.py" line="55"/>
+        <location filename="topology.py" line="56"/>
         <source>There is no selected entity in MODIFICATION PAG layer. You can now check topology</source>
         <translation>Il n&apos;y a pas d&apos;entité sélectionnée dans la couche MODIFICATION PAG. Vous pouvez maintenant vérifier la topologie</translation>
     </message>
@@ -1003,7 +1008,7 @@
 <context>
     <name>rulesDialog</name>
     <message>
-        <location filename="topology.py" line="121"/>
+        <location filename="topology.py" line="122"/>
         <source>No layer</source>
         <translation>Pas de couche</translation>
     </message>
