@@ -926,32 +926,32 @@
 <context>
     <name>TopoClean</name>
     <message>
-        <location filename="topoclean.py" line="95"/>
+        <location filename="topoclean.py" line="99"/>
         <source>Adding cleaned features</source>
         <translation>Ajout des objets nettoyés</translation>
     </message>
     <message>
-        <location filename="topoclean.py" line="116"/>
+        <location filename="topoclean.py" line="120"/>
         <source>Error</source>
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="topoclean.py" line="116"/>
+        <location filename="topoclean.py" line="120"/>
         <source>Commit error on layer {}</source>
         <translation>Erreur lors du commit sur la couche {}</translation>
     </message>
     <message>
-        <location filename="topoclean.py" line="123"/>
+        <location filename="topoclean.py" line="127"/>
         <source>Success</source>
         <translation>Succès</translation>
     </message>
     <message>
-        <location filename="topoclean.py" line="123"/>
+        <location filename="topoclean.py" line="127"/>
         <source>Layer cleaned successfully</source>
         <translation>Couche nettoyée</translation>
     </message>
     <message>
-        <location filename="topoclean.py" line="51"/>
+        <location filename="topoclean.py" line="74"/>
         <source>Warning</source>
         <translation>Attention</translation>
     </message>
@@ -964,6 +964,11 @@
         <location filename="topoclean.py" line="51"/>
         <source>Selected layer contains no feature</source>
         <translation>La couche sélectionnée ne contient aucun objet</translation>
+    </message>
+    <message>
+        <location filename="topoclean.py" line="74"/>
+        <source>No topological errors on the selected layer</source>
+        <translation>Il n'y a pas d'erreur de topologie sur la couche sélectionnée</translation>
     </message>
 </context>
 <context>

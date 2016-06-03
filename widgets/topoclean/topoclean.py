@@ -59,66 +59,73 @@ class TopoClean(object):
         # Deselect all
         layer.setSelectedFeatures([])
         
+        extent = layer.extent()
+        extentString = str(extent.xMinimum()) + "," + str(extent.xMaximum()) + "," + str(extent.yMinimum()) + "," + str(extent.yMaximum())
+        
         # 1. Run the GRASS clean topology tool
         result = processing.runalg('grass:v.clean.advanced', # Processing
                                    layer, # Layer
                                    'rmarea', # Tools
                                    threshold, # Threshold
-                                   None, # Extent
+                                   extentString, # Extent
                                    -1, # Snapping tolerance
                                    0.0001, # Min area
                                    None, # Output layer (auto)
                                    None) # Output errors (auto)
         
-        # Get cleaned layer
-        vclean_layer = QgsVectorLayer(result['output'], 'VClean', 'ogr')
-        
-        # 2. Dissolve polygons
-        result = processing.runalg('qgis:dissolve', # Processing
-                                   vclean_layer, # Layer
-                                   False, # Dissolve all
-                                   PagLuxembourg.project.PK, # Field to merge
-                                   None)# Output layer (auto)
-        
-        # Get cleaned layer
-        clean_layer = QgsVectorLayer(result['OUTPUT'], 'Clean', 'ogr')
-        
-        # Start editing session
-        if not layer.isEditable():
-            layer.startEditing()
-        
-        # Empty layer
-        layer.selectAll()
-        layer.deleteSelectedFeatures()
-        
-        # Progress bar + message
-        progressMessageBar = PagLuxembourg.main.qgis_interface.messageBar().createMessage(QCoreApplication.translate('TopoClean','Adding cleaned features'))
-        progress = QProgressBar()
-        progress.setMaximum(clean_layer.featureCount())
-        progress.setAlignment(Qt.AlignLeft|Qt.AlignVCenter)
-        progressMessageBar.layout().addWidget(progress)
-        PagLuxembourg.main.qgis_interface.messageBar().pushWidget(progressMessageBar, QgsMessageBar.INFO)
-        
-        # Adding features
-        for feature in clean_layer.getFeatures():
-            dst_feature = QgsFeature(layer.fields())
-            for index in range(1,layer.fields().count()):
-                dst_feature.setAttribute(index, feature[index])
-            dst_feature.setGeometry(feature.geometry())
-            layer.addFeatures([dst_feature], False)
-            progress.setValue(progress.value() + 1)
-        
-        PagLuxembourg.main.qgis_interface.messageBar().clearWidgets()
-        
-        # Commit    
-        if not layer.commitChanges():
-            layer.rollBack()
-            PagLuxembourg.main.qgis_interface.messageBar().pushCritical(QCoreApplication.translate('TopoClean','Error'), 
-                                                                        QCoreApplication.translate('TopoClean','Commit error on layer {}').format(layer.name()))
-            errors = layer.commitErrors()
-            for error in errors:
-                QgsMessageLog.logMessage(error, 'Clean topology on {}'.format(layer.name()), QgsMessageLog.CRITICAL)
-            PagLuxembourg.main.qgis_interface.openMessageLog()
-        else:
-            PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('TopoClean','Success'), 
-                                                                       QCoreApplication.translate('TopoClean','Layer cleaned successfully'))
+        if result is None :
+            PagLuxembourg.main.qgis_interface.messageBar().pushWarning(QCoreApplication.translate('TopoClean','Warning'), 
+                                                                       QCoreApplication.translate('TopoClean','No topological errors on the selected layer'))
+        else :
+            # Get cleaned layer
+            vclean_layer = QgsVectorLayer(result['output'], 'VClean', 'ogr')
+            
+            # 2. Dissolve polygons
+            result = processing.runalg('qgis:dissolve', # Processing
+                                       vclean_layer, # Layer
+                                       False, # Dissolve all
+                                       PagLuxembourg.project.PK, # Field to merge
+                                       None)# Output layer (auto)
+            
+            # Get cleaned layer
+            clean_layer = QgsVectorLayer(result['OUTPUT'], 'Clean', 'ogr')
+                
+            # Start editing session
+            if not layer.isEditable():
+                layer.startEditing()
+            
+            # Empty layer
+            layer.selectAll()
+            layer.deleteSelectedFeatures()
+            
+            # Progress bar + message
+            progressMessageBar = PagLuxembourg.main.qgis_interface.messageBar().createMessage(QCoreApplication.translate('TopoClean','Adding cleaned features'))
+            progress = QProgressBar()
+            progress.setMaximum(clean_layer.featureCount())
+            progress.setAlignment(Qt.AlignLeft|Qt.AlignVCenter)
+            progressMessageBar.layout().addWidget(progress)
+            PagLuxembourg.main.qgis_interface.messageBar().pushWidget(progressMessageBar, QgsMessageBar.INFO)
+            
+            # Adding features
+            for feature in clean_layer.getFeatures():
+                dst_feature = QgsFeature(layer.fields())
+                for index in range(1,layer.fields().count()):
+                    dst_feature.setAttribute(index, feature[index])
+                dst_feature.setGeometry(feature.geometry())
+                layer.addFeatures([dst_feature], False)
+                progress.setValue(progress.value() + 1)
+            
+            PagLuxembourg.main.qgis_interface.messageBar().clearWidgets()
+            
+            # Commit    
+            if not layer.commitChanges():
+                layer.rollBack()
+                PagLuxembourg.main.qgis_interface.messageBar().pushCritical(QCoreApplication.translate('TopoClean','Error'), 
+                                                                            QCoreApplication.translate('TopoClean','Commit error on layer {}').format(layer.name()))
+                errors = layer.commitErrors()
+                for error in errors:
+                    QgsMessageLog.logMessage(error, 'Clean topology on {}'.format(layer.name()), QgsMessageLog.CRITICAL)
+                PagLuxembourg.main.qgis_interface.openMessageLog()
+            else:
+                PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('TopoClean','Success'), 
+                                                                           QCoreApplication.translate('TopoClean','Layer cleaned successfully'))
