@@ -93,6 +93,12 @@
           "Nodes": []
         },
         {
+          "Name": "COULOIRS_ET_ESP_RES_PG",
+          "IsGroup": false,
+          "TableName": "PAG.COULOIRS_ET_ESP_RES_PG",
+          "Nodes": []
+        },
+        {
           "Name": "ZAD",
           "IsGroup": false,
           "TableName": "PAG.ZAD",
@@ -126,6 +132,12 @@
           "Name": "EMPLAC_STAT",
           "IsGroup": false,
           "TableName": "PAG.EMPLAC_STAT",
+          "Nodes": []
+        },
+         {
+          "Name": "LIMITES_COMMUNALES",
+          "IsGroup": false,
+          "TableName": "PAG.LIMITES_COMMUNALES",
           "Nodes": []
         },
         {
