@@ -168,7 +168,7 @@
             <xsd:restriction base="xsd:normalizedString">
               <xsd:enumeration value="refonte"/>
               <xsd:enumeration value="modification"/>
-              <xsd:enumeration value="mise à jour complète"/>
+              <xsd:enumeration value="mise_a_jour_complete"/>
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:element>
