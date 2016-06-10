@@ -1,7 +1,7 @@
 INTERLIS 2.3;
 
 /** Modèle de données pour l'échange de données entre les bureaux d'études et le Ministère de l'Intérieur. 
- * Chaque PAG doit être transmise à l'aide d'un fichier GML conforme à ce modele de données.
+ * Chaque PAG doit être transmis à l'aide d'un fichier GML conforme à ce modele de données.
  */
 MODEL PAG (fr)
 AT "mailto:david.hottua@mi.etat.lu"
@@ -16,7 +16,7 @@ VERSION "2015-04-01"  =
   TOPIC GESTION =
 
     CLASS Gestion =
-      /** Numéro interne du Minsitère de l'Intérieur de la commune
+      /** Numéro interne du Ministère de l'Intérieur
        */
       ID_COMMUNE (FINAL) : MANDATORY (
         /** Nommern
@@ -256,7 +256,7 @@ VERSION "2015-04-01"  =
         /** Bous
          */
         C087,
-        /** Ech-Sûre
+        /** Esch-Sûre
          */
         C088,
         /** Boevange/Attert
@@ -286,13 +286,13 @@ VERSION "2015-04-01"  =
         /** Waldbillig
          */
         C101,
-        /** Vallé de l'Ernz
+        /** Vallée de l'Ernz
          */
         C103,
         /** Boulaide
          */
         C104,
-        /** Besch
+        /** Bech
          */
         C105,
         /** Manternach
@@ -307,7 +307,7 @@ VERSION "2015-04-01"  =
         /** Weiswampach
          */
         C111,
-        /** Saell
+        /** Saeul
          */
         C112,
         /** Schengen
@@ -325,7 +325,7 @@ VERSION "2015-04-01"  =
         /** Wincrange
          */
         C120,
-        /** Preizerdaul
+        /** Préizerdaul
          */
         C121,
         /** Betzdorf
@@ -335,7 +335,7 @@ VERSION "2015-04-01"  =
          */
         C125
       );
-      /** Nom du bureau d'étude
+      /** Nom du bureau d'études
        */
       NOM_BUR_ET : MANDATORY TEXT*50;
       /** date de délivrance
@@ -344,6 +344,14 @@ VERSION "2015-04-01"  =
       /** Date de mutation du PCN ou fond de plan qui servait comme base à l'élaboration du PAG (p.ex yyyy-mm-jj)
        */
       DATE_MUTATION_FOND_DE_PLAN : MANDATORY FORMAT INTERLIS.XMLDate "2004-1-1" .. "2018-8-28";
+      /** description du projet (localité concernée;lieu-dit; etc.)
+       */
+      OBJET : MANDATORY (
+        refonte,
+        modification,
+        EnumElement91
+      );
+      DESCRIPTION : TEXT*20;
     END Gestion;
 
   END GESTION;
@@ -445,7 +453,7 @@ VERSION "2015-04-01"  =
       /** géometrie du biotope
        */
       GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
-      /** code du type de biotope tel que defini dans Kurzanleitung zur Erfassung der nach Art. 17 des
+      /** code du type de biotope tel que défini dans Kurzanleitung zur Erfassung der nach Art. 17 des
        * luxemburgischen Naturschutzgesetzes
        * geschützten Biotope
        * in den Siedlungs- und Gewerbegebieten
@@ -585,7 +593,7 @@ VERSION "2015-04-01"  =
 
   END ARTIKEL17;
 
-  /** Contient les élements relevant pour la création du PAG
+  /** Contient les éléments relevant pour la création du PAG
    */
   TOPIC PAG =
 
@@ -598,7 +606,7 @@ VERSION "2015-04-01"  =
       /** Nom du fichier word contenant la partie écrite du PAG de l'article concerné
        */
       NOM_FICHIER : MANDATORY TEXT*100;
-      /** géométrie
+      /** géométrie(ligne)
        */
       GEOMETRIE : MANDATORY POLYLINE WITH (STRAIGHTS) VERTEX PAG.LUREF;
     END ALIGN_A_RESP;
@@ -637,41 +645,72 @@ VERSION "2015-04-01"  =
       GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
     END CONST_A_CONS_POLY;
 
-    /** couloirs et espaces réservés (art. 32)
+    /** couloirs et espaces réservés (art. 32) avec une largeur continue
      */
     CLASS COULOIRS_ET_ESP_RES =
       /** Type de couloir
        */
       CODE (FINAL) : MANDATORY (
-        /** couloir pour projets routiers
+        /** couloirs pour projets routiers
          */
         CPR,
-        /** couloir pour projets ferroviaires
+        /** couloirs pour projets ferroviaires
          */
         CPF,
-        /** couloir pour projets de mobilité douce
+        /** couloirs pour projets de mobilité douce
          */
         CPMD,
-        /** couloir pour projets de canalisation pour eaux usées
+        /** couloirs pour projets de canalisation pour eaux usées
          */
         CP_EU,
-        /** couloir pour projets de rétention et d'écoulement des eaux pluviales
+        /** couloirs pour projets de rétention et d'écoulement des eaux pluviales
          */
         CP_R_EP
       );
       /** Nom du fichier word contenant la partie écrite du PAG de l'article concerné
        */
       NOM_FICHIER : MANDATORY TEXT*100;
-      /** Largeur du couloir en mètres
-       */
-      LARGEUR : MANDATORY 0.00 .. 100.00;
       /** géométrie du couloir
        */
       GEOMETRIE : MANDATORY POLYLINE WITH (STRAIGHTS) VERTEX PAG.LUREF;
-      /** subdivision de la zone définie dans Catégorie
+      /** subdivision de la zone définie dans catégorie
        */
       GENRE : TEXT*10;
+      LARGEUR : MANDATORY 0.00 .. 100.00;
     END COULOIRS_ET_ESP_RES;
+
+    /** couloirs et espaces réservés (art. 32) avec une largeur variable
+     */
+    CLASS COULOIRS_ET_ESP_RES_PG =
+      /** Type de couloir
+       */
+      CODE : (
+        /** couloirs pour projets de canalisation pour eaux usées
+         */
+        CP_EU,
+        /** couloirs pour projets de rétention et d'écoulement des eaux pluviales
+         */
+        CP_R_EP,
+        /** couloirs pour projets routiers
+         */
+        CPR,
+        /** couloirs pour projets ferroviaires
+         */
+        CPF,
+        /** couloirs pour projets de mobilité douce
+         */
+        CPMD
+      );
+      /** Nom du fichier word contenant la partie écrite du PAG de l'article concerné
+       */
+      NOM_FICHIER : MANDATORY TEXT*100;
+      /** géométrie du couloir
+       */
+      GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
+      /** subdivision de la zone définie dans catégorie
+       */
+      GENRE : TEXT*10;
+    END COULOIRS_ET_ESP_RES_PG;
 
     /** zone emplacement de stationnement
      */
@@ -721,12 +760,20 @@ VERSION "2015-04-01"  =
       GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
     END GABARIT_A_SAUV_POLY;
 
+    /** géométrie (polygone) de la limte communale selon base cadastrale du PAG
+     */
+    CLASS LIMITES_COMMUNALES =
+      /** géométrie (polygone)
+       */
+      GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
+    END LIMITES_COMMUNALES;
+
     /** limites de la modification ponctuelle du PAG
      */
     CLASS MODIFICATION_PAG =
       /** Date de la modification
        */
-      DATE_MODIF : FORMAT INTERLIS.XMLDate "2011-1-1" .. "2030-1-1";
+      DATE_MODIF : MANDATORY FORMAT INTERLIS.XMLDate "2011-1-1" .. "2030-1-1";
       /** limites de la modification PAG
        */
       GEOMETRIE : SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
@@ -776,7 +823,7 @@ VERSION "2015-04-01"  =
     /** PAP approuvés
      */
     CLASS PAP_APPROUVE =
-      /** Nom du fichier pdf contenant la partie écrite du PAG de l'article concernée
+      /** Nom du fichier pdf contenant la partie écrite du PAG de l'article concerné
        */
       NOM_FICHIER_EC : TEXT*100;
       /** Nom du fichier pdf contenant la partie graphique du PAG de l'article concerné
@@ -818,19 +865,19 @@ VERSION "2015-04-01"  =
         /** Art.9 Zones d'habitation 2
          */
         HAB_2,
-        /** Art.10 Zone mixte urbaine centrale
+        /** Art.10 Zones mixtes urbaines centrale
          */
         MIX_c,
-        /** Art.10 Zone mixte urbaine
+        /** Art.10 Zones mixtes urbaines
          */
         MIX_u,
-        /** Art.10 Zone mixte villageoise
+        /** Art.10 Zones mixtes villageoises
          */
         MIX_v,
-        /** Zone mixte rurale
+        /** Art.10 Zones mixtes rurales
          */
         MIX_r,
-        /** Art.11 Zone de bâtiments et d' équipements public
+        /** Art.11 Zones de bâtiments et d' équipements publics
          */
         BEP,
         /** Art.12 Zones d'activités économiques communales type 1
@@ -854,13 +901,13 @@ VERSION "2015-04-01"  =
         /** Art.17 Zones commerciales
          */
         COM,
-        /** Art.18 Zones Militaires
+        /** Art.18 Zones militaires
          */
         MIL,
         /** Art.19 Zones spéciales
          */
         SPEC,
-        /** Art.20 Zone d' aérodrome
+        /** Art.20 Zones d'aérodrome
          */
         AERO,
         /** Art.22 Zones de gares ferroviaires et routières
@@ -887,7 +934,7 @@ VERSION "2015-04-01"  =
         /** Zones de parc public
          */
         PARC,
-        /** Art.28  Zone de verdure
+        /** Art.28  Zones de verdure
          */
         VERD,
         /** Art.21 Zones portuaires
@@ -898,7 +945,7 @@ VERSION "2015-04-01"  =
          * port de marchandises
          */
         PORT_m,
-        /** Art.13 Zones d'activités économiques communales type
+        /** Art.13 Zones d'activités économiques communales type 3
          */
         ECO_c3
       );
@@ -908,12 +955,12 @@ VERSION "2015-04-01"  =
       /** géométrie (surface)
        */
       GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
-      /** subdivision de la zone définie dans Catégorie
+      /** subdivision de la zone définie dans la rubrique "catégorie"
        */
       GENRE : TEXT*10;
     END ZONAGE;
 
-    /** zones tel que défini dans le règlement grand-ducal du 28 juillet 2011 concernant le contenu du plan d'aménagement général d'une commune (art. 31)
+    /** zones telles que définies dans le règlement grand-ducal du 28 juillet 2011 concernant le contenu du plan d'aménagement général d'une commune (art. 31)
      */
     CLASS ZONE_SERV_URB =
       /** type de la servitude
@@ -939,7 +986,7 @@ VERSION "2015-04-01"  =
       /** Nom du fichier word contenant la partie écrite du quartier existant
        */
       NOM_FICHIER_EC : MANDATORY TEXT*100;
-      /** Nom du fichier word contenant la partie graphique du quartier existant
+      /** Nom du fichier PDF contenant la partie graphique du quartier existant
        */
       NOM_FICHIER_GR : TEXT*100;
       /** géométrie(surface)
@@ -947,7 +994,7 @@ VERSION "2015-04-01"  =
       GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
     END ZONES_QE;
 
-    /** informations concernant les zones définies dans le règlement grand-ducal 28 juillet 2011 art. 30;33-37
+    /** informations concernant les zones définies dans le règlement grand-ducal du 28 juillet 2011 art. 30;33-37
      */
     CLASS ZONES_SUPERPOSEES =
       /** type de zone
@@ -959,25 +1006,25 @@ VERSION "2015-04-01"  =
         /** Art.33 Secteur protégé d'intérêt communal de type "environnement naturel et paysage"
          */
         SPI_ENP,
-        /** Art.34 Zones de risques naturels prévisibles "zone de risque d'éboulement ou de glissement de terrain"
+        /** Art.34 Zones de risques naturels prévisibles "zones de risque d'éboulement ou de glissements de terrain"
          */
         ZRNP_G,
-        /** Art.34 Zones de risques naturels prévisibles "zone de risque d'éboulement miniers"
+        /** Art.34 Zones de risques naturels prévisibles "zones de risques d'éboulement miniers"
          */
         ZRNP_M,
-        /** Art.34 Zones de risques naturels prévisibles "zone inondable"
+        /** Art.34 Zones de risques naturels prévisibles "zones inondables"
          */
         ZRNP_I,
-        /** Art.35 Zone à risques concernant la prévention des accidents majeurs impliquant des substances dangereuses
+        /** Art.35 Zones à risques concernant la prévention des accidents majeurs impliquant des substances dangereuses
          */
         ZR_SD,
-        /** Art.36 Zone de bruit
+        /** Art.36 Zones de bruit
          */
         ZB,
-        /** Zone d'extraction
+        /** Zones d'extraction
          */
         ZE,
-        /** Art.30 Zone urbanisation prioritaire type
+        /** Art.30 Zones urbanisation prioritaire
          */
         ZUP
       );
@@ -987,7 +1034,7 @@ VERSION "2015-04-01"  =
       /** géométrie de la zone
        */
       GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
-      /** subdivision de la zone définie dans Catégorie
+      /** subdivision de la zone définie dans la rubrique "catégorie"
        */
       GENRE : TEXT*10;
     END ZONES_SUPERPOSEES;
