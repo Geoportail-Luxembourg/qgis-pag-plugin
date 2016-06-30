@@ -86,9 +86,13 @@ class TopoClean(object):
                                        False, # Dissolve all
                                        PagLuxembourg.project.PK, # Field to merge
                                        None)# Output layer (auto)
+            if result is None :
+                PagLuxembourg.main.qgis_interface.messageBar().pushWarning(QCoreApplication.translate('TopoClean','Warning'), 
+                                                                           QCoreApplication.translate('TopoClean','No topological errors on the selected layer'))
             
-            # Get cleaned layer
-            clean_layer = QgsVectorLayer(result['OUTPUT'], 'Clean', 'ogr')
+            else :
+                # Get cleaned layer
+                clean_layer = QgsVectorLayer(result['OUTPUT'], 'Clean', 'ogr')
                 
             # Start editing session
             if not layer.isEditable():
