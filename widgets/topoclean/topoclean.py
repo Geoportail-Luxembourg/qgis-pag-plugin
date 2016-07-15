@@ -5,6 +5,8 @@ Created on 11 dec. 2015
 '''
 
 import os
+import uuid
+import shutil
 
 from qgis.core import *
 from qgis.gui import *
@@ -17,6 +19,7 @@ import PagLuxembourg.main
 import PagLuxembourg.project
 
 from topoclean_dialog import TopoCleanDialog
+from pickle import NONE
 
 class TopoClean(object):
     '''
@@ -62,9 +65,22 @@ class TopoClean(object):
         extent = layer.extent()
         extentString = str(extent.xMinimum()) + "," + str(extent.xMaximum()) + "," + str(extent.yMinimum()) + "," + str(extent.yMaximum())
         
+        # Export as SHP
+        processing_dir = QSettings().value('/Processing/Configuration/OUTPUTS_FOLDER') if QSettings().value('/Processing/Configuration/OUTPUTS_FOLDER') is not None else QSettings().value('/Processing/Configuration/OUTPUT_FOLDER')
+        temp_dir = os.path.join(processing_dir, str(uuid.uuid1()))
+        os.makedirs(temp_dir)
+        temp_shp = os.path.join(temp_dir,
+                                    '{}.shp'.format(layer.name()))
+        
+        QgsVectorFileWriter.writeAsVectorFormat(layer, 
+                                                temp_shp,
+                                                'utf-8', 
+                                                None, 
+                                                'ESRI Shapefile')
+        
         # 1. Run the GRASS clean topology tool
-        result = processing.runalg('grass:v.clean.advanced', # Processing
-                                   layer, # Layer
+        result = processing.runalg('grass7:v.clean.advanced', # Processing
+                                   temp_shp, # Layer
                                    'rmarea', # Tools
                                    threshold, # Threshold
                                    extentString, # Extent
