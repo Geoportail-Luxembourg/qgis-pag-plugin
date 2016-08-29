@@ -1,7 +1,7 @@
 INTERLIS 2.3;
 
-/** Modèle de données pour l'échange de données entre les bureaux d'études et le Ministère de l'Intérieur. 
- * Chaque PAG doit être transmis à l'aide d'un fichier GML conforme à ce modele de données.
+/** ModÃ¨le de donnÃ©es pour l'Ã©change de donnÃ©es entre les bureaux d'Ã©tudes et le MinistÃ¨re de l'IntÃ©rieur. 
+ * Chaque PAG doit Ãªtre transmis Ã  l'aide d'un fichier GML conforme Ã  ce modele de donnÃ©es.
  */
 MODEL PAG (fr)
 AT "mailto:david.hottua@mi.etat.lu"
@@ -16,7 +16,7 @@ VERSION "2015-04-01"  =
   TOPIC GESTION =
 
     CLASS Gestion =
-      /** Numéro interne du Ministère de l'Intérieur
+      /** NumÃ©ro interne du MinistÃ¨re de l'IntÃ©rieur
        */
       ID_COMMUNE (FINAL) : MANDATORY (
         /** Nommern
@@ -64,7 +64,7 @@ VERSION "2015-04-01"  =
         /** Mondorf-les-Bains
          */
         C015,
-        /** Ettelbrück
+        /** EttelbrÃ¼ck
          */
         C016,
         /** Petange
@@ -100,7 +100,7 @@ VERSION "2015-04-01"  =
         /** Schuttrange
          */
         C029,
-        /** Käerjeng
+        /** KÃ¤erjeng
          */
         C030,
         /** Tuntange
@@ -229,7 +229,7 @@ VERSION "2015-04-01"  =
         /** Dahleim
          */
         C077,
-        /** Lac-Haute-Sûre
+        /** Lac-Haute-SÃ»re
          */
         C078,
         /** Rambrouch
@@ -256,7 +256,7 @@ VERSION "2015-04-01"  =
         /** Bous
          */
         C087,
-        /** Esch-Sûre
+        /** Esch-SÃ»re
          */
         C088,
         /** Boevange/Attert
@@ -286,7 +286,7 @@ VERSION "2015-04-01"  =
         /** Waldbillig
          */
         C101,
-        /** Vallée de l'Ernz
+        /** VallÃ©e de l'Ernz
          */
         C103,
         /** Boulaide
@@ -325,7 +325,7 @@ VERSION "2015-04-01"  =
         /** Wincrange
          */
         C120,
-        /** Préizerdaul
+        /** PrÃ©izerdaul
          */
         C121,
         /** Betzdorf
@@ -335,44 +335,44 @@ VERSION "2015-04-01"  =
          */
         C125
       );
-      /** Nom du bureau d'études
+      /** Nom du bureau d'Ã©tudes
        */
       NOM_BUR_ET : MANDATORY TEXT*50;
-      /** date de délivrance
+      /** date de dÃ©livrance
        */
       DATE : MANDATORY FORMAT INTERLIS.XMLDate "2000-1-1" .. "2099-1-1";
-      /** Date de mutation du PCN ou fond de plan qui servait comme base à l'élaboration du PAG (p.ex yyyy-mm-jj)
+      /** Date de mutation du PCN ou fond de plan qui servait comme base Ã  l'Ã©laboration du PAG (p.ex yyyy-mm-jj)
        */
       DATE_MUTATION_FOND_DE_PLAN : MANDATORY FORMAT INTERLIS.XMLDate "2004-1-1" .. "2018-8-28";
-      /** description du projet (localité concernée;lieu-dit; etc.)
+      /** description du projet (localitÃ© concernÃ©e;lieu-dit; etc.)
        */
-      OBJET : MANDATORY (
+      OBJET (FINAL) : MANDATORY (
         refonte,
         modification,
-        EnumElement91
+        mise_a_jour_complete
       );
       DESCRIPTION : TEXT*20;
     END Gestion;
 
   END GESTION;
 
-  /** Contient l'Inventaire des biotopes à l’intérieur du périmètre (art 17 loi modifiée du 19 janvier 2004)
+  /** Contient l'Inventaire des biotopes Ã  lâ€™intÃ©rieur du pÃ©rimÃ¨tre (art 17 loi modifiÃ©e du 19 janvier 2004)
    */
   TOPIC ARTIKEL17 =
 
-    /** Inventaire des biotopes à l’intérieur du périmètre (art 17 loi modifiée du 19 janvier 2004)
+    /** Inventaire des biotopes Ã  lâ€™intÃ©rieur du pÃ©rimÃ¨tre (art 17 loi modifiÃ©e du 19 janvier 2004)
      */
     CLASS BIOTOPE_LIGNE =
-      /** géométrie du biotope
+      /** gÃ©omÃ©trie du biotope
        */
       GEOMETRIE : MANDATORY POLYLINE WITH (STRAIGHTS) VERTEX PAG.LUREF;
       /** code du type de biotope tel que defini dans Kurzanleitung zur Erfassung der nach Art. 17 des
        * luxemburgischen Naturschutzgesetzes
-       * geschützten Biotope
+       * geschÃ¼tzten Biotope
        * in den Siedlungs- und Gewerbegebieten
        */
       CATEGORIE (FINAL) : (
-        /** mur en pierres sèches
+        /** mur en pierres sÃ¨ches
          */
         Tm,
         /** Feldwege
@@ -390,55 +390,55 @@ VERSION "2015-04-01"  =
         /** groupes arbres
          */
         BG,
-        /** rangée d'arbres
+        /** rangÃ©e d'arbres
          */
         BR,
-        /** Éboulis médio-européens calcaires
+        /** Ã‰boulis mÃ©dio-europÃ©ens calcaires
          */
         FFH8160,
-        /** Pentes rocheuses calcaires avec végétation chasmophytique
+        /** Pentes rocheuses calcaires avec vÃ©gÃ©tation chasmophytique
          */
         FFH8210,
-        /** Éboulis médio-européens siliceux
+        /** Ã‰boulis mÃ©dio-europÃ©ens siliceux
          */
         FFH8150,
-        /** Pentes rocheuses siliceuses avec végétation chasmophytique
+        /** Pentes rocheuses siliceuses avec vÃ©gÃ©tation chasmophytique
          */
         FFH8220
       );
     END BIOTOPE_LIGNE;
 
-    /** Inventaire des biotopes à l’intérieur du périmètre (art 17 loi modifiée du 19 janvier 2004)
+    /** Inventaire des biotopes Ã  lâ€™intÃ©rieur du pÃ©rimÃ¨tre (art 17 loi modifiÃ©e du 19 janvier 2004)
      */
     CLASS BIOTOPE_POINT =
-      /** géométrie du biotope
+      /** gÃ©omÃ©trie du biotope
        */
       GEOMETRIE : MANDATORY PAG.LUREF;
       /** code du type de biotope tel que defini dans Kurzanleitung zur Erfassung der nach Art. 17 des
        * luxemburgischen Naturschutzgesetzes
-       * geschützten Biotope
+       * geschÃ¼tzten Biotope
        * in den Siedlungs- und Gewerbegebieten
        */
       CATEGORIE (FINAL) : (
         /** sources
          */
         BK05,
-        /** Pentes rocheuses siliceuses avec végétation chasmophytique
+        /** Pentes rocheuses siliceuses avec vÃ©gÃ©tation chasmophytique
          */
         FFH8220,
-        /** Sources pétrifiantes avec formation de travertins (Cratoneurion)
+        /** Sources pÃ©trifiantes avec formation de travertins (Cratoneurion)
          */
         FFH7220,
-        /** Pentes rocheuses calcaires avec végétation chasmophytique
+        /** Pentes rocheuses calcaires avec vÃ©gÃ©tation chasmophytique
          */
         FFH8210,
-        /** arbres isolés
+        /** arbres isolÃ©s
          */
         EB,
-        /** Éboulis médio-européens siliceux
+        /** Ã‰boulis mÃ©dio-europÃ©ens siliceux
          */
         FFH8150,
-        /** Éboulis médio-européens calcaires
+        /** Ã‰boulis mÃ©dio-europÃ©ens calcaires
          */
         FFH8160,
         /** groupes arbres
@@ -447,46 +447,46 @@ VERSION "2015-04-01"  =
       );
     END BIOTOPE_POINT;
 
-    /** Inventaire des biotopes à l’intérieur du périmètre (art 17 loi modifiée du 19 janvier 2004)
+    /** Inventaire des biotopes Ã  lâ€™intÃ©rieur du pÃ©rimÃ¨tre (art 17 loi modifiÃ©e du 19 janvier 2004)
      */
     CLASS BIOTOPE_POLY =
-      /** géometrie du biotope
+      /** gÃ©ometrie du biotope
        */
       GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
-      /** code du type de biotope tel que défini dans Kurzanleitung zur Erfassung der nach Art. 17 des
+      /** code du type de biotope tel que dÃ©fini dans Kurzanleitung zur Erfassung der nach Art. 17 des
        * luxemburgischen Naturschutzgesetzes
-       * geschützten Biotope
+       * geschÃ¼tzten Biotope
        * in den Siedlungs- und Gewerbegebieten
        */
       CATEGORIE (FINAL) : (
-        /** Végétation flottante de renoncules des rivières submontagnardes et planitiaires
+        /** VÃ©gÃ©tation flottante de renoncules des riviÃ¨res submontagnardes et planitiaires
          */
         FFH3260,
-        /** Tourbières de transition et tremblantes
+        /** TourbiÃ¨res de transition et tremblantes
          */
         FFH7140,
-        /** Roselières (Phragmition, Phalaridion, Sparganio-Glycerion)
+        /** RoseliÃ¨res (Phragmition, Phalaridion, Sparganio-Glycerion)
          */
         BK06,
-        /** Magnocariçaie (Magnocaricion)
+        /** MagnocariÃ§aie (Magnocaricion)
          */
         BK04,
-        /** Lacs eutrophes naturels avec végétation du Magnopotamion ou Hydrocharition
+        /** Lacs eutrophes naturels avec vÃ©gÃ©tation du Magnopotamion ou Hydrocharition
          */
         FFH3150,
-        /** Eaux oligo-mésotrophes calcaires avec végétation benthique à Chara spp. (Characeae)
+        /** Eaux oligo-mÃ©sotrophes calcaires avec vÃ©gÃ©tation benthique Ã  Chara spp. (Characeae)
          */
         FFH3140,
-        /** Eaux stagnantes, oligotrophes à mésotrophes avec végétation du Littorelletea uniflorae et/ou du Isoëto-Nanojuncetea
+        /** Eaux stagnantes, oligotrophes Ã  mÃ©sotrophes avec vÃ©gÃ©tation du Littorelletea uniflorae et/ou du IsoÃ«to-Nanojuncetea
          */
         FFH3130,
         /** Eaux stagnantes
          */
         BK08,
-        /** "Gebüsch sonstiger Standorte"
+        /** "GebÃ¼sch sonstiger Standorte"
          */
         Gb,
-        /** "Gebüsch nasser Standorte"
+        /** "GebÃ¼sch nasser Standorte"
          */
         Gbf,
         /** eaux courantes
@@ -495,19 +495,19 @@ VERSION "2015-04-01"  =
         /** marais des sources
          */
         BK11,
-        /** Grottes non exploitées par le tourisme
+        /** Grottes non exploitÃ©es par le tourisme
          */
         FFH8310,
-        /** Prairies à Molinia
+        /** Prairies Ã  Molinia
          */
         FFH6410,
-        /** Éboulis médio-européens calcaires des étages collinéen à montagnard
+        /** Ã‰boulis mÃ©dio-europÃ©ens calcaires des Ã©tages collinÃ©en Ã  montagnard
          */
         FFH8160,
         /** Pelouses rupicoles calcaires ou basiphiles (Alysso-Sedion albi)
          */
         FFH6110,
-        /** Roches siliceuses avec végétation pionnière (Sedo-Scleranthion, Sedo albi-Veronicion dillenii)
+        /** Roches siliceuses avec vÃ©gÃ©tation pionniÃ¨re (Sedo-Scleranthion, Sedo albi-Veronicion dillenii)
          */
         FFH8230,
         /** Pelouses maigres sableuses et siliceuses
@@ -519,19 +519,19 @@ VERSION "2015-04-01"  =
         /** Prairies maigres de fauche de basse altitude
          */
         FFH6510,
-        /** Pelouses sèches semi-naturelles sur calcaires (Festuco-Brometalia)
+        /** Pelouses sÃ¨ches semi-naturelles sur calcaires (Festuco-Brometalia)
          */
         FFH6210,
-        /** Formations à Juniperus (Juniperus communis)
+        /** Formations Ã  Juniperus (Juniperus communis)
          */
         FFH5130,
-        /** Landes sèches à callune
+        /** Landes sÃ¨ches Ã  callune
          */
         FFH4030,
-        /** Formations herbeuses à Nardus
+        /** Formations herbeuses Ã  Nardus
          */
         FFH6230,
-        /** Mégaphorbiaies hygrophiles des cours d'eau et lisières forestières
+        /** MÃ©gaphorbiaies hygrophiles des cours d'eau et lisiÃ¨res forestiÃ¨res
          */
         FFH6430,
         /** "Eischen-Hainbuchenwald trocken-warmer Standorte"
@@ -561,19 +561,19 @@ VERSION "2015-04-01"  =
         /** "Bruchwald"
          */
         BruW,
-        /** "Sukzessionswald (überwiegend) aus Laubbäumen"
+        /** "Sukzessionswald (Ã¼berwiegend) aus LaubbÃ¤umen"
          */
         Sukzl,
-        /** "Aufforstung mit standorttypischen Laubbäumen"
+        /** "Aufforstung mit standorttypischen LaubbÃ¤umen"
          */
         Auf,
-        /** Éboulis médio-européens siliceux
+        /** Ã‰boulis mÃ©dio-europÃ©ens siliceux
          */
         FFH8150,
-        /** Pentes rocheuses calcaires avec végétation chasmophytique
+        /** Pentes rocheuses calcaires avec vÃ©gÃ©tation chasmophytique
          */
         FFH8210,
-        /** Pentes rocheuses siliceuses avec végétation chasmophytique
+        /** Pentes rocheuses siliceuses avec vÃ©gÃ©tation chasmophytique
          */
         FFH8220,
         /** haie-"Feldhecke"
@@ -593,59 +593,59 @@ VERSION "2015-04-01"  =
 
   END ARTIKEL17;
 
-  /** Contient les éléments relevant pour la création du PAG
+  /** Contient les Ã©lÃ©ments relevant pour la crÃ©ation du PAG
    */
   TOPIC PAG =
 
-    /** alignement à respecter (ligne)
+    /** alignement Ã  respecter (ligne)
      */
     CLASS ALIGN_A_RESP =
       /** Texte explicatif
        */
       CATEGORIE : TEXT*100;
-      /** Nom du fichier word contenant la partie écrite du PAG de l'article concerné
+      /** Nom du fichier word contenant la partie Ã©crite du PAG de l'article concernÃ©
        */
       NOM_FICHIER : MANDATORY TEXT*100;
-      /** géométrie(ligne)
+      /** gÃ©omÃ©trie(ligne)
        */
       GEOMETRIE : MANDATORY POLYLINE WITH (STRAIGHTS) VERTEX PAG.LUREF;
     END ALIGN_A_RESP;
 
-    /** inventaire de tous les bâtiments de la commune
+    /** inventaire de tous les bÃ¢timents de la commune
      */
     CLASS BATIMENT =
       GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
     END BATIMENT;
 
-    /** constructions à conserver (point)
+    /** constructions Ã  conserver (point)
      */
     CLASS CONST_A_CONS_POINT =
       /** Texte explicatif
        */
       CATEGORIE : TEXT*100;
-      /** Nom du fichier word contenant la partie écrite du PAG de l'article concerné
+      /** Nom du fichier word contenant la partie Ã©crite du PAG de l'article concernÃ©
        */
       NOM_FICHIER : MANDATORY TEXT*100;
-      /** géométrie (point)
+      /** gÃ©omÃ©trie (point)
        */
       GEOMETRIE : MANDATORY PAG.LUREF;
     END CONST_A_CONS_POINT;
 
-    /** constructions à conserver (polygone)
+    /** constructions Ã  conserver (polygone)
      */
     CLASS CONST_A_CONS_POLY =
       /** Texte explicatif
        */
       CATEGORIE : TEXT*100;
-      /** Nom du fichier word contenant la partie écrite du PAG de l'article concerné
+      /** Nom du fichier word contenant la partie Ã©crite du PAG de l'article concernÃ©
        */
       NOM_FICHIER : MANDATORY TEXT*100;
-      /** géométrie (surface)
+      /** gÃ©omÃ©trie (surface)
        */
       GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
     END CONST_A_CONS_POLY;
 
-    /** couloirs et espaces réservés (art. 32) avec une largeur continue
+    /** couloirs et espaces rÃ©servÃ©s (art. 32) avec une largeur continue
      */
     CLASS COULOIRS_ET_ESP_RES =
       /** Type de couloir
@@ -657,38 +657,38 @@ VERSION "2015-04-01"  =
         /** couloirs pour projets ferroviaires
          */
         CPF,
-        /** couloirs pour projets de mobilité douce
+        /** couloirs pour projets de mobilitÃ© douce
          */
         CPMD,
-        /** couloirs pour projets de canalisation pour eaux usées
+        /** couloirs pour projets de canalisation pour eaux usÃ©es
          */
         CP_EU,
-        /** couloirs pour projets de rétention et d'écoulement des eaux pluviales
+        /** couloirs pour projets de rÃ©tention et d'Ã©coulement des eaux pluviales
          */
         CP_R_EP
       );
-      /** Nom du fichier word contenant la partie écrite du PAG de l'article concerné
+      /** Nom du fichier word contenant la partie Ã©crite du PAG de l'article concernÃ©
        */
       NOM_FICHIER : MANDATORY TEXT*100;
-      /** géométrie du couloir
+      /** gÃ©omÃ©trie du couloir
        */
       GEOMETRIE : MANDATORY POLYLINE WITH (STRAIGHTS) VERTEX PAG.LUREF;
-      /** subdivision de la zone définie dans catégorie
+      /** subdivision de la zone dÃ©finie dans catÃ©gorie
        */
       GENRE : TEXT*10;
       LARGEUR : MANDATORY 0.00 .. 100.00;
     END COULOIRS_ET_ESP_RES;
 
-    /** couloirs et espaces réservés (art. 32) avec une largeur variable
+    /** couloirs et espaces rÃ©servÃ©s (art. 32) avec une largeur variable
      */
     CLASS COULOIRS_ET_ESP_RES_PG =
       /** Type de couloir
        */
       CODE : (
-        /** couloirs pour projets de canalisation pour eaux usées
+        /** couloirs pour projets de canalisation pour eaux usÃ©es
          */
         CP_EU,
-        /** couloirs pour projets de rétention et d'écoulement des eaux pluviales
+        /** couloirs pour projets de rÃ©tention et d'Ã©coulement des eaux pluviales
          */
         CP_R_EP,
         /** couloirs pour projets routiers
@@ -697,17 +697,17 @@ VERSION "2015-04-01"  =
         /** couloirs pour projets ferroviaires
          */
         CPF,
-        /** couloirs pour projets de mobilité douce
+        /** couloirs pour projets de mobilitÃ© douce
          */
         CPMD
       );
-      /** Nom du fichier word contenant la partie écrite du PAG de l'article concerné
+      /** Nom du fichier word contenant la partie Ã©crite du PAG de l'article concernÃ©
        */
       NOM_FICHIER : MANDATORY TEXT*100;
-      /** géométrie du couloir
+      /** gÃ©omÃ©trie du couloir
        */
       GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
-      /** subdivision de la zone définie dans catégorie
+      /** subdivision de la zone dÃ©finie dans catÃ©gorie
        */
       GENRE : TEXT*10;
     END COULOIRS_ET_ESP_RES_PG;
@@ -715,15 +715,15 @@ VERSION "2015-04-01"  =
     /** zone emplacement de stationnement
      */
     CLASS EMPLAC_STAT =
-      /** Nom du fichier word contenant la partie écrite du PAG de l'article concerné
+      /** Nom du fichier word contenant la partie Ã©crite du PAG de l'article concernÃ©
        */
       NOM_FICHIER : MANDATORY TEXT*100;
-      /** géométrie de la zone
+      /** gÃ©omÃ©trie de la zone
        */
       GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
     END EMPLAC_STAT;
 
-    /** PCN ou fond de plan qui servait comme base à l'élaboration du PAG
+    /** PCN ou fond de plan qui servait comme base Ã  l'Ã©laboration du PAG
      */
     CLASS FOND_DE_PLAN =
       /** NUM_CADASTRAL/CODE_SUP
@@ -732,38 +732,38 @@ VERSION "2015-04-01"  =
       GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
     END FOND_DE_PLAN;
 
-    /** gabarit à sauvegarder (point)
+    /** gabarit Ã  sauvegarder (point)
      */
     CLASS GABARIT_A_SAUV_POINT =
       /** Texte explicatif
        */
       CATEGORIE : TEXT*100;
-      /** Nom du fichier word contenant la partie écrite du PAG de l'article concerné
+      /** Nom du fichier word contenant la partie Ã©crite du PAG de l'article concernÃ©
        */
       NOM_FICHIER : MANDATORY TEXT*100;
-      /** géométrie (point)
+      /** gÃ©omÃ©trie (point)
        */
       GEOMETRIE : MANDATORY PAG.LUREF;
     END GABARIT_A_SAUV_POINT;
 
-    /** gabarit à sauvegarder (polygone)
+    /** gabarit Ã  sauvegarder (polygone)
      */
     CLASS GABARIT_A_SAUV_POLY =
       /** Texte explicatif
        */
       CATEGORIE : TEXT*100;
-      /** Nom du fichier word contenant la partie écrite du PAG de l'article concerné
+      /** Nom du fichier word contenant la partie Ã©crite du PAG de l'article concernÃ©
        */
       NOM_FICHIER : MANDATORY TEXT*100;
-      /** géométrie (polygone)
+      /** gÃ©omÃ©trie (polygone)
        */
       GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
     END GABARIT_A_SAUV_POLY;
 
-    /** géométrie (polygone) de la limte communale selon base cadastrale du PAG
+    /** gÃ©omÃ©trie (polygone) de la limte communale selon base cadastrale du PAG
      */
     CLASS LIMITES_COMMUNALES =
-      /** géométrie (polygone)
+      /** gÃ©omÃ©trie (polygone)
        */
       GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
     END LIMITES_COMMUNALES;
@@ -779,7 +779,7 @@ VERSION "2015-04-01"  =
       GEOMETRIE : SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
     END MODIFICATION_PAG;
 
-    /** Zone soumise à un plan d'aménagement particulier "nouveau quartier" (art.38)
+    /** Zone soumise Ã  un plan d'amÃ©nagement particulier "nouveau quartier" (art.38)
      */
     CLASS NQ_PAP =
       /** Valeur du coefficient d' occupation du sol minimum (COS MIN)
@@ -797,63 +797,63 @@ VERSION "2015-04-01"  =
       /** Coefficient de scellement du sol (CSS)
        */
       CSS_MAX : MANDATORY 0.00 .. 1.00;
-      /** densité de logement minimum (DL MIN)
+      /** densitÃ© de logement minimum (DL MIN)
        */
       DL_MIN : 0 .. 1000;
-      /** densité de logement maximum (DL MAX)
+      /** densitÃ© de logement maximum (DL MAX)
        */
       DL_MAX : 0 .. 1000;
-      /** géométrie du quartier
+      /** gÃ©omÃ©trie du quartier
        */
       GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
-      /** Dénomination de la zone
+      /** DÃ©nomination de la zone
        */
       DENOMINATION : TEXT*100;
-      /** nom du fichier pdf du schéma directeur
+      /** nom du fichier pdf du schÃ©ma directeur
        */
       NOM_FICHIER_SD_EC : TEXT*100;
-      /** Nom du fichier word contenant la partie écrite du PAG de l'article concerné
+      /** Nom du fichier word contenant la partie Ã©crite du PAG de l'article concernÃ©
        */
       NOM_FICHIER_EC : MANDATORY TEXT*100;
-      /** Nom du fichier pdf contenant la partie graphique du schéma directeur
+      /** Nom du fichier pdf contenant la partie graphique du schÃ©ma directeur
        */
       NOM_FICHIER_SD_GR : TEXT*100;
     END NQ_PAP;
 
-    /** PAP approuvés
+    /** PAP approuvÃ©s
      */
     CLASS PAP_APPROUVE =
-      /** Nom du fichier pdf contenant la partie écrite du PAG de l'article concerné
+      /** Nom du fichier pdf contenant la partie Ã©crite du PAG de l'article concernÃ©
        */
       NOM_FICHIER_EC : TEXT*100;
-      /** Nom du fichier pdf contenant la partie graphique du PAG de l'article concerné
+      /** Nom du fichier pdf contenant la partie graphique du PAG de l'article concernÃ©
        */
       NOM_FICHIER_GR : MANDATORY TEXT*100;
-      /** géométrie du PAP
+      /** gÃ©omÃ©trie du PAP
        */
       GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
     END PAP_APPROUVE;
 
-    /** délimitation du périmètre
+    /** dÃ©limitation du pÃ©rimÃ¨tre
      */
     CLASS PERIMETRE =
-      /** géométrie(surface)
+      /** gÃ©omÃ©trie(surface)
        */
       GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
     END PERIMETRE;
 
-    /** Zone d'aménagement différé (art.29)
+    /** Zone d'amÃ©nagement diffÃ©rÃ© (art.29)
      */
     CLASS ZAD =
-      /** géométrie du quartier
+      /** gÃ©omÃ©trie du quartier
        */
       GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
-      /** Nom du fichier word contenant la partie écrite du PAG de l'article concerné
+      /** Nom du fichier word contenant la partie Ã©crite du PAG de l'article concernÃ©
        */
       NOM_FICHIER : MANDATORY TEXT*100;
     END ZAD;
 
-    /** zones tel que défini dans le règlement grand-ducal du 28 juillet 2011 concernant le contenu du plan d'aménagement général d'une commune (art- 9-24 et 28)
+    /** zones tel que dÃ©fini dans le rÃ¨glement grand-ducal du 28 juillet 2011 concernant le contenu du plan d'amÃ©nagement gÃ©nÃ©ral d'une commune (art- 9-24 et 28)
      */
     CLASS ZONAGE =
       /** Categorie de la zone (voire liste)
@@ -877,25 +877,25 @@ VERSION "2015-04-01"  =
         /** Art.10 Zones mixtes rurales
          */
         MIX_r,
-        /** Art.11 Zones de bâtiments et d' équipements publics
+        /** Art.11 Zones de bÃ¢timents et d' Ã©quipements publics
          */
         BEP,
-        /** Art.12 Zones d'activités économiques communales type 1
+        /** Art.12 Zones d'activitÃ©s Ã©conomiques communales type 1
          */
         ECO_c1,
-        /** Art.13 Zones d'activités économiques communales type 2
+        /** Art.13 Zones d'activitÃ©s Ã©conomiques communales type 2
          */
         ECO_c2,
-        /** Art.14 Zones d'activités économiques régionales type 1
+        /** Art.14 Zones d'activitÃ©s Ã©conomiques rÃ©gionales type 1
          */
         ECO_r1,
-        /** Art.14 Zones d'activités économiques régionales type 2
+        /** Art.14 Zones d'activitÃ©s Ã©conomiques rÃ©gionales type 2
          */
         ECO_r2,
-        /** Art.15 Zones d'activités économiques nationales
+        /** Art.15 Zones d'activitÃ©s Ã©conomiques nationales
          */
         ECO_n,
-        /** Art.16 Zones d'activités spécifiques nationales
+        /** Art.16 Zones d'activitÃ©s spÃ©cifiques nationales
          */
         SP_n,
         /** Art.17 Zones commerciales
@@ -904,13 +904,13 @@ VERSION "2015-04-01"  =
         /** Art.18 Zones militaires
          */
         MIL,
-        /** Art.19 Zones spéciales
+        /** Art.19 Zones spÃ©ciales
          */
         SPEC,
-        /** Art.20 Zones d'aérodrome
+        /** Art.20 Zones d'aÃ©rodrome
          */
         AERO,
-        /** Art.22 Zones de gares ferroviaires et routières
+        /** Art.22 Zones de gares ferroviaires et routiÃ¨res
          */
         GARE,
         /** Art.23 Zones de sports et de loisirs
@@ -922,7 +922,7 @@ VERSION "2015-04-01"  =
         /** Art.28 Zones agricoles
          */
         AGR,
-        /** Art.28 Zones forestières
+        /** Art.28 Zones forestiÃ¨res
          */
         FOR,
         /** Art.28 Zones viticoles
@@ -945,34 +945,34 @@ VERSION "2015-04-01"  =
          * port de marchandises
          */
         PORT_m,
-        /** Art.13 Zones d'activités économiques communales type 3
+        /** Art.13 Zones d'activitÃ©s Ã©conomiques communales type 3
          */
         ECO_c3
       );
-      /** Nom du fichier word contenant la partie écrite du PAG de l'article concerné
+      /** Nom du fichier word contenant la partie Ã©crite du PAG de l'article concernÃ©
        */
       NOM_FICHIER : MANDATORY TEXT*100;
-      /** géométrie (surface)
+      /** gÃ©omÃ©trie (surface)
        */
       GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
-      /** subdivision de la zone définie dans la rubrique "catégorie"
+      /** subdivision de la zone dÃ©finie dans la rubrique "catÃ©gorie"
        */
       GENRE : TEXT*10;
     END ZONAGE;
 
-    /** zones telles que définies dans le règlement grand-ducal du 28 juillet 2011 concernant le contenu du plan d'aménagement général d'une commune (art. 31)
+    /** zones telles que dÃ©finies dans le rÃ¨glement grand-ducal du 28 juillet 2011 concernant le contenu du plan d'amÃ©nagement gÃ©nÃ©ral d'une commune (art. 31)
      */
     CLASS ZONE_SERV_URB =
       /** type de la servitude
        */
       CODE : MANDATORY TEXT*20;
-      /** libellé du code
+      /** libellÃ© du code
        */
       LIB : TEXT*100;
-      /** Nom du fichier word contenant la partie écrite du PAG de l'article concerné
+      /** Nom du fichier word contenant la partie Ã©crite du PAG de l'article concernÃ©
        */
       NOM_FICHIER : MANDATORY TEXT*100;
-      /** géométrie (surface)
+      /** gÃ©omÃ©trie (surface)
        */
       GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
     END ZONE_SERV_URB;
@@ -980,42 +980,42 @@ VERSION "2015-04-01"  =
     /** informations sur les quartiers existants
      */
     CLASS ZONES_QE =
-      /** Nom du fichier word contenant la partie écrite générale du quartier existant
+      /** Nom du fichier word contenant la partie Ã©crite gÃ©nÃ©rale du quartier existant
        */
       NOM_FICHIER_EC_GEN : TEXT*100;
-      /** Nom du fichier word contenant la partie écrite du quartier existant
+      /** Nom du fichier word contenant la partie Ã©crite du quartier existant
        */
       NOM_FICHIER_EC : MANDATORY TEXT*100;
       /** Nom du fichier PDF contenant la partie graphique du quartier existant
        */
       NOM_FICHIER_GR : TEXT*100;
-      /** géométrie(surface)
+      /** gÃ©omÃ©trie(surface)
        */
       GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
     END ZONES_QE;
 
-    /** informations concernant les zones définies dans le règlement grand-ducal du 28 juillet 2011 art. 30;33-37
+    /** informations concernant les zones dÃ©finies dans le rÃ¨glement grand-ducal du 28 juillet 2011 art. 30;33-37
      */
     CLASS ZONES_SUPERPOSEES =
       /** type de zone
        */
       CATEGORIE (FINAL) : MANDATORY (
-        /** Art.33 Secteur protégé d'intérêt communal de type "environnement construit"
+        /** Art.33 Secteur protÃ©gÃ© d'intÃ©rÃªt communal de type "environnement construit"
          */
         SPI_EC,
-        /** Art.33 Secteur protégé d'intérêt communal de type "environnement naturel et paysage"
+        /** Art.33 Secteur protÃ©gÃ© d'intÃ©rÃªt communal de type "environnement naturel et paysage"
          */
         SPI_ENP,
-        /** Art.34 Zones de risques naturels prévisibles "zones de risque d'éboulement ou de glissements de terrain"
+        /** Art.34 Zones de risques naturels prÃ©visibles "zones de risque d'Ã©boulement ou de glissements de terrain"
          */
         ZRNP_G,
-        /** Art.34 Zones de risques naturels prévisibles "zones de risques d'éboulement miniers"
+        /** Art.34 Zones de risques naturels prÃ©visibles "zones de risques d'Ã©boulement miniers"
          */
         ZRNP_M,
-        /** Art.34 Zones de risques naturels prévisibles "zones inondables"
+        /** Art.34 Zones de risques naturels prÃ©visibles "zones inondables"
          */
         ZRNP_I,
-        /** Art.35 Zones à risques concernant la prévention des accidents majeurs impliquant des substances dangereuses
+        /** Art.35 Zones Ã  risques concernant la prÃ©vention des accidents majeurs impliquant des substances dangereuses
          */
         ZR_SD,
         /** Art.36 Zones de bruit
@@ -1028,13 +1028,13 @@ VERSION "2015-04-01"  =
          */
         ZUP
       );
-      /** Nom du fichier word contenant la partie écrite du PAG de l'article concernée
+      /** Nom du fichier word contenant la partie Ã©crite du PAG de l'article concernÃ©e
        */
       NOM_FICHIER : MANDATORY TEXT*100;
-      /** géométrie de la zone
+      /** gÃ©omÃ©trie de la zone
        */
       GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
-      /** subdivision de la zone définie dans la rubrique "catégorie"
+      /** subdivision de la zone dÃ©finie dans la rubrique "catÃ©gorie"
        */
       GENRE : TEXT*10;
     END ZONES_SUPERPOSEES;
