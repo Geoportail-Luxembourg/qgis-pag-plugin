@@ -219,6 +219,9 @@ class DataChecker(object):
         
         errors = list()
         
+        # Check geometry
+        errors += self.checkFeatureGeometry(feature)
+        
         for field in feature.fields():
             xsd_field = xsd_type.getField(field.name())
             
@@ -302,7 +305,12 @@ class DataChecker(object):
         
         errors = list()
         
-        if feature.geometry() is None:
+        if feature.geometry() is None or feature.geometry().isEmpty():
             errors.append((feature, None, QCoreApplication.translate('DataChecker','Geometry is empty')))
+        
+        errors2 = feature.geometry().validateGeometry()
+                    
+        for error in errors2:
+            errors.append((feature, None, error.what()))
         
         return errors
