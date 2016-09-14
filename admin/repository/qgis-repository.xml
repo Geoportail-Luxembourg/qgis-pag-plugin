@@ -1,10 +1,10 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
 <plugins>
-    <pyqgis_plugin name="PAG Luxembourg" version="1.1" plugin_id="999"><!-- Mettre à jour -->
+    <pyqgis_plugin name="PAG Luxembourg" version="1.2" plugin_id="999"><!-- Mettre à jour -->
         <description>Plugin permettant la gestion de Plans d'Aménagement Généraux (PAG) du Grand Duché de Luxembourg. Développé par arx iT.</description>
         <about>Grand Duché de Luxembourg, arx iT</about>
-        <version>1.1</version><!-- Mettre à jour -->
-        <qgis_minimum_version>2.14.2</qgis_minimum_version>
+        <version>1.2</version><!-- Mettre à jour -->
+        <qgis_minimum_version>2.14.6</qgis_minimum_version>
         <qgis_maximum_version>2.99.0</qgis_maximum_version>
         <homepage>https://github.com/Geoportail-Luxembourg/qgis-pag-plugin</homepage>
         <file_name>pag.1.0.zip</file_name><!-- Mettre à jour -->
