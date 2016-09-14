@@ -119,7 +119,7 @@ class TopologyChecker(object):
         result = TopologyRule()
         result.layer1 = str(layer1_table) if layer1_table is not None and len(layer1_table)>0 else QCoreApplication.translate('rulesDialog','No layer')
         result.layer2 = str(layer2_table) if layer2_table is not None and len(layer2_table)>0 else QCoreApplication.translate('rulesDialog','No layer')
-        result.rule = str(rule) if rule is not None else None
+        result.rule = unicode(rule) if rule is not None else None
         result.tolerance = str(tolerance) if tolerance is not None else None
         
         return result
