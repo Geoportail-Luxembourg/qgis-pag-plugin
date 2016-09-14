@@ -47,8 +47,7 @@ class TopologyChecker(object):
             entity_count = modification_pag_layer.selectedFeatureCount()
             canvas = qgis.utils.iface.mapCanvas()
             canvas.zoomToSelected(modification_pag_layer)
-            if entity_count==1:
-                
+            if entity_count==1:                
                 PagLuxembourg.main.qgis_interface.messageBar().clearWidgets()
                 PagLuxembourg.main.qgis_interface.messageBar().pushMessage(QCoreApplication.translate('Topology','Information'),
                                                                    QCoreApplication.translate('Topology','There is 1 selected entity in MODIFICATION PAG layer. You can now check topology'))
