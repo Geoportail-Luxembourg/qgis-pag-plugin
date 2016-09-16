@@ -181,6 +181,17 @@ class Importer(object):
         
         for src_feature in src_dp.getFeatures(feature_request):
             geometry = src_feature.geometry()
+            
+            # Check if geometry is empty
+            if geometry is None or geometry.isEmpty():
+                self.features_errors.append((
+                                         mapping.sourceLayerName() if mapping.sourceLayerName() is not None else src_layer.name(),
+                                         src_feature.id(),
+                                         QCoreApplication.translate('Importer','Geometry is empty'),
+                                         None
+                                         ))
+                continue
+            
             # Check if feature geometry is multipart
             if geometry.isMultipart():
                 temp_feature = QgsFeature(src_feature)
@@ -189,7 +200,7 @@ class Importer(object):
                     temp_feature.setGeometry(part)
                     source_features.append(QgsFeature(temp_feature))
             else:
-                source_features.append(QgsFeature(src_feature))
+                source_features.append(src_feature)
         
         # Iterate source features
         for src_feature in source_features:
