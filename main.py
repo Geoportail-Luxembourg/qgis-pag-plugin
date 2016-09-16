@@ -252,7 +252,7 @@ class PAGLuxembourg(object):
         # Geometry checker
         found = False
         for action in self.iface.vectorMenu().actions():
-            if action.text()==QCoreApplication.translate("QgsGeometryCheckerPlugin","G&eometry Tools"):
+            if action.text()==QCoreApplication.translate("QgsGeometryCheckerPlugin","G&eometry Tools") or action.text()==QCoreApplication.translate("QgsGeometryCheckerPlugin","Geometry Tools"):
                 for subaction in action.menu().actions():
                     if subaction.text()==QCoreApplication.translate("QgsGeometryCheckerPlugin","Check Geometries"):
                         found = True
