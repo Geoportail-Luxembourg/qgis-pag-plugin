@@ -17,7 +17,7 @@ VERSION "2015-04-01"  =
 
     CLASS Gestion =
       /** Numéro interne du Ministère de l'Intérieur
-       */
+       *
       ID_COMMUNE (FINAL) : MANDATORY (
         /** Nommern
          */
@@ -684,7 +684,7 @@ VERSION "2015-04-01"  =
     CLASS COULOIRS_ET_ESP_RES_PG =
       /** Type de couloir
        */
-      CODE : (
+      CODE (FINAL) : MANDATORY (
         /** couloirs pour projets de canalisation pour eaux usées
          */
         CP_EU,
