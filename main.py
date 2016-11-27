@@ -252,9 +252,9 @@ class PAGLuxembourg(object):
         # Geometry checker
         found = False
         for action in self.iface.vectorMenu().actions():
-            if action.text()==QCoreApplication.translate("QgsGeometryCheckerPlugin","G&eometry Tools") or action.text()==QCoreApplication.translate("QgsGeometryCheckerPlugin","Geometry Tools"):
+            if action.text().replace("&","")==QCoreApplication.translate("QgsGeometryCheckerPlugin","G&eometry Tools").replace("&",""):
                 for subaction in action.menu().actions():
-                    if subaction.text()==QCoreApplication.translate("QgsGeometryCheckerPlugin","Check Geometries"):
+                    if subaction.text().replace("&","")==QCoreApplication.translate("QgsGeometryCheckerPlugin","Check Geometries").replace("&",""):
                         found = True
                         self.topoclean_widget = TopoClean(subaction)
                         self.pag_actions.append(self.add_action(
