@@ -180,6 +180,10 @@ class Importer(object):
         source_features = list()
         
         for src_feature in src_dp.getFeatures(feature_request):
+            if dst_layer.geometryType()== QGis.NoGeometry:
+                source_features.append(src_feature)
+                continue
+            
             geometry = src_feature.geometry()
             
             # Check if geometry is empty
