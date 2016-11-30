@@ -175,9 +175,39 @@ class Importer(object):
         else:
             expr = QgsExpression(mapping.sourceLayerFilter())
             feature_request = QgsFeatureRequest(expr)
+            
+        # Explode multi-parts
+        source_features = list()
+        
+        for src_feature in src_dp.getFeatures(feature_request):
+            if dst_layer.geometryType()== QGis.NoGeometry:
+                source_features.append(src_feature)
+                continue
+            
+            geometry = src_feature.geometry()
+            
+            # Check if geometry is empty
+            if geometry is None or geometry.isEmpty():
+                self.features_errors.append((
+                                         mapping.sourceLayerName() if mapping.sourceLayerName() is not None else src_layer.name(),
+                                         src_feature.id(),
+                                         QCoreApplication.translate('Importer','Geometry is empty'),
+                                         None
+                                         ))
+                continue
+            
+            # Check if feature geometry is multipart
+            if geometry.isMultipart():
+                temp_feature = QgsFeature(src_feature)
+                # create a new feature using the geometry of each part
+                for part in geometry.asGeometryCollection():
+                    temp_feature.setGeometry(part)
+                    source_features.append(QgsFeature(temp_feature))
+            else:
+                source_features.append(src_feature)
         
         # Iterate source features
-        for src_feature in src_dp.getFeatures(feature_request):
+        for src_feature in source_features:
             dst_feature = QgsFeature(dst_layer_fields)
             for src_index, dst_index, constant_value, enabled, value_map in mapping.fieldMappings():
                 value = constant_value if src_index is None else src_feature[src_index]
@@ -293,6 +323,9 @@ class Importer(object):
         return clean_geometry if len(errors) == 0 else None
     
     def _getCleanGeometry(self, geometry, simplify_tolerance=0):
+        if geometry is None:
+            return None
+        
         clean_geometry = geometry.simplify(simplify_tolerance)
         
         if clean_geometry is None:

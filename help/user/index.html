@@ -85,7 +85,7 @@
                             <a href="#topoclean">
                                 <img src="images/topoclean.png" />
                                 <br />
-                                Nettoyer la topologie
+                                Vérifier la géométrie
                             </a>
                         </li>
                         <li>
@@ -333,13 +333,25 @@
         </p>
 
         <p>
-            Un message indique la fin de l'export.
+            Un message indique la fin de l'export de la totalité des données.
         </p>
 
         <p>
             <img src="images/export2.png" />
         </p>
+		
+        <p>
+            Si une sélection est faite au sein de la couche 'MODIFICATION PAG', l'outil effectue l'export seulement sur les objets intersectant ces polygones.
+        </p>
 
+        <p>
+            <img src="images/export3.png" />
+        </p>
+		
+		<p>
+			Si aucun polygone n'est sélectionné dans la couche 'MODIFICATION PAG', l'export s'effectue sur l'ensemble des données.
+        </p>
+		
         <div class="alert alert-info" role="alert">
             <b>Note : </b>Une vérification des données est automatiquement effectuée avant l'export.
         </div>
@@ -359,14 +371,14 @@
             <img src="images/stylize1.png" />
         </p>
 
-        <h1 id="topoclean"><img src="images/topoclean.png" /> Nettoyer la topologie</h1>
+        <h1 id="topoclean"><img src="images/topoclean.png" /> Vérifier la géométrie</h1>
         
         <p>
-            Cet outil nettoie la topologie de la couche sélectionnée en supprimant les petites surfaces (&lt;10cm2). Sélectionnez une couche et cliquer sur l'outil
+            Cet outil est natif de QGIS, il permet d'effectuer un certain nombre de vérifications et de corrections de géométrie. Cliquez sur l'outil. Si un polygone est sélectionné dans la couche "MODIFICATION_PAG", toutes les entités se trouvant dans ce polygone seront alors sélectionnées, pour permettre d'effectuer les validations seulement sur ces dernières.
         </p>
-
-        <p>
-            Un message indique la fin du nettoyage.
+		
+		<p>
+            Veuillez consulter l'aide officielle pour plus de détails : <a href="http://docs.qgis.org/2.14/en/docs/user_manual/plugins/plugins_geometry_checker.html">Aide QGIS</a>
         </p>
 
         <h1 id="topology"><img src="images/topology.png" /> Vérifier la topologie</h1>
@@ -399,7 +411,20 @@
         <p>
             <img src="images/topology3.png" />
         </p>
+		
+		<p>
+            Si une sélection est faite au sein de la couche 'MODIFICATION PAG', l'outil zoom automatiquement sur l'emprise des entités sélectionnées.
+			Ceci permet de limiter la vérification topologique à l'étendue affichée, via le bouton adéquat.
+        </p>
 
+        <p>
+            <img src="images/topology4.png" />
+        </p>
+
+		<p>
+            Si aucune sélection n'est faite au sein de la couche 'MODIFICATION PAG', l'outil n'aura aucune action de zoom.
+        </p>		
+		
         <h1 id="check"><img src="images/check.png" /> Valider les données</h1>
 
         <p>
@@ -432,7 +457,18 @@
         <div class="alert alert-info" role="alert">
             <b>Note : </b>Penser à sauvegarder l'édition avant relancer la vérification des données.
         </div>
+		
+		<p>
+            Si une sélection est faite au sein de la couche 'MODIFICATION PAG', l'outil effectue la vérification seulement sur les objets intersectant ces polygones.
+        </p>
 
+        <p>
+            <img src="images/check4.png" />
+        </p>
+		<p>
+            Si aucun polygone n'est sélectionné dans la couche 'MODIFICATION PAG', le traitement s'effectue sur l'ensemble des données.
+        </p>
+		
         <script src="js/jquery-1.11.3.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
         <script type="text/javascript">

@@ -201,6 +201,41 @@ class Project(QObject):
             return None
         
         return layer
+    
+    def getModificationPagLayer(self):
+        return self.getLayer(main.xsd_schema.getTypeFromTableName('PAG.MODIFICATION_PAG'))
+    
+    def getNativeFields(self, type):
+        '''
+        Gets the native fields with type from database
+        
+        :param type: XSD schema type
+        :type type: PAGType
+        '''
+        
+        conn = db.connect(self.database)
+        
+        cursor = conn.cursor() 
+        rs = cursor.execute("PRAGMA table_info('{}')".format(type.name))
+        
+        for i in range(len(rs.description)):
+            if rs.description[i][0] == 'name':
+                name_index = i
+            if rs.description[i][0] == 'type':
+                type_index = i
+        
+        fields =[]
+        
+        for row in rs:
+            fields.append((row[name_index],row[type_index]))
+        
+        cursor.close()
+        del cursor
+        
+        conn.close()
+        del conn
+        
+        return fields
             
     def _setupTopologicalSettings(self):
         # Topological editing
@@ -552,9 +587,7 @@ class Project(QObject):
         '''
         
         # Hide fields
-        #hidden = [PK, IMPORT_ID]
-        ''' Bug http://hub.qgis.org/issues/14235 '''
-        hidden = [PK]
+        hidden = [PK, IMPORT_ID]
         for field in layer.pendingFields():
             if field.name() == IMPORT_ID:
                 layer.setEditorWidgetV2(layer.fieldNameIndex(field.name()),'TextEdit')

@@ -1,6 +1,8 @@
 '''
 Created on 25 sept. 2015
 
+Updated on 11 may 2016
+
 @author: arxit
 '''
 
@@ -8,9 +10,9 @@ import os
 import json
 
 from qgis.core import *
+import qgis.utils
 from PyQt4.QtGui import QAction
 from PyQt4.QtCore import QCoreApplication
-
 import PagLuxembourg.main
 
 TOPOL_SECTION = "Topol"
@@ -38,6 +40,26 @@ class TopologyChecker(object):
         
         self.topology_action.trigger()
         
+        # Zoom to selected onclick button
+        modification_pag_layer=project.getModificationPagLayer()
+        
+        if modification_pag_layer is not None:
+            entity_count = modification_pag_layer.selectedFeatureCount()
+            canvas = qgis.utils.iface.mapCanvas()
+            canvas.zoomToSelected(modification_pag_layer)
+            if entity_count==1:                
+                PagLuxembourg.main.qgis_interface.messageBar().clearWidgets()
+                PagLuxembourg.main.qgis_interface.messageBar().pushMessage(QCoreApplication.translate('Topology','Information'),
+                                                                   QCoreApplication.translate('Topology','There is 1 selected entity in MODIFICATION PAG layer. You can now check topology'))
+            elif entity_count==0:
+                PagLuxembourg.main.qgis_interface.messageBar().pushMessage(QCoreApplication.translate('Topology_no','Information'),
+                                                                   QCoreApplication.translate('Topology_no','There is no selected entity in MODIFICATION PAG layer. You can now check topology'))
+            else:
+                qgis.utils.iface.messageBar().pushMessage(QCoreApplication.translate('Topology_many', 'Information'),
+                                                                   QCoreApplication.translate('Topology_many','There are {} selected entities in MODIFICATION PAG layer. You can now check topology').format(entity_count))
+        else :
+            qgis.utils.iface.messageBar().pushMessage("Error", "MODIFICATION PAG layer is not correct")
+    
     def updateProjectRules(self):
         '''
         Updates the topology check rules of the project
@@ -97,7 +119,7 @@ class TopologyChecker(object):
         result = TopologyRule()
         result.layer1 = str(layer1_table) if layer1_table is not None and len(layer1_table)>0 else QCoreApplication.translate('rulesDialog','No layer')
         result.layer2 = str(layer2_table) if layer2_table is not None and len(layer2_table)>0 else QCoreApplication.translate('rulesDialog','No layer')
-        result.rule = str(rule) if rule is not None else None
+        result.rule = unicode(rule) if rule is not None else None
         result.tolerance = str(tolerance) if tolerance is not None else None
         
         return result

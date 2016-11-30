@@ -1,1 +1,1 @@
-"C:\Program Files\QGIS Wien\bin\lrelease" C:\Users\arxit\.qgis2\python\plugins\PagLuxembourg\i18n\fr.ts
+"C:\Program Files\QGIS 2.14\bin\lrelease" C:\Users\arxit\.qgis2\python\plugins\PagLuxembourg\i18n\fr.ts

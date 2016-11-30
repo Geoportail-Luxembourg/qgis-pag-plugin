@@ -1,12 +1,18 @@
 '''
 Created on 23 oct. 2015
 
+Updated on 11 may 2016
+
 @author: arxit
 '''
 
 import os
 
+import processing
+from processing.tools import *
+
 from qgis.core import *
+import qgis.utils
 from PyQt4.QtGui import QAction
 from PyQt4.QtCore import QCoreApplication
 
@@ -41,6 +47,15 @@ class DataChecker(object):
         layer_structure_errors = list()
         data_errors = list()
         
+        # 'MODIFICATION PAG' layer definition        
+        layer_PAG = project.getModificationPagLayer()
+                
+        # 'MODIFICATION PAG' selection definition
+        selection_PAG = layer_PAG.selectedFeatures()
+        
+        # Counting number entities in 'MODIFICATION PAG' selection
+        entity_count_PAG = layer_PAG.selectedFeatureCount()
+        
         # Iterates through XSD types
         for type in PagLuxembourg.main.xsd_schema.types:
             layer = project.getLayer(type)
@@ -54,7 +69,7 @@ class DataChecker(object):
             if len(fatal_errors)>0:
                 continue
             
-            layer_data_errors = self.checkLayerData(layer, type)
+            layer_data_errors = self.checkLayerData(selection_PAG, layer, type)
             data_errors.append(layer_data_errors)
         
         # Flatten data errors
@@ -65,10 +80,20 @@ class DataChecker(object):
         
         valid = (len(layer_structure_errors) + len(data_errors_flat)) == 0
         
-        if valid:
+        # Messages display for number of selected entities
+        if valid and entity_count_PAG == 1:
             PagLuxembourg.main.qgis_interface.messageBar().clearWidgets()
             PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('DataChecker','Success'),
-                                                                       QCoreApplication.translate('DataChecker','No errors found.'))
+                                                                       QCoreApplication.translate('DataChecker','No errors found on entities that intersect {} selected entity in MODIFICATION PAG layer').format(entity_count_PAG))
+        elif valid and entity_count_PAG == 0 :
+            PagLuxembourg.main.qgis_interface.messageBar().clearWidgets()
+            PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('DataChecker_no','Success'),
+                                                                       QCoreApplication.translate('DataChecker_no','No errors found'))
+        elif valid and entity_count_PAG > 1 :
+            PagLuxembourg.main.qgis_interface.messageBar().clearWidgets()
+            PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('DataChecker_many','Success'),
+                                                                       QCoreApplication.translate('DataChecker_many','No errors found on entities that intersect {} selected entities in MODIFICATION PAG layer').format(entity_count_PAG))
+        
         else:
             self.dlg = ErrorSummaryDialog(layer_structure_errors, data_errors)
             self.dlg.show()
@@ -76,16 +101,13 @@ class DataChecker(object):
         return valid 
         
     # Datatype mapping allowed while checking. For a given XSD type, several QGIS type may be allowed or compatible
-    XSD_QGIS_ALLOWED_DATATYPE_MAP = [(DataType.STRING, QVariant.String),
-                                     (DataType.STRING, QVariant.LongLong),
-                                     (DataType.STRING, QVariant.Int),
-                                     (DataType.STRING, QVariant.Double),
-                                     (DataType.INTEGER, QVariant.LongLong),
-                                     (DataType.INTEGER, QVariant.Int),
-                                     (DataType.DOUBLE, QVariant.Double),
-                                     (DataType.DOUBLE, QVariant.LongLong),
-                                     (DataType.DOUBLE, QVariant.Int),
-                                     (DataType.DATE, QVariant.String)]
+    XSD_QGIS_ALLOWED_DATATYPE_MAP = [(DataType.STRING, 'string'),
+                                     (DataType.STRING, 'integer'),
+                                     (DataType.STRING, 'double'),
+                                     (DataType.INTEGER, 'integer'),
+                                     (DataType.DOUBLE, 'double'),
+                                     (DataType.DOUBLE, 'integer'),
+                                     (DataType.DATE, 'date')]
     
     def checkLayerStructure(self, layer, xsd_type):
         '''
@@ -102,7 +124,7 @@ class DataChecker(object):
         :rtype: Tuple : warning, fatal. Layer (QgsVectorLayer), field (PAGField), message (str, QString)
         '''
         
-        layer_fields = layer.dataProvider().fields()
+        native_fields = PagLuxembourg.main.current_project.getNativeFields(xsd_type)
         warn_errors = list()
         fatal_errors = list()
         
@@ -113,8 +135,7 @@ class DataChecker(object):
         # Check field structure
         for field in xsd_type.fields:
             # Check field missing
-            layer_index = layer_fields.fieldNameIndex(field.name)
-            if layer_index == -1:
+            if self._getNativeField(native_fields, field.name) == None:
                 if field.nullable:
                     warn_errors.append((layer, field, QCoreApplication.translate('DataChecker','Nullable field is missing')))
                 else:
@@ -123,10 +144,10 @@ class DataChecker(object):
                 continue
             
             # Check field datatype
-            layer_field = layer_fields[layer_index]
+            layer_field_name, layer_field_type = self._getNativeField(native_fields, field.name)
             found = False
             for xsd_type, qgis_type in self.XSD_QGIS_ALLOWED_DATATYPE_MAP:
-                if layer_field.type() == qgis_type and field.type == xsd_type:
+                if layer_field_type == qgis_type and field.type == xsd_type:
                     found = True
                     break
             
@@ -135,9 +156,22 @@ class DataChecker(object):
         
         return warn_errors, fatal_errors
     
-    def checkLayerData(self, layer, xsd_type):
+    def _getNativeField(self, fields, name):
+        '''
+        Get a native field  from name
+        '''
+        for field in fields:
+            if field[0]==name:
+                return field
+        
+        return None
+    
+    def checkLayerData(self, selection_PAG, layer, xsd_type):
         '''
         Checks the data of a layer against the XSD type
+        
+        :param selection_PAG: Selected features from the Modification PAG layer
+        :type selection_PAG: QgsFeatureList
         
         :param layer: The vector layer to check
         :type layer: QgsVectorLayer
@@ -150,9 +184,28 @@ class DataChecker(object):
         '''
         
         errors = list()
+        areas = []
         
-        for feature in layer.dataProvider().getFeatures():
-            errors += self.checkFeatureData(feature, xsd_type)
+        # Check if a selection exists in 'MODIFICATION PAG'
+        if len(selection_PAG) > 0 :
+            
+            # Selection by intersection with 'MODIFICATION PAG' layer
+            for PAG_feature in selection_PAG:
+                cands = layer.getFeatures()
+                for layer_features in cands:
+                    if PAG_feature.geometry().intersects(layer_features.geometry()):
+                        areas.append(layer_features.id())
+
+            layer.select(areas)
+            selection_entities_from_PAG = layer.selectedFeatures()
+
+            for feature in selection_entities_from_PAG :
+                errors += self.checkFeatureData(feature, xsd_type)
+                    
+        else:
+            
+            for feature in layer.dataProvider().getFeatures() :
+                errors += self.checkFeatureData(feature, xsd_type)
         
         return layer, errors
     
@@ -171,6 +224,10 @@ class DataChecker(object):
         '''
         
         errors = list()
+        
+        # Check geometry
+        if xsd_type.geometry_type is not None:
+            errors += self.checkFeatureGeometry(feature)
         
         for field in feature.fields():
             xsd_field = xsd_type.getField(field.name())
@@ -255,7 +312,12 @@ class DataChecker(object):
         
         errors = list()
         
-        if feature.geometry() is None:
+        if feature.geometry() is None or feature.geometry().isEmpty():
             errors.append((feature, None, QCoreApplication.translate('DataChecker','Geometry is empty')))
+        else:
+            errors2 = feature.geometry().validateGeometry()
+                        
+            for error in errors2:
+                errors.append((feature, None, error.what()))
         
         return errors
