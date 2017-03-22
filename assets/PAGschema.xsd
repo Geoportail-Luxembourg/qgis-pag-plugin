@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-  xmlns="http://www.interlis.ch/INTERLIS2.3/GML32/PAG" targetNamespace="http://www.interlis.ch/INTERLIS2.3/GML32/PAG" elementFormDefault="qualified" attributeFormDefault="unqualified"
+<xsd:schema 
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns="http://www.interlis.ch/INTERLIS2.3/GML32/PAG" 
+  targetNamespace="http://www.interlis.ch/INTERLIS2.3/GML32/PAG" 
+  elementFormDefault="qualified" 
+  attributeFormDefault="unqualified"
   xmlns:gml="http://www.opengis.net/gml/3.2"
-  xmlns:INTERLIS="http://www.interlis.ch/INTERLIS2.3/GML32/INTERLIS"
+  xmlns:ili="http://www.interlis.ch/INTERLIS2.3/GML32/INTERLIS"
   xmlns:ili2c="http://www.interlis.ch/ili2c"
   >
 <xsd:annotation>
@@ -156,6 +160,22 @@
         <xsd:element name="DATE_MUTATION_FOND_DE_PLAN">
           <xsd:simpleType>
             <xsd:restriction base="xsd:date">
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="OBJET">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:enumeration value="refonte"/>
+              <xsd:enumeration value="modification"/>
+              <xsd:enumeration value="mise_a_jour_complete"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="DESCRIPTION" minOccurs="0">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="20"/>
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:element>
@@ -429,6 +449,15 @@
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:element>
+        <xsd:element name="GEOMETRIE" type="gml:CurvePropertyType">
+        </xsd:element>
+        <xsd:element name="GENRE" minOccurs="0">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="10"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
         <xsd:element name="LARGEUR">
           <xsd:simpleType>
             <xsd:restriction base="xsd:decimal">
@@ -437,7 +466,34 @@
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:element>
-        <xsd:element name="GEOMETRIE" type="gml:CurvePropertyType">
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="COULOIRS_ET_ESP_RES_PG" type="COULOIRS_ET_ESP_RES_PGType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="COULOIRS_ET_ESP_RES_PGType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="CODE" minOccurs="0">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:enumeration value="CP_EU"/>
+              <xsd:enumeration value="CP_R_EP"/>
+              <xsd:enumeration value="CPR"/>
+              <xsd:enumeration value="CPF"/>
+              <xsd:enumeration value="CPMD"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="NOM_FICHIER">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="100"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="GEOMETRIE" type="gml:SurfacePropertyType">
         </xsd:element>
         <xsd:element name="GENRE" minOccurs="0">
           <xsd:simpleType>
@@ -535,12 +591,23 @@
     </xsd:extension>
   </xsd:complexContent>
 </xsd:complexType>
+<xsd:element name="LIMITES_COMMUNALES" type="LIMITES_COMMUNALESType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="LIMITES_COMMUNALESType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="GEOMETRIE" type="gml:SurfacePropertyType">
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
 <xsd:element name="MODIFICATION_PAG" type="MODIFICATION_PAGType" substitutionGroup="gml:AbstractFeature"/>
 <xsd:complexType  name="MODIFICATION_PAGType">
   <xsd:complexContent>
     <xsd:extension base="gml:AbstractFeatureType">
       <xsd:sequence>
-        <xsd:element name="DATE_MODIF" minOccurs="0">
+        <xsd:element name="DATE_MODIF">
           <xsd:simpleType>
             <xsd:restriction base="xsd:date">
             </xsd:restriction>
@@ -875,10 +942,12 @@
           <xsd:element ref="CONST_A_CONS_POINT"/>
           <xsd:element ref="CONST_A_CONS_POLY"/>
           <xsd:element ref="COULOIRS_ET_ESP_RES"/>
+          <xsd:element ref="COULOIRS_ET_ESP_RES_PG"/>
           <xsd:element ref="EMPLAC_STAT"/>
           <xsd:element ref="FOND_DE_PLAN"/>
           <xsd:element ref="GABARIT_A_SAUV_POINT"/>
           <xsd:element ref="GABARIT_A_SAUV_POLY"/>
+          <xsd:element ref="LIMITES_COMMUNALES"/>
           <xsd:element ref="MODIFICATION_PAG"/>
           <xsd:element ref="NQ_PAP"/>
           <xsd:element ref="PAP_APPROUVE"/>

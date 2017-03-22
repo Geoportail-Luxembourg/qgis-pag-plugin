@@ -47,8 +47,7 @@ class TopologyChecker(object):
             entity_count = modification_pag_layer.selectedFeatureCount()
             canvas = qgis.utils.iface.mapCanvas()
             canvas.zoomToSelected(modification_pag_layer)
-            if entity_count==1:
-                
+            if entity_count==1:                
                 PagLuxembourg.main.qgis_interface.messageBar().clearWidgets()
                 PagLuxembourg.main.qgis_interface.messageBar().pushMessage(QCoreApplication.translate('Topology','Information'),
                                                                    QCoreApplication.translate('Topology','There is 1 selected entity in MODIFICATION PAG layer. You can now check topology'))
@@ -120,7 +119,7 @@ class TopologyChecker(object):
         result = TopologyRule()
         result.layer1 = str(layer1_table) if layer1_table is not None and len(layer1_table)>0 else QCoreApplication.translate('rulesDialog','No layer')
         result.layer2 = str(layer2_table) if layer2_table is not None and len(layer2_table)>0 else QCoreApplication.translate('rulesDialog','No layer')
-        result.rule = str(rule) if rule is not None else None
+        result.rule = unicode(rule) if rule is not None else None
         result.tolerance = str(tolerance) if tolerance is not None else None
         
         return result

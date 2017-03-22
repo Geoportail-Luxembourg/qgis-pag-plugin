@@ -241,13 +241,32 @@ class PAGLuxembourg(object):
             parent=self.iface.mainWindow()))
         
         # Topo clean tool
-        self.topoclean_widget = TopoClean()
+        '''self.topoclean_widget = TopoClean()
         self.pag_actions.append(self.add_action(
             ':/plugins/PagLuxembourg/widgets/topoclean/icon.png',
             text=self.tr(u'Clean topology'),
             callback=self.topoclean_widget.run,
             status_tip=self.tr(u'Clean the topology of a layer'),
-            parent=self.iface.mainWindow()))
+            parent=self.iface.mainWindow()))'''
+        
+        # Geometry checker
+        found = False
+        for action in self.iface.vectorMenu().actions():
+            if action.text().replace("&","")==QCoreApplication.translate("QgsGeometryCheckerPlugin","G&eometry Tools").replace("&",""):
+                for subaction in action.menu().actions():
+                    if subaction.text().replace("&","")==QCoreApplication.translate("QgsGeometryCheckerPlugin","Check Geometries").replace("&",""):
+                        found = True
+                        self.topoclean_widget = TopoClean(subaction)
+                        self.pag_actions.append(self.add_action(
+                            ':/plugins/PagLuxembourg/widgets/topoclean/icon.png',
+                            text=self.tr(u'Check geometry'),
+                            callback=self.topoclean_widget.run,
+                            status_tip=self.tr(u'Check geometries and fix errors'),
+                            parent=self.iface.mainWindow()))
+        
+        # Topology checker plugin is not enabled, ask the user to install it
+        if not found:
+            self.iface.initializationCompleted.connect(self._showMissingGeometryCheckerPluginMessage)
         
         # Topology checker
         found = False
@@ -303,7 +322,21 @@ class PAGLuxembourg(object):
         Display a message to prompt the user to install the topology checker plugin
         '''
         
-        widget = self.iface.messageBar().createMessage(self.tr(u'PAG Luxembourg'),self.tr(u'The "Topology Checker" plugin is required by the "PAG Luxembourg", please install it and restart QGIS.'))
+        self._showMissingPluginMessage(u'Topology Checker')
+        
+    def _showMissingGeometryCheckerPluginMessage(self):
+        '''
+        Display a message to prompt the user to install the topology checker plugin
+        '''
+        
+        self._showMissingPluginMessage(u'Geometry Checker')
+        
+    def _showMissingPluginMessage(self, plugin):
+        '''
+        Display a message to prompt the user to install the geometry checker plugin
+        '''
+        
+        widget = self.iface.messageBar().createMessage(self.tr(u'PAG Luxembourg'),self.tr(u'The "') + plugin + self.tr(u'" plugin is required by the "PAG Luxembourg" plugin, please install it and restart QGIS.'))
         button = QPushButton(widget)
         button.setText(self.tr(u'Show plugin manager'),)
         button.pressed.connect(self.iface.actionManagePlugins().trigger)

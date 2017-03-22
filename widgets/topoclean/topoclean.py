@@ -7,113 +7,68 @@ Created on 11 dec. 2015
 import os
 
 from qgis.core import *
-from qgis.gui import *
-import processing
-
-from PyQt4.QtGui import QFileDialog, QProgressBar
-from PyQt4.QtCore import *
-
+import qgis.utils
+from PyQt4.QtGui import QAction
+from PyQt4.QtCore import QCoreApplication
 import PagLuxembourg.main
-import PagLuxembourg.project
-
-from topoclean_dialog import TopoCleanDialog
 
 class TopoClean(object):
     '''
     Main class for the snapping widget
     '''
 
-    def __init__(self):
+    def __init__(self, action):
         '''
         Constructor
         '''
-        pass
+        self.topoclean_action=action
     
     def run(self):
         '''
         Runs the widget
         '''
         
-        if not PagLuxembourg.main.current_project.isPagProject():
+        project = PagLuxembourg.main.current_project
+        
+        if not project.isPagProject():
             return
         
-        layer = PagLuxembourg.main.qgis_interface.layerTreeView().currentLayer()
+        self.topoclean_action.trigger()
         
-        if layer is None:
-            PagLuxembourg.main.qgis_interface.messageBar().pushWarning(QCoreApplication.translate('TopoClean','Warning'), 
-                                                                       QCoreApplication.translate('TopoClean','Please select a layer'))
-            return
+        # Zoom to selected onclick button
+        modification_pag_layer=project.getModificationPagLayer()
         
-        if not (layer.type() == QgsMapLayer.VectorLayer and PagLuxembourg.main.current_project.isPagLayer(layer)):
-            return
-        
-        self.dlg = TopoCleanDialog(self, layer)
-        self.dlg.show()
-    
-    def cleanLayer(self, layer, threshold = 0.1):
-        # Deselect all
-        layer.setSelectedFeatures([])
-        
-        # 1. Run the GRASS clean topology tool
-        result = processing.runalg('grass:v.clean.advanced', # Processing
-                                   layer, # Layer
-                                   'rmarea', # Tools
-                                   threshold, # Threshold
-                                   None, # Extent
-                                   -1, # Snapping tolerance
-                                   0.0001, # Min area
-                                   None, # Output layer (auto)
-                                   None) # Output errors (auto)
-        
-        # Get cleaned layer
-        vclean_layer = QgsVectorLayer(result['output'], 'VClean', 'ogr')
-        
-        # 2. Dissolve polygons
-        result = processing.runalg('qgis:dissolve', # Processing
-                                   vclean_layer, # Layer
-                                   False, # Dissolve all
-                                   PagLuxembourg.project.PK, # Field to merge
-                                   None)# Output layer (auto)
-        
-        # Get cleaned layer
-        clean_layer = QgsVectorLayer(result['OUTPUT'], 'Clean', 'ogr')
-        
-        # Start editing session
-        if not layer.isEditable():
-            layer.startEditing()
-        
-        # Empty layer
-        layer.selectAll()
-        layer.deleteSelectedFeatures()
-        
-        # Progress bar + message
-        progressMessageBar = PagLuxembourg.main.qgis_interface.messageBar().createMessage(QCoreApplication.translate('TopoClean','Adding cleaned features'))
-        progress = QProgressBar()
-        progress.setMaximum(clean_layer.featureCount())
-        progress.setAlignment(Qt.AlignLeft|Qt.AlignVCenter)
-        progressMessageBar.layout().addWidget(progress)
-        PagLuxembourg.main.qgis_interface.messageBar().pushWidget(progressMessageBar, QgsMessageBar.INFO)
-        
-        # Adding features
-        for feature in clean_layer.getFeatures():
-            dst_feature = QgsFeature(layer.fields())
-            for index in range(1,layer.fields().count()):
-                dst_feature.setAttribute(index, feature[index])
-            dst_feature.setGeometry(feature.geometry())
-            layer.addFeatures([dst_feature], False)
-            progress.setValue(progress.value() + 1)
-        
-        PagLuxembourg.main.qgis_interface.messageBar().clearWidgets()
-        
-        # Commit    
-        if not layer.commitChanges():
-            layer.rollBack()
-            PagLuxembourg.main.qgis_interface.messageBar().pushCritical(QCoreApplication.translate('TopoClean','Error'), 
-                                                                        QCoreApplication.translate('TopoClean','Commit error on layer {}').format(layer.name()))
-            errors = layer.commitErrors()
-            for error in errors:
-                QgsMessageLog.logMessage(error, 'Clean topology on {}'.format(layer.name()), QgsMessageLog.CRITICAL)
-            PagLuxembourg.main.qgis_interface.openMessageLog()
-        else:
-            PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('TopoClean','Success'), 
-                                                                       QCoreApplication.translate('TopoClean','Layer cleaned successfully'))
+        if modification_pag_layer is not None:
+            # Map layers in the TOC
+            maplayers = QgsMapLayerRegistry.instance().mapLayers()
+            
+            # Selection by intersection with 'MODIFICATION PAG' layer
+            for k,layer in maplayers.iteritems():
+                if layer.type() != QgsMapLayer.VectorLayer or not PagLuxembourg.main.current_project.isPagLayer(layer):
+                    continue
+               
+                areas = []
+                for PAG_feature in modification_pag_layer.selectedFeatures():
+                    cands = layer.getFeatures()
+                    for layer_features in cands:
+                        if PAG_feature.geometry().intersects(layer_features.geometry()):
+                            areas.append(layer_features.id())
+
+                layer.select(areas)
+            
+            entity_count = modification_pag_layer.selectedFeatureCount()            
+            canvas = qgis.utils.iface.mapCanvas()
+            canvas.zoomToSelected(modification_pag_layer)
+            if entity_count==1:
+                
+                PagLuxembourg.main.qgis_interface.messageBar().clearWidgets()
+                PagLuxembourg.main.qgis_interface.messageBar().pushMessage(QCoreApplication.translate('TopoClean','Information'),
+                                                                   QCoreApplication.translate('TopoClean','There is 1 selected entity in MODIFICATION PAG layer. You can now check geometries'))
+            elif entity_count==0:
+                PagLuxembourg.main.qgis_interface.messageBar().pushMessage(QCoreApplication.translate('TopoClean','Information'),
+                                                                   QCoreApplication.translate('TopoClean','There is no selected entity in MODIFICATION PAG layer. You can now check geometries'))
+            else:
+                qgis.utils.iface.messageBar().pushMessage(QCoreApplication.translate('TopoClean', 'Information'),
+                                                                   QCoreApplication.translate('TopoClean','There are {} selected entities in MODIFICATION PAG layer. You can now check geometries').format(entity_count))
+        else :
+            qgis.utils.iface.messageBar().pushMessage("Error", "MODIFICATION PAG layer is not correct")
