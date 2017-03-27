@@ -148,6 +148,34 @@
         }
       ]
     },
+
+    {
+      "Name": "Informations supplémentaires",
+      "IsGroup": true,
+      "TableName": "",
+      "Nodes": [
+        {
+          "Name": "INFO_SUPP_POINT",
+          "IsGroup": false,
+          "TableName": "INFORMATIONS_SUPPLEMENTAIRES.INFO_SUPP_POINT",
+          "Nodes": []
+        },
+        {
+          "Name": "INFO_SUPP_LIGNE",
+          "IsGroup": false,
+          "TableName": "INFORMATIONS_SUPPLEMENTAIRES.INFO_SUPP_LIGNE",
+          "Nodes": []
+        },
+        {
+          "Name": "INFO_SUPP_POLY",
+          "IsGroup": false,
+          "TableName": "INFORMATIONS_SUPPLEMENTAIRES.INFO_SUPP_POLY",
+          "Nodes": []
+        }]
+      },
+
+
+
     {
       "Name": "Gestion",
       "IsGroup": false,
