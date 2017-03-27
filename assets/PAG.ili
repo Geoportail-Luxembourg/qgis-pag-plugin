@@ -17,7 +17,7 @@ VERSION "2015-04-01"  =
 
     CLASS Gestion =
       /** Numéro interne du Ministère de l'Intérieur
-       *
+       */
       ID_COMMUNE (FINAL) : MANDATORY (
         /** Nommern
          */
@@ -344,14 +344,14 @@ VERSION "2015-04-01"  =
       /** Date de mutation du PCN ou fond de plan qui servait comme base à l'élaboration du PAG (p.ex yyyy-mm-jj)
        */
       DATE_MUTATION_FOND_DE_PLAN : MANDATORY FORMAT INTERLIS.XMLDate "2004-1-1" .. "2018-8-28";
-      /** description du projet (localité concernée;lieu-dit; etc.)
-       */
       OBJET (FINAL) : MANDATORY (
         refonte,
         modification,
         mise_a_jour_complete
       );
-      DESCRIPTION : TEXT*20;
+      /** description du projet (localité concernée;lieu-dit; etc.)
+       */
+      DESCRIPTION : MANDATORY TEXT*100;
     END Gestion;
 
   END GESTION;
@@ -593,6 +593,45 @@ VERSION "2015-04-01"  =
 
   END ARTIKEL17;
 
+  /** Contient des informations à titre indicatif
+   */
+  TOPIC INFORMATIONS_SUPPLEMENTAIRES =
+
+    /** Contient des informations à titre indicatif (lignes)
+     */
+    CLASS INFO_SUPP_LIGNE =
+      /** géométrie(ligne)
+       */
+      GEOMETRIE : MANDATORY POLYLINE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
+      /** Nom du fichier word contenant la partie écrite de l'article concerné
+       */
+      NOM_FICHIER : MANDATORY TEXT*100;
+    END INFO_SUPP_LIGNE;
+
+    /** Contient des informations à titre indicatif (points)
+     */
+    CLASS INFO_SUPP_POINT =
+      /** géométrie(point)
+       */
+      GEOMETRIE : MANDATORY PAG.LUREF;
+      /** Nom du fichier word contenant la partie écrite de l'article concerné
+       */
+      NOM_FICHIER : MANDATORY TEXT*100;
+    END INFO_SUPP_POINT;
+
+    /** Contient des informations à titre indicatif (polygones)
+     */
+    CLASS INFO_SUPP_POLY =
+      /** géométrie(polygone)
+       */
+      GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
+      /** Nom du fichier word contenant la partie écrite de l'article concerné
+       */
+      NOM_FICHIER : MANDATORY TEXT*100;
+    END INFO_SUPP_POLY;
+
+  END INFORMATIONS_SUPPLEMENTAIRES;
+
   /** Contient les éléments relevant pour la création du PAG
    */
   TOPIC PAG =
@@ -645,7 +684,7 @@ VERSION "2015-04-01"  =
       GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
     END CONST_A_CONS_POLY;
 
-    /** couloirs et espaces réservés (art. 32) avec une largeur continue
+    /** couloirs et espaces réservés (art. 31) avec une largeur continue
      */
     CLASS COULOIRS_ET_ESP_RES =
       /** Type de couloir
@@ -679,7 +718,7 @@ VERSION "2015-04-01"  =
       LARGEUR : MANDATORY 0.00 .. 100.00;
     END COULOIRS_ET_ESP_RES;
 
-    /** couloirs et espaces réservés (art. 32) avec une largeur variable
+    /** couloirs et espaces réservés (art. 31) avec une largeur variable
      */
     CLASS COULOIRS_ET_ESP_RES_PG =
       /** Type de couloir
@@ -779,7 +818,7 @@ VERSION "2015-04-01"  =
       GEOMETRIE : SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
     END MODIFICATION_PAG;
 
-    /** Zone soumise à un plan d'aménagement particulier "nouveau quartier" (art.38)
+    /** Art.37 Zone soumise à un plan d'aménagement particulier "nouveau quartier"
      */
     CLASS NQ_PAP =
       /** Valeur du coefficient d' occupation du sol minimum (COS MIN)
@@ -787,16 +826,16 @@ VERSION "2015-04-01"  =
       COS_MIN : 0.00 .. 1.00;
       /** Valeur du coefficient d' occupation du sol maximum (COS MAX)
        */
-      COS_MAX : MANDATORY 0.00 .. 1.00;
+      COS_MAX : 0.00 .. 1.00;
       /** Valeur du coefficient d' utilisation du sol minimum (CUS MIN)
        */
       CUS_MIN : 0.00 .. 10.00;
       /** Valeur du coefficient d' utilisation du sol maximum (CUS MAX)
        */
-      CUS_MAX : MANDATORY 0.00 .. 10.00;
+      CUS_MAX : 0.00 .. 10.00;
       /** Coefficient de scellement du sol (CSS)
        */
-      CSS_MAX : MANDATORY 0.00 .. 1.00;
+      CSS_MAX : 0.00 .. 1.00;
       /** densité de logement minimum (DL MIN)
        */
       DL_MIN : 0 .. 1000;
@@ -832,6 +871,9 @@ VERSION "2015-04-01"  =
       /** géométrie du PAP
        */
       GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
+      /** Nom du fichier word contenant la partie écrite du PAG de l'article concerné
+       */
+      NOM_FICHIER : TEXT*100;
     END PAP_APPROUVE;
 
     /** délimitation du périmètre
@@ -842,7 +884,7 @@ VERSION "2015-04-01"  =
       GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
     END PERIMETRE;
 
-    /** Zone d'aménagement différé (art.29)
+    /** Art.28 Zone d'aménagement différé
      */
     CLASS ZAD =
       /** géométrie du quartier
@@ -853,7 +895,7 @@ VERSION "2015-04-01"  =
       NOM_FICHIER : MANDATORY TEXT*100;
     END ZAD;
 
-    /** zones tel que défini dans le règlement grand-ducal du 28 juillet 2011 concernant le contenu du plan d'aménagement général d'une commune (art- 9-24 et 28)
+    /** zones tel que défini dans le règlement grand-ducal du 8 mars 2017 concernant le contenu du plan d'aménagement général d'une commune (art- 8-23 et 27)
      */
     CLASS ZONAGE =
       /** Categorie de la zone (voire liste)
@@ -886,6 +928,9 @@ VERSION "2015-04-01"  =
         /** Art.13 Zones d'activités économiques communales type 2
          */
         ECO_c2,
+        /** Art.13 Zones d'activités économiques régionales
+         */
+        ECO_r,
         /** Art.14 Zones d'activités économiques régionales type 1
          */
         ECO_r1,
@@ -960,7 +1005,7 @@ VERSION "2015-04-01"  =
       GENRE : TEXT*10;
     END ZONAGE;
 
-    /** zones telles que définies dans le règlement grand-ducal du 28 juillet 2011 concernant le contenu du plan d'aménagement général d'une commune (art. 31)
+    /** zones telles que définies dans le règlement grand-ducal du 8 mars 2017 concernant le contenu du plan d'aménagement général d'une commune (art. 30)
      */
     CLASS ZONE_SERV_URB =
       /** type de la servitude
@@ -994,37 +1039,40 @@ VERSION "2015-04-01"  =
       GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
     END ZONES_QE;
 
-    /** informations concernant les zones définies dans le règlement grand-ducal du 28 juillet 2011 art. 30;33-37
+    /** informations concernant les zones définies dans le règlement grand-ducal du 8 mars 2017 art. 29;32-36
      */
     CLASS ZONES_SUPERPOSEES =
       /** type de zone
        */
       CATEGORIE (FINAL) : MANDATORY (
-        /** Art.33 Secteur protégé d'intérêt communal de type "environnement construit"
+        /** Art.32 Secteur protégé d'intérêt communal de type "vestiges archéologiques"
+         */
+        SPI_A,
+        /** Art.32 Secteur protégé d'intérêt communal de type "environnement construit"
          */
         SPI_EC,
-        /** Art.33 Secteur protégé d'intérêt communal de type "environnement naturel et paysage"
+        /** Art.32 Secteur protégé d'intérêt communal de type "environnement naturel et paysage"
          */
         SPI_ENP,
-        /** Art.34 Zones de risques naturels prévisibles "zones de risque d'éboulement ou de glissements de terrain"
+        /** Art.33 Zones de risques naturels prévisibles "zones de risque d'éboulement ou de glissements de terrain"
          */
         ZRNP_G,
-        /** Art.34 Zones de risques naturels prévisibles "zones de risques d'éboulement miniers"
+        /** Art.33 Zones de risques naturels prévisibles "zones de risques d'éboulement miniers"
          */
         ZRNP_M,
-        /** Art.34 Zones de risques naturels prévisibles "zones inondables"
+        /** Art.33 Zones de risques naturels prévisibles "zones inondables"
          */
         ZRNP_I,
-        /** Art.35 Zones à risques concernant la prévention des accidents majeurs impliquant des substances dangereuses
+        /** Art.34 Zones à risques concernant la prévention des accidents majeurs impliquant des substances dangereuses
          */
         ZR_SD,
-        /** Art.36 Zones de bruit
+        /** Art.35 Zones de bruit
          */
         ZB,
-        /** Zones d'extraction
+        /** Art.36 Zones d'extraction
          */
         ZE,
-        /** Art.30 Zones urbanisation prioritaire
+        /** Art.29 Zones urbanisation prioritaire
          */
         ZUP
       );
