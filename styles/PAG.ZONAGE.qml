@@ -1,5 +1,5 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis version="2.12.1-Lyon" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
+<qgis version="2.14.0-Essen" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
   <edittypes>
     <edittype widgetv2type="Hidden" name="OGC_FID">
       <widgetv2config fieldEditable="1" labelOnTop="0"/>
@@ -14,6 +14,7 @@
         <value key="ECO_c2" value="ECO_c2"/>
         <value key="ECO_c3" value="ECO_c3"/>
         <value key="ECO_n" value="ECO_n"/>
+        <value key="ECO_r" value="ECO_r"/>
         <value key="ECO_r1" value="ECO_r1"/>
         <value key="ECO_r2" value="ECO_r2"/>
         <value key="FOR" value="FOR"/>
@@ -47,7 +48,7 @@
       <widgetv2config fieldEditable="1" labelOnTop="0"/>
     </edittype>
   </edittypes>
-  <renderer-v2 attr="CATEGORIE" forceraster="0" symbollevels="0" type="categorizedSymbol">
+  <renderer-v2 attr="CATEGORIE" forceraster="0" symbollevels="0" type="categorizedSymbol" enableorderby="0">
     <categories>
       <category render="true" symbol="0" value="HAB_1" label="HAB_1"/>
       <category render="true" symbol="1" value="HAB_2" label="HAB_2"/>
@@ -77,10 +78,11 @@
       <category render="true" symbol="25" value="JAR" label="JAR"/>
       <category render="true" symbol="26" value="FOR" label="FOR"/>
       <category render="true" symbol="27" value="VIT" label="VIT"/>
-      <category render="true" symbol="28" value="HORT" label="HORT"/>
+      <category render="true" symbol="28" value="HOR" label="HOR"/>
       <category render="true" symbol="29" value="PARC" label="PARC"/>
       <category render="true" symbol="30" value="VERD" label="VERD"/>
       <category render="true" symbol="31" value="AGR" label="AGR"/>
+      <category render="true" symbol="32" value="ECO_r" label="ECO_r"/>
     </categories>
     <symbols>
       <symbol alpha="1" clip_to_extent="1" type="fill" name="0">
@@ -473,6 +475,21 @@
           <prop k="style" v="solid"/>
         </layer>
       </symbol>
+      <symbol alpha="1" clip_to_extent="1" type="fill" name="32">
+        <layer pass="0" class="SimpleFill" locked="0">
+          <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="color" v="245,99,255,255"/>
+          <prop k="joinstyle" v="bevel"/>
+          <prop k="offset" v="0,0"/>
+          <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="offset_unit" v="MM"/>
+          <prop k="outline_color" v="0,0,0,255"/>
+          <prop k="outline_style" v="solid"/>
+          <prop k="outline_width" v="0.26"/>
+          <prop k="outline_width_unit" v="MM"/>
+          <prop k="style" v="solid"/>
+        </layer>
+      </symbol>
       <symbol alpha="1" clip_to_extent="1" type="fill" name="4">
         <layer pass="0" class="SimpleFill" locked="0">
           <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -625,7 +642,7 @@
     <property key="labeling/fitInPolygonOnly" value="false"/>
     <property key="labeling/fontBold" value="false"/>
     <property key="labeling/fontCapitals" value="0"/>
-    <property key="labeling/fontFamily" value="MS Shell Dlg 2"/>
+    <property key="labeling/fontFamily" value=".SF NS Text"/>
     <property key="labeling/fontItalic" value="false"/>
     <property key="labeling/fontLetterSpacing" value="0"/>
     <property key="labeling/fontLimitPixelSize" value="false"/>
@@ -654,14 +671,16 @@
     <property key="labeling/minFeatureSize" value="0"/>
     <property key="labeling/multilineAlign" value="0"/>
     <property key="labeling/multilineHeight" value="1"/>
-    <property key="labeling/namedStyle" value="Normal"/>
+    <property key="labeling/namedStyle" value=""/>
     <property key="labeling/obstacle" value="true"/>
     <property key="labeling/obstacleFactor" value="1"/>
     <property key="labeling/obstacleType" value="0"/>
+    <property key="labeling/offsetType" value="0"/>
     <property key="labeling/placeDirectionSymbol" value="0"/>
     <property key="labeling/placement" value="1"/>
     <property key="labeling/placementFlags" value="0"/>
     <property key="labeling/plussign" value="false"/>
+    <property key="labeling/predefinedPositionOrder" value="TR,TL,BR,BL,R,L,TSR,BSR"/>
     <property key="labeling/preserveRotation" value="true"/>
     <property key="labeling/previewBkgrdColor" value="#ffffff"/>
     <property key="labeling/priority" value="5"/>
@@ -739,6 +758,7 @@
     <property key="labeling/wrapChar" value=""/>
     <property key="labeling/xOffset" value="0"/>
     <property key="labeling/yOffset" value="0"/>
+    <property key="labeling/zIndex" value="0"/>
     <property key="variableNames" value="_fields_"/>
     <property key="variableValues" value=""/>
   </customproperties>
@@ -770,19 +790,41 @@
   <SingleCategoryDiagramRenderer diagramType="Pie">
     <DiagramCategory penColor="#000000" labelPlacementMethod="XHeight" penWidth="0" diagramOrientation="Up" minimumSize="0" barWidth="5" penAlpha="255" maxScaleDenominator="1e+08" backgroundColor="#ffffff" transparency="0" width="15" scaleDependency="Area" backgroundAlpha="255" angleOffset="1440" scaleBasedVisibility="0" enabled="0" height="15" sizeType="MM" minScaleDenominator="0">
       <fontProperties description="MS Shell Dlg 2,8.25,-1,5,50,0,0,0,0,0" style=""/>
+      <attribute field="" color="#000000" label=""/>
     </DiagramCategory>
   </SingleCategoryDiagramRenderer>
-  <DiagramLayerSettings yPosColumn="-1" linePlacementFlags="10" placement="0" dist="0" xPosColumn="-1" priority="0" obstacle="0" showAll="1"/>
-  <editform>..</editform>
-  <editforminit/>
-  <featformsuppress>2</featformsuppress>
+  <DiagramLayerSettings yPosColumn="-1" linePlacementFlags="10" placement="0" dist="0" xPosColumn="-1" priority="0" obstacle="0" zIndex="0" showAll="1"/>
   <annotationform>..</annotationform>
-  <editorlayout>generatedlayout</editorlayout>
   <excludeAttributesWMS/>
   <excludeAttributesWFS/>
   <attributeactions/>
+  <editform>..</editform>
+  <editforminit/>
+  <editforminitcodesource>0</editforminitcodesource>
+  <editforminitfilepath></editforminitfilepath>
+  <editforminitcode><![CDATA[# -*- coding: utf-8 -*-
+"""
+QGIS forms can have a Python function that is called when the form is
+opened.
+
+Use this function to add extra logic to your forms.
+
+Enter the name of the function in the "Python Init function"
+field.
+An example follows:
+"""
+from PyQt4.QtGui import QWidget
+
+def my_form_open(dialog, layer, feature):
+	geom = feature.geometry()
+	control = dialog.findChild(QWidget, "MyLineEdit")
+]]></editforminitcode>
+  <featformsuppress>2</featformsuppress>
+  <editorlayout>generatedlayout</editorlayout>
+  <widgets/>
   <conditionalstyles>
     <rowstyles/>
     <fieldstyles/>
   </conditionalstyles>
+  <layerGeometryType>2</layerGeometryType>
 </qgis>
