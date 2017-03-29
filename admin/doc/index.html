@@ -49,6 +49,20 @@
         <p>
             Pour modifier le schéma d'un projet PAG, il suffit de remplacer le fichier <b>PAGschema.xsd</b> dans le répertoire <b>assets</b>.
         </p>
+		
+		<div class="alert alert-warning" role="alert">
+			<b>Attention : </b>Pour gérer le nombre de décimales dans l'éditeur d'un attribut de type "double", il faut spécifier la précision dans les Tags minInclusive et maxInclusive.<br/>
+			Exemple : 2 décimales pour l'attribut COS_MAX<br/><br/>
+			<pre>
+&lt;xsd:element name="COS_MAX"&gt;
+  &lt;xsd:simpleType&gt;
+    &lt;xsd:restriction base="xsd:decimal"&gt;
+      &lt;xsd:minInclusive value="0.00"/&gt;
+      &lt;xsd:maxInclusive value="1.00"/&gt;
+    &lt;/xsd:restriction&gt;
+  &lt;/xsd:simpleType&gt;
+&lt;/xsd:element&gt;</pre>
+        </div>
 
         <p>
             Si des couches ont été ajoutées, pensez à mettre à jour le fichier de configuration de <a href="#layers">l'ordre des couches</a>.
