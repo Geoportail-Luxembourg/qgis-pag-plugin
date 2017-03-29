@@ -196,7 +196,10 @@ class DataChecker(object):
                     if PAG_feature.geometry().intersects(layer_features.geometry()):
                         areas.append(layer_features.id())
 
-            layer.select(areas)
+            if layer.geometryType()== QGis.NoGeometry:
+                layer.selectAll()
+            else:
+                layer.select(areas)
             selection_entities_from_PAG = layer.selectedFeatures()
 
             for feature in selection_entities_from_PAG :
