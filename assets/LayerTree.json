@@ -38,6 +38,12 @@
           "TableName": "PAG.CONST_A_CONS_POINT",
           "Nodes": []
         },
+         {
+          "Name": "CONST_A_CONS_LIGNE",
+          "IsGroup": false,
+          "TableName": "PAG.CONST_A_CONS_LIGNE",
+          "Nodes": []
+        },
         {
           "Name": "GABARIT_A_SAUV_POINT",
           "IsGroup": false,

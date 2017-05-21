@@ -454,6 +454,31 @@
     </xsd:extension>
   </xsd:complexContent>
 </xsd:complexType>
+<xsd:element name="CONST_A_CONS_LIGNE" type="CONST_A_CONS_LIGNEType" substitutionGroup="gml:AbstractFeature"/>
+<xsd:complexType  name="CONST_A_CONS_LIGNEType">
+  <xsd:complexContent>
+    <xsd:extension base="gml:AbstractFeatureType">
+      <xsd:sequence>
+        <xsd:element name="CATEGORIE" minOccurs="0">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="100"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="NOM_FICHIER">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="100"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="GEOMETRIE" type="gml:CurvePropertyType">
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
 <xsd:element name="CONST_A_CONS_POINT" type="CONST_A_CONS_POINTType" substitutionGroup="gml:AbstractFeature"/>
 <xsd:complexType  name="CONST_A_CONS_POINTType">
   <xsd:complexContent>
@@ -1025,6 +1050,7 @@
         <xsd:choice>
           <xsd:element ref="ALIGN_A_RESP"/>
           <xsd:element ref="BATIMENT"/>
+          <xsd:element ref="CONST_A_CONS_LIGNE"/>
           <xsd:element ref="CONST_A_CONS_POINT"/>
           <xsd:element ref="CONST_A_CONS_POLY"/>
           <xsd:element ref="COULOIRS_ET_ESP_RES"/>

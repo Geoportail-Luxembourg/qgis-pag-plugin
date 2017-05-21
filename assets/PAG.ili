@@ -656,6 +656,20 @@ VERSION "2015-04-01"  =
       GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
     END BATIMENT;
 
+    /** constructions à conserver (ligne)
+     */
+    CLASS CONST_A_CONS_LIGNE =
+      /** Texte explicatif
+       */
+      CATEGORIE : TEXT*100;
+      /** Nom du fichier word contenant la partie écrite du PAG de l'article concerné
+       */
+      NOM_FICHIER : MANDATORY TEXT*100;
+      /** géométrie (ligne)
+       */
+      GEOMETRIE : MANDATORY POLYLINE WITH (STRAIGHTS) VERTEX PAG.LUREF;
+    END CONST_A_CONS_LIGNE;
+
     /** constructions à conserver (point)
      */
     CLASS CONST_A_CONS_POINT =
