@@ -79,7 +79,7 @@ class ImportGML(Importer):
             # Progression message
             progressMessageBar.setText(QCoreApplication.translate('ImportGML','Importing {}').format(gmltype))
             
-            gmllayer = QgsVectorLayer('{}|layername={}'.format(self.filename,gmltype), gmltype, "ogr")
+            gmllayer = QgsVectorLayer(u'{}|layername={}'.format(self.filename,gmltype), gmltype, "ogr")
             
             # Check schema structure table and datatypes
             warn_errors, fatal_errors = self.data_checker.checkLayerStructure(gmllayer, xsdtype)
