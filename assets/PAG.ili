@@ -606,6 +606,7 @@ VERSION "2015-04-01"  =
       /** Nom du fichier word contenant la partie écrite de l'article concerné
        */
       NOM_FICHIER : MANDATORY TEXT*100;
+      CODE : TEXT*20;
     END INFO_SUPP_LIGNE;
 
     /** Contient des informations à titre indicatif (points)
@@ -617,6 +618,7 @@ VERSION "2015-04-01"  =
       /** Nom du fichier word contenant la partie écrite de l'article concerné
        */
       NOM_FICHIER : MANDATORY TEXT*100;
+      CODE : TEXT*20;
     END INFO_SUPP_POINT;
 
     /** Contient des informations à titre indicatif (polygones)
@@ -628,6 +630,7 @@ VERSION "2015-04-01"  =
       /** Nom du fichier word contenant la partie écrite de l'article concerné
        */
       NOM_FICHIER : MANDATORY TEXT*100;
+      CODE : TEXT*20;
     END INFO_SUPP_POLY;
 
   END INFORMATIONS_SUPPLEMENTAIRES;
