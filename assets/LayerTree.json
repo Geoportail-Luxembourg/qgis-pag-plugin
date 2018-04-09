@@ -38,6 +38,12 @@
           "TableName": "PAG.CONST_A_CONS_POINT",
           "Nodes": []
         },
+         {
+          "Name": "CONST_A_CONS_LIGNE",
+          "IsGroup": false,
+          "TableName": "PAG.CONST_A_CONS_LIGNE",
+          "Nodes": []
+        },
         {
           "Name": "GABARIT_A_SAUV_POINT",
           "IsGroup": false,
@@ -148,6 +154,34 @@
         }
       ]
     },
+
+    {
+      "Name": "Informations supplémentaires",
+      "IsGroup": true,
+      "TableName": "",
+      "Nodes": [
+        {
+          "Name": "INFO_SUPP_POINT",
+          "IsGroup": false,
+          "TableName": "INFORMATIONS_SUPPLEMENTAIRES.INFO_SUPP_POINT",
+          "Nodes": []
+        },
+        {
+          "Name": "INFO_SUPP_LIGNE",
+          "IsGroup": false,
+          "TableName": "INFORMATIONS_SUPPLEMENTAIRES.INFO_SUPP_LIGNE",
+          "Nodes": []
+        },
+        {
+          "Name": "INFO_SUPP_POLY",
+          "IsGroup": false,
+          "TableName": "INFORMATIONS_SUPPLEMENTAIRES.INFO_SUPP_POLY",
+          "Nodes": []
+        }]
+      },
+
+
+
     {
       "Name": "Gestion",
       "IsGroup": false,

@@ -101,9 +101,9 @@ class ImportDxfDialog(QtGui.QDialog, FORM_CLASS, Importer):
         oldProjValue = settings.value( "/Projections/defaultBehaviour", "prompt", type=str )
         settings.setValue( "/Projections/defaultBehaviour", "useProject" )
 
-        self.dxflayer_points = QgsVectorLayer('{}|layername=entities|geometrytype=Point'.format(filename), 'Points', 'ogr')
-        self.dxflayer_linestrings = QgsVectorLayer('{}|layername=entities|geometrytype=LineString'.format(filename), 'LineString', 'ogr')
-        self.dxflayer_polygons = QgsVectorLayer('{}|layername=entities|geometrytype=Polygon'.format(filename), 'Polygon', 'ogr')
+        self.dxflayer_points = QgsVectorLayer(u'{}|layername=entities|geometrytype=Point'.format(filename), 'Points', 'ogr')
+        self.dxflayer_linestrings = QgsVectorLayer(u'{}|layername=entities|geometrytype=LineString'.format(filename), 'LineString', 'ogr')
+        self.dxflayer_polygons = QgsVectorLayer(u'{}|layername=entities|geometrytype=Polygon'.format(filename), 'Polygon', 'ogr')
         
         self.valid = self.dxflayer_points.isValid() or self.dxflayer_linestrings.isValid() or self.dxflayer_polygons.isValid()
         
