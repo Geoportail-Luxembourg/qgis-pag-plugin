@@ -855,10 +855,10 @@ VERSION "2015-04-01"  =
       CSS_MAX : 0.00 .. 1.00;
       /** densité de logement minimum (DL MIN)
        */
-      DL_MIN : 0 .. 1000;
+      DL_MIN : 0.00 .. 1000.00;
       /** densité de logement maximum (DL MAX)
        */
-      DL_MAX : 0 .. 1000;
+      DL_MAX : 0.00 .. 1000.00;
       /** géométrie du quartier
        */
       GEOMETRIE : MANDATORY SURFACE WITH (STRAIGHTS) VERTEX PAG.LUREF WITHOUT OVERLAPS>0.001;
