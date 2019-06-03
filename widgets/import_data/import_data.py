@@ -15,6 +15,7 @@ import PagLuxembourg.main
 
 from import_gml import ImportGML
 from import_shp import ImportSHP
+from import_geojson import ImportGeoJSON
 from import_dxf import ImportDXF
 
 class ImportData(object):
@@ -40,7 +41,7 @@ class ImportData(object):
         dialog = QFileDialog()
         dialog.setFileMode(QFileDialog.ExistingFile)
         dialog.setOption(QFileDialog.ReadOnly)
-        dialog.setNameFilter('Vector file (*.gml *.shp *.dxf)');
+        dialog.setNameFilter('Vector file (*.gml *.shp *.geojson *.dxf)');
         dialog.setWindowTitle(QCoreApplication.translate('ImportData','Select the file to import'))
         dialog.setSizeGripEnabled(False)
         result = dialog.exec_()
@@ -57,6 +58,7 @@ class ImportData(object):
         importers = {
                     'gml':ImportGML,
                     'shp':ImportSHP,
+                    'geojson': ImportGeoJSON,
                     'dxf':ImportDXF
                     }
         

@@ -518,7 +518,7 @@ class Project(QObject):
                 layer.setFeatureFormSuppress(QgsVectorLayer.SuppressOff)
         
     def _addOrthoBasemap(self):
-        ortho_url = 'url=http://wsinspire.geoportail.lu/oi&SLegend=0&crs=EPSG:2169&dpiMode=7&featureCount=10&format=image/jpeg&layers=1&styles='
+        ortho_url = 'url=http://wmts1.geoportail.lu/opendata/service&SLegend=0&crs=EPSG:2169&dpiMode=7&featureCount=10&format=image/jpeg&layers=ortho_latest&styles='
         ortho_found = False
         for k,v in QgsMapLayerRegistry.instance().mapLayers().iteritems():
             if v.source() == ortho_url:
