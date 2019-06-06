@@ -1,16 +1,14 @@
 '''
-Created on 09 nov. 2015
+Created on 17 sept. 2015
 
 @author: arxit
 '''
-from __future__ import absolute_import
 
-from builtins import object
 import os
 
-from .about_dialog import AboutDialog
+from create_project_dialog import CreateProjectDialog
 
-class About(object):
+class CreateProject(object):
     '''
     Main class for the create project widget
     '''
@@ -21,11 +19,12 @@ class About(object):
         Constructor
         '''
         
-        self.dlg = AboutDialog()
+        self.dlg = CreateProjectDialog()
     
     def run(self):
         '''
         Runs the widget
         '''
         
+        self.dlg.clear()
         self.dlg.show()

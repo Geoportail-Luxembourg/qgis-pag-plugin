@@ -136,7 +136,7 @@ class TopologyChecker(object):
         # Get layer id from table name
         layer_registry = QgsMapLayerRegistry.instance()
         current_project = PagLuxembourg.main.current_project
-        for layerid, layer in list(layer_registry.mapLayers().items()):
+        for layerid, layer in layer_registry.mapLayers().items():
             layer_table = current_project.getUriInfos(layer.source())[1]
             if rule.layer1 == layer_table:
                 rule.layer1=layerid

@@ -4,10 +4,12 @@ Created on 08 dec. 2015
 @author: arxit
 '''
 
+from builtins import str
 from qgis.gui import QgsEditorWidgetWrapper, QgsEditorConfigWidget, QgsEditorWidgetFactory, QgsEditorWidgetRegistry, QgsFilterLineEdit
 from qgis.core import NULL
-from PyQt4.QtGui import QWidget, QPalette, QPushButton, QGridLayout, QLineEdit, QFileDialog, QLabel, QHBoxLayout
-from PyQt4.QtCore import QCoreApplication, QFileInfo, QSettings
+from qgis.PyQt.QtWidgets import QWidget, QPushButton, QGridLayout, QLineEdit, QFileDialog, QLabel, QHBoxLayout
+from qgis.PyQt.QtGui import QPalette
+from qgis.PyQt.QtCore import QCoreApplication, QFileInfo, QSettings
 
 import os.path
  
@@ -46,7 +48,7 @@ class SimpleFilenamePicker(QWidget):
     def selectFileName(self):
         text = self.le.text()
 
-        fileName = QFileDialog.getOpenFileName(self.le,
+        fileName, __ = QFileDialog.getOpenFileName(self.le,
                                                QCoreApplication.translate('Filename','Select a file'),
                                                QFileInfo(text).absolutePath())
 

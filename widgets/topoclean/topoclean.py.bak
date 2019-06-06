@@ -44,7 +44,7 @@ class TopoClean(object):
             maplayers = QgsMapLayerRegistry.instance().mapLayers()
             
             # Selection by intersection with 'MODIFICATION PAG' layer
-            for k,layer in list(maplayers.items()):
+            for k,layer in maplayers.items():
                 if layer.type() != QgsMapLayer.VectorLayer or not PagLuxembourg.main.current_project.isPagLayer(layer):
                     continue
                

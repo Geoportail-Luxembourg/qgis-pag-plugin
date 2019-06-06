@@ -5,10 +5,7 @@ Updated on 11 may 2016
 
 @author: arxit
 '''
-from __future__ import absolute_import
 
-from builtins import str
-from builtins import object
 import os
 
 import processing
@@ -16,13 +13,13 @@ from processing.tools import *
 
 from qgis.core import *
 import qgis.utils
-from qgis.PyQt.QtWidgets import QAction
-from qgis.PyQt.QtCore import QCoreApplication
+from PyQt4.QtGui import QAction
+from PyQt4.QtCore import QCoreApplication
 
 from PagLuxembourg.schema import *
 import PagLuxembourg.main
 
-from .error_summary_dialog import ErrorSummaryDialog
+from error_summary_dialog import ErrorSummaryDialog
 
 class DataChecker(object):
     '''
@@ -289,7 +286,7 @@ class DataChecker(object):
             
         # Check string values
         if xsd_field.type == DataType.STRING:
-            text_value = str(field_value)
+            text_value = unicode(field_value)
             
             # Check value length
             if xsd_field.length is not None:
