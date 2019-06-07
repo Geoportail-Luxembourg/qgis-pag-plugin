@@ -78,7 +78,7 @@ class ExportGML(object):
         # Progress bar
         progressMessageBar = PagLuxembourg.main.qgis_interface.messageBar().createMessage(QCoreApplication.translate('ExportGML','Exporting to GML'))
         progress = QProgressBar()
-        progress.setMaximum(len(QgsMapLayerRegistry.instance().mapLayers()))
+        progress.setMaximum(len(QgsProject.instance().mapLayers()))
         progress.setAlignment(Qt.AlignLeft|Qt.AlignVCenter)
         progressMessageBar.layout().addWidget(progress)
         PagLuxembourg.main.qgis_interface.messageBar().pushWidget(progressMessageBar, QgsMessageBar.INFO)

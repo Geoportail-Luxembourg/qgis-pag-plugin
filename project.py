@@ -150,7 +150,7 @@ class Project(QObject):
         '''
 
         # Map layers in the TOC
-        maplayers = QgsMapLayerRegistry.instance().mapLayers()
+        maplayers = QgsProject.instance().mapLayers()
 
         # Iterates through XSD types
         uri = self.getTypeUri(type)
@@ -251,7 +251,7 @@ class Project(QObject):
         QgsProject.instance().writeEntry('Digitizing', '/DefaultSnapTolerance', 10.0)
         QgsProject.instance().writeEntry('Digitizing', '/DefaultSnapToleranceUnit', QgsTolerance.Pixels)
 
-        QgsProject.instance().snapSettingsChanged.emit()
+        QgsProject.instance().snappingConfigChanged.emit(QgsSnappingConfig(QgsProject.instance()))
 
     def _activateAutoShowForm(self):
         settings = QSettings()
@@ -300,7 +300,7 @@ class Project(QObject):
         :type type: PAGType
         '''
 
-        uri = QgsDataSourceURI()
+        uri = QgsDataSourceUri()
         uri.setDatabase(self.database)
         geom_column = 'GEOMETRY' if type.geometry_type is not None else ''
         uri.setDataSource('', type.name, geom_column, '', PK)
@@ -410,7 +410,7 @@ class Project(QObject):
         '''
 
         for field in type.fields:
-            if layer.fieldNameIndex(field.name) < 0:
+            if layer.fields().indexFromName(field.name) < 0:
                 layer.dataProvider().addAttributes([self._getField(field)])
 
         # Add import id field
@@ -419,7 +419,7 @@ class Project(QObject):
             field.name = IMPORT_ID
             field.type = DataType.STRING
             field.nullable = True
-            if layer.fieldNameIndex(field.name) < 0:
+            if layer.fields().indexFromName(field.name) < 0:
                 layer.dataProvider().addAttributes([self._getField(field)])
 
         layer.updateFields()
@@ -510,7 +510,7 @@ class Project(QObject):
                 if layer is None:
                     uri = self.getTypeUri(xsd_type)
                     layer = QgsVectorLayer(uri, child['Name'], 'spatialite')
-                    QgsMapLayerRegistry.instance().addMapLayer(layer, False)
+                    QgsProject.instance().addMapLayer(layer, False)
                     treenode.addLayer(layer)
 
                 # Updates layers style
@@ -520,19 +520,20 @@ class Project(QObject):
                 self._updateLayerEditors(layer, xsd_type)
 
                 # Activate the auto Show feature form on feature creation
-                layer.setFeatureFormSuppress(QgsVectorLayer.SuppressOff)
+                #TODO QGIS 2 TO 3
+                #layer.setFeatureFormSuppress(QgsVectorLayer.SuppressOff)
 
     def _addOrthoBasemap(self):
         ortho_url = 'url=http://wmts1.geoportail.lu/opendata/service&SLegend=0&crs=EPSG:2169&dpiMode=7&featureCount=10&format=image/jpeg&layers=ortho_latest&styles='
         ortho_found = False
-        for k, v in list(QgsMapLayerRegistry.instance().mapLayers().items()):
+        for k, v in list(QgsProject.instance().mapLayers().items()):
             if v.source() == ortho_url:
                 ortho_found = True
                 break
 
         if not ortho_found:
             ortho_layer = QgsRasterLayer(ortho_url, 'Ortho 2013', 'wms')
-            QgsMapLayerRegistry.instance().addMapLayer(ortho_layer, False)
+            QgsProject.instance().addMapLayer(ortho_layer, False)
             QgsProject.instance().layerTreeRoot().addLayer(ortho_layer)
             main.qgis_interface.mapCanvas().setExtent(ortho_layer.extent())
 
@@ -590,16 +591,18 @@ class Project(QObject):
         :param type: XSD schema type
         :type type: PAGType
         '''
-
         # Hide fields
         hidden = [PK, IMPORT_ID]
-        for field in layer.pendingFields():
+        for field in layer.fields():
             if field.name() == IMPORT_ID:
-                layer.setEditorWidgetV2(layer.fieldNameIndex(field.name()), 'TextEdit')
+                #layer.setEditorWidgetV2(layer.fields().indexFromName(field.name()), 'TextEdit')
+                layer.setEditorWidgetSetup(layer.fields().indexFromName(field.name()), QgsEditorWidgetSetup("TextEdit", {}))
+
         ''' Bug http://hub.qgis.org/issues/14235 '''
-        for field in layer.pendingFields():
+        for field in layer.fields():
             if field.name() in hidden:
-                layer.setEditorWidgetV2(layer.fieldNameIndex(field.name()), 'Hidden')
+                #layer.setEditorWidgetV2(layer.fields().indexFromName(field.name()), 'Hidden')
+                layer.setEditorWidgetSetup(layer.fields().indexFromName(field.name()), QgsEditorWidgetSetup("Hidden", {}))
 
         # Editors
         for field in type.fields:
@@ -618,7 +621,7 @@ class Project(QObject):
         :type layer: QgsVectorLayer
         '''
 
-        fieldIndex = layer.fieldNameIndex(field.name)
+        fieldIndex = layer.fields().indexFromName(field.name)
 
         if fieldIndex == -1:
             return
@@ -640,8 +643,9 @@ class Project(QObject):
                 editor = 'ValueMap'
 
                 # Invert key, value of currentConfig
-                currentConfig = layer.editorWidgetV2Config(fieldIndex) if layer.editorWidgetV2(fieldIndex) == 'ValueMap' else OrderedDict()
-                currentConfig = OrderedDict((v, k) for k, v in list(currentConfig.items()))
+                #currentConfig = layer.editorWidgetV2Config(fieldIndex) if layer.editorWidgetV2(fieldIndex) == 'ValueMap' else OrderedDict()
+                currentConfig = layer.editorWidgetSetup(fieldIndex).config() if layer.editorWidgetSetup(fieldIndex).type() == 'ValueMap' else OrderedDict()
+                currentConfig["map"] = OrderedDict((v, k) for k, v in currentConfig["map"].items())
 
                 # Keep current values and add new ones
                 for element in field.listofvalues:
@@ -680,5 +684,10 @@ class Project(QObject):
         else:
             raise NotImplementedError('Unknown datatype')
 
-        layer.setEditorWidgetV2(fieldIndex, editor)
-        layer.setEditorWidgetV2Config(fieldIndex, config)
+        #layer.setEditorWidgetV2(fieldIndex, "ValueMap")
+        #layer.setEditorWidgetV2Config(fieldIndex, config)
+
+        editor_widget_setup = QgsEditorWidgetSetup(editor, {
+            'map':config
+        })
+        layer.setEditorWidgetSetup(fieldIndex, editor_widget_setup)

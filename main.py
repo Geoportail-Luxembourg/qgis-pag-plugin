@@ -22,6 +22,7 @@
 '''
 from __future__ import absolute_import
 from builtins import object
+from qgis.core import *
 from qgis.PyQt.QtCore import QSettings, QTranslator, qVersion, QCoreApplication
 from qgis.PyQt.QtWidgets import QAction, QPushButton
 from qgis.PyQt.QtGui import QIcon
@@ -252,11 +253,12 @@ class PAGLuxembourg(object):
             parent=self.iface.mainWindow()))'''
 
         # Geometry checker
+        """
         found = False
         for action in self.iface.vectorMenu().actions():
-            if action.text().replace("&","")==QCoreApplication.translate("QgsGeometryCheckerPlugin","G&eometry Tools").replace("&",""):
+            if action.text().replace("&", "") == QCoreApplication.translate("QgsGeometryCheckerPlugin", "G&eometry Tools").replace("&",""):
                 for subaction in action.menu().actions():
-                    if subaction.text().replace("&","")==QCoreApplication.translate("QgsGeometryCheckerPlugin","Check Geometries").replace("&",""):
+                    if subaction.text().replace("&", "") == QCoreApplication.translate("QgsGeometryCheckerPlugin", "Check Geometries").replace("&",""):
                         found = True
                         self.topoclean_widget = TopoClean(subaction)
                         self.pag_actions.append(self.add_action(
@@ -265,6 +267,19 @@ class PAGLuxembourg(object):
                             callback=self.topoclean_widget.run,
                             status_tip=self.tr(u'Check geometries and fix errors'),
                             parent=self.iface.mainWindow()))
+        """
+        found = False
+        for action in self.iface.vectorMenu().actions():
+            if action.parent().objectName() == u'qgis_plugin_geometrycheckerplugin':
+                found = True
+                self.topoclean_widget = TopoClean(action)
+                self.pag_actions.append(self.add_action(
+                    ':/plugins/PagLuxembourg/widgets/topoclean/icon.png',
+                    text=self.tr(u'Check geometry'),
+                    callback=self.topoclean_widget.run,
+                    status_tip=self.tr(u'Check geometries and fix errors'),
+                    parent=self.iface.mainWindow()))
+
 
         # Topology checker plugin is not enabled, ask the user to install it
         if not found:
@@ -273,7 +288,7 @@ class PAGLuxembourg(object):
         # Topology checker
         found = False
         for action in self.iface.vectorToolBar().actions():
-            if action.parent().objectName()==u'qgis_plugin_topolplugin':
+            if action.parent().objectName() == u'qgis_plugin_topolplugin':
                 found = True
                 self.topology_widget = TopologyChecker(action)
                 self.pag_actions.append(self.add_action(
@@ -337,13 +352,12 @@ class PAGLuxembourg(object):
         '''
         Display a message to prompt the user to install the geometry checker plugin
         '''
-
-        widget = self.iface.messageBar().createMessage(self.tr(u'PAG Luxembourg'),self.tr(u'The "') + plugin + self.tr(u'" plugin is required by the "PAG Luxembourg" plugin, please install it and restart QGIS.'))
+        widget = self.iface.messageBar().createMessage(self.tr(u'PAG Luxembourg'), self.tr(u'The "') + plugin + self.tr(u'" plugin is required by the "PAG Luxembourg" plugin, please install it and restart QGIS.'))
         button = QPushButton(widget)
         button.setText(self.tr(u'Show plugin manager'),)
         button.pressed.connect(self.iface.actionManagePlugins().trigger)
         widget.layout().addWidget(button)
-        self.iface.messageBar().pushWidget(widget, QgsMessageBar.CRITICAL)
+        self.iface.messageBar().pushWidget(widget, 2) #Critical = 2
 
     def unload(self):
         '''
