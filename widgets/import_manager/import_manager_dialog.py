@@ -63,7 +63,7 @@ class ImportManagerDialog(QDialog, FORM_CLASS):
         self.tabImports.setColumnWidth(1, 80)
         self.tabImports.setColumnWidth(2, 200)
 
-        self.tabImports.verticalHeader().setResizeMode(QHeaderView.ResizeToContents)
+        self.tabImports.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
 
         # Load imports
         layer = PagLuxembourg.main.current_project.getImportLogLayer()
