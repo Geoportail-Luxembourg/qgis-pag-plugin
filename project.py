@@ -648,11 +648,15 @@ class Project(QObject):
                 if "map" in currentConfig:
                     currentConfig["map"] = OrderedDict((v, k) for k, v in currentConfig["map"].items())
 
-                # Keep current values and add new ones
-                for element in field.listofvalues:
-                    if element in currentConfig:
-                        config[currentConfig[element]] = element # Config is in the form, description, value
-                    else:
+                    # Keep current values and add new ones
+                    for element in field.listofvalues:
+                        if element in currentConfig["map"]:
+                            config[currentConfig["map"][element]] = element # Config is in the form, description, value
+                        else:
+                            config[element] = element
+                else:
+                    # Add new values
+                    for element in field.listofvalues:
                         config[element] = element
 
         # Integer
