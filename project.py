@@ -645,7 +645,8 @@ class Project(QObject):
                 # Invert key, value of currentConfig
                 #currentConfig = layer.editorWidgetV2Config(fieldIndex) if layer.editorWidgetV2(fieldIndex) == 'ValueMap' else OrderedDict()
                 currentConfig = layer.editorWidgetSetup(fieldIndex).config() if layer.editorWidgetSetup(fieldIndex).type() == 'ValueMap' else OrderedDict()
-                currentConfig["map"] = OrderedDict((v, k) for k, v in currentConfig["map"].items())
+                if "map" in currentConfig:
+                    currentConfig["map"] = OrderedDict((v, k) for k, v in currentConfig["map"].items())
 
                 # Keep current values and add new ones
                 for element in field.listofvalues:
