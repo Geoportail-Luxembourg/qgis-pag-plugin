@@ -638,7 +638,7 @@ class Project(QObject):
                 if field.name.startswith(fileField):
                     editor = 'SimpleFilename'
 
-value            # Enumeration
+            # Enumeration
             if field.listofvalues is not None:
                 editor = 'ValueMap'
 

@@ -199,18 +199,18 @@ class DataChecker(object):
                     if PAG_feature.geometry().intersects(layer_features.geometry()):
                         areas.append(layer_features.id())
 
-            if layer.geometryType()== QGis.NoGeometry:
+            if layer.wkbType() == QgsWkbTypes.NoGeometry:
                 layer.selectAll()
             else:
                 layer.select(areas)
             selection_entities_from_PAG = layer.selectedFeatures()
 
-            for feature in selection_entities_from_PAG :
+            for feature in selection_entities_from_PAG:
                 errors += self.checkFeatureData(feature, xsd_type)
 
         else:
 
-            for feature in layer.dataProvider().getFeatures() :
+            for feature in layer.dataProvider().getFeatures():
                 errors += self.checkFeatureData(feature, xsd_type)
 
         return layer, errors

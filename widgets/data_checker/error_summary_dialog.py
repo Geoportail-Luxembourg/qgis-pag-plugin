@@ -60,17 +60,19 @@ class ErrorSummaryDialog(QDialog, FORM_CLASS):
         self.setupUi(self)
 
         self.tabSchemaErrors.setHorizontalHeaderLabels([
-                                                      QCoreApplication.translate('ErrorSummaryDialog','Layer'),
-                                                      QCoreApplication.translate('ErrorSummaryDialog','Field name'),
-                                                      QCoreApplication.translate('ErrorSummaryDialog','Error')])
+            QCoreApplication.translate('ErrorSummaryDialog', 'Layer'),
+            QCoreApplication.translate('ErrorSummaryDialog', 'Field name'),
+            QCoreApplication.translate('ErrorSummaryDialog', 'Error')
+        ])
         self.tabSchemaErrors.setColumnWidth(0, 150)
         self.tabSchemaErrors.setColumnWidth(1, 150)
 
         self.tabDataErrors.setHorizontalHeaderLabels([
-                                                      QCoreApplication.translate('ErrorSummaryDialog','Layer'),
-                                                      QCoreApplication.translate('ErrorSummaryDialog','Feature ID'),
-                                                      QCoreApplication.translate('ErrorSummaryDialog','Field name'),
-                                                      QCoreApplication.translate('ErrorSummaryDialog','Error')])
+            QCoreApplication.translate('ErrorSummaryDialog', 'Layer'),
+            QCoreApplication.translate('ErrorSummaryDialog', 'Feature ID'),
+            QCoreApplication.translate('ErrorSummaryDialog', 'Field name'),
+            QCoreApplication.translate('ErrorSummaryDialog', 'Error')
+            ])
         self.tabDataErrors.setColumnWidth(0, 150)
         self.tabDataErrors.setColumnWidth(1, 60)
         self.tabDataErrors.setColumnWidth(2, 150)
@@ -108,10 +110,12 @@ class ErrorSummaryDialog(QDialog, FORM_CLASS):
     def _tabDataErrorsCellChanged(self, currentRow, currentColumn, previousRow, previousColumn):
         # Deselect
         layer, feature, field, message = self.data_errors[previousRow]
-        layer.setSelectedFeatures([])
+        #layer.setSelectedFeatures([])
+        layer.selectByIds([])
 
         layer, feature, field, message = self.data_errors[currentRow]
-        layer.setSelectedFeatures([feature.id()])
+        #layer.setSelectedFeatures([feature.id()])
+        layer.selectByIds([feature.id()])
         PagLuxembourg.main.qgis_interface.mapCanvas().zoomToSelected(layer)
 
     def _tabDataErrorsCellDblClicked(self, row, column):
@@ -122,12 +126,14 @@ class ErrorSummaryDialog(QDialog, FORM_CLASS):
         if not layer.isEditable():
             layer.startEditing()
 
-        PagLuxembourg.main.qgis_interface.legendInterface().setCurrentLayer(layer)
+        #PagLuxembourg.main.qgis_interface.legendInterface().setCurrentLayer(layer)
+        PagLuxembourg.main.qgis_interface.setActiveLayer(layer)
+
 
         features = layer.getFeatures(QgsFeatureRequest(feature.id()))
 
         for feature in features:
-            PagLuxembourg.main.qgis_interface.openFeatureForm(layer, feature, showModal = False)
+            PagLuxembourg.main.qgis_interface.openFeatureForm(layer, feature, showModal=False)
 
     def exportToCsv(self):
         # Select CSV file to export
