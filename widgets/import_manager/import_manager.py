@@ -44,7 +44,9 @@ class ImportManager(object):
         errors = False
 
         # Delete import from layers
-        for layer in PagLuxembourg.main.qgis_interface.legendInterface().layers():
+        layers = [layer for layer in QgsProject.instance().mapLayers().values()]
+        #for layer in PagLuxembourg.main.qgis_interface.legendInterface().layers():
+        for layer in layers:
             if not (layer.type() == QgsMapLayer.VectorLayer and PagLuxembourg.main.current_project.isPagLayer(layer)):
                 continue
 
@@ -55,8 +57,8 @@ class ImportManager(object):
         errors = errors or not self._deleteImportFromLayer(layer, id)
 
         if not errors:
-            PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('ImportManager','Success'),
-                                                                       QCoreApplication.translate('ImportManager','Rollback was successful'))
+            PagLuxembourg.main.qgis_interface.messageBar().pushSuccess(QCoreApplication.translate('ImportManager', 'Success'),
+                                                                       QCoreApplication.translate('ImportManager', 'Rollback was successful'))
 
     def _deleteImportFromLayer(self, layer, importid):
         fids = []

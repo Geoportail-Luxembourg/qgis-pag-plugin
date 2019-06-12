@@ -68,18 +68,19 @@ class ImportShpDialog(QDialog, FORM_CLASS, Importer):
 
         # Setup table
         self.tabMapping.setHorizontalHeaderLabels([
-                                                      QCoreApplication.translate('ImportShpDialog','QGIS Field'),
-                                                      QCoreApplication.translate('ImportShpDialog','SHP Field'),
-                                                      QCoreApplication.translate('ImportShpDialog','Value'),
-                                                      QCoreApplication.translate('ImportShpDialog','Enabled')])
+            QCoreApplication.translate('ImportShpDialog', 'QGIS Field'),
+            QCoreApplication.translate('ImportShpDialog', 'SHP Field'),
+            QCoreApplication.translate('ImportShpDialog', 'Value'),
+            QCoreApplication.translate('ImportShpDialog', 'Enabled')
+        ])
         self.tabMapping.setColumnWidth(0, 200)
         self.tabMapping.setColumnWidth(1, 200)
         self.tabMapping.setColumnWidth(2, 270)
 
         self.tabValueMap.setHorizontalHeaderLabels([
-                                                      QCoreApplication.translate('ImportShpDialog','SHP Value'),
-                                                      QCoreApplication.translate('ImportShpDialog','QGIS Value')
-                                                      ])
+            QCoreApplication.translate('ImportShpDialog', 'SHP Value'),
+            QCoreApplication.translate('ImportShpDialog', 'QGIS Value')
+        ])
         self.tabValueMap.setColumnWidth(0, 200)
 
         # Load shp layer
@@ -87,8 +88,10 @@ class ImportShpDialog(QDialog, FORM_CLASS, Importer):
 
         # If not valid, don't show the dialog
         if not self.shplayer.isValid():
-            PagLuxembourg.main.qgis_interface.messageBar().pushCritical(QCoreApplication.translate('ImportShpDialog','Error'),
-                                                                        QCoreApplication.translate('ImportShpDialog','Shapefile is not valid'))
+            PagLuxembourg.main.qgis_interface.messageBar().pushCritical(
+                QCoreApplication.translate('ImportShpDialog', 'Error'),
+                QCoreApplication.translate('ImportShpDialog', 'Shapefile is not valid')
+            )
             self.valid = False
             return
 
@@ -119,7 +122,9 @@ class ImportShpDialog(QDialog, FORM_CLASS, Importer):
         self.qgislayers = list()
 
         # Adds the map layers with same geometry type to the combobox
-        for layer in PagLuxembourg.main.qgis_interface.legendInterface().layers():
+        layers = [layer for layer in QgsProject.instance().mapLayers().values()]
+        #for layer in PagLuxembourg.main.qgis_interface.legendInterface().layers():
+        for layer in layers:
             if layer.type() == QgsMapLayer.VectorLayer and layer.geometryType() == self.shplayer.geometryType() and PagLuxembourg.main.current_project.isPagLayer(layer):
                 self.qgislayers.append(layer)
                 self.cbbLayers.addItem(layer.name(), layer.id())
@@ -152,9 +157,11 @@ class ImportShpDialog(QDialog, FORM_CLASS, Importer):
                 qgis_layer = layer
 
         if self.mapping.destinationLayerName() is not None and qgis_layer is None:
-            QMessageBox.critical(self,
-                                 QCoreApplication.translate('ImportShpDialog','Error'),
-                                 QCoreApplication.translate('ImportShpDialog','Destination layer {} not found.').format(self.mapping.destinationLayerName()))
+            QMessageBox.critical(
+                self,
+                QCoreApplication.translate('ImportShpDialog','Error'),
+                QCoreApplication.translate('ImportShpDialog','Destination layer {} not found.').format(self.mapping.destinationLayerName())
+            )
             return
 
         # Loads a config file mapping
@@ -219,10 +226,10 @@ class ImportShpDialog(QDialog, FORM_CLASS, Importer):
         widget = QWidget()
         combobox = QComboBox()
         layout = QHBoxLayout(widget)
-        layout.addWidget(combobox, 1);
-        layout.setAlignment(Qt.AlignCenter);
-        layout.setContentsMargins(5,0,5,0);
-        widget.setLayout(layout);
+        layout.addWidget(combobox, 1)
+        layout.setAlignment(Qt.AlignCenter)
+        layout.setContentsMargins(5, 0, 5, 0)
+        widget.setLayout(layout)
 
         shplayer = self.shplayer
         shplayer_fields = shplayer.dataProvider().fields()
@@ -230,7 +237,7 @@ class ImportShpDialog(QDialog, FORM_CLASS, Importer):
         current_item_index = 0
         selected_index = 0
 
-        combobox.addItem(QCoreApplication.translate('ImportShpDialog','<None>'), None)
+        combobox.addItem(QCoreApplication.translate('ImportShpDialog', '<None>'), None)
         current_item_index += 1
 
         for field in shplayer_fields:
@@ -244,7 +251,7 @@ class ImportShpDialog(QDialog, FORM_CLASS, Importer):
                     if field.name() == selected_shpfield:
                         selected_index = current_item_index
                     current_item_index += 1
-                    break;
+                    break
 
         combobox.setCurrentIndex(selected_index)
         combobox.currentIndexChanged.connect(self._comboboxShpFieldIndexChanged)
@@ -364,15 +371,17 @@ class ImportShpDialog(QDialog, FORM_CLASS, Importer):
                 for valuemap_rowindex in range(self.tabValueMap.rowCount()):
                     shp_value = self._getCellValue(self.tabValueMap, valuemap_rowindex, 0)
                     valuemap.append((
-                                     shp_value if shp_value != 'NULL' else shp_value,
-                                     self._getCellValue(self.tabValueMap, valuemap_rowindex, 1)
-                                     ))
+                        shp_value if shp_value != 'NULL' else shp_value,
+                        self._getCellValue(self.tabValueMap, valuemap_rowindex, 1)
+                    ))
 
-            newmapping.addFieldMapping(self._getCellValue(self.tabMapping, rowindex, 1),
-                                       self._getCellValue(self.tabMapping, rowindex, 0),
-                                       self._getCellValue(self.tabMapping, rowindex, 2),
-                                       self._getCellValue(self.tabMapping, rowindex, 3),
-                                       valuemap)
+            newmapping.addFieldMapping(
+                self._getCellValue(self.tabMapping, rowindex, 1),
+                self._getCellValue(self.tabMapping, rowindex, 0),
+                self._getCellValue(self.tabMapping, rowindex, 2),
+                self._getCellValue(self.tabMapping, rowindex, 3),
+                valuemap
+            )
         del self.mapping
         self.mapping = newmapping
 
@@ -411,18 +420,18 @@ class ImportShpDialog(QDialog, FORM_CLASS, Importer):
         progress.setMaximum(self.shplayer.featureCount())
         progress.setAlignment(Qt.AlignLeft|Qt.AlignVCenter)
         progressMessageBar.layout().addWidget(progress)
-        PagLuxembourg.main.qgis_interface.messageBar().pushWidget(progressMessageBar, QgsMessageBar.INFO)
+        PagLuxembourg.main.qgis_interface.messageBar().pushWidget(progressMessageBar, 0) # QGis.Info = 0
 
         # Start import session
         self._startImportSession()
 
         # Import the layer, and get the imported extent
         self._importLayer(
-                          self.shplayer,
-                          qgis_layer,
-                          self.mapping.asIndexFieldMappings(qgis_layer.dataProvider().fields(), self.shpfields),
-                          progress
-                          )
+            self.shplayer,
+            qgis_layer,
+            self.mapping.asIndexFieldMappings(qgis_layer.dataProvider().fields(), self.shpfields),
+            progress
+        )
 
         # Commit import session
         self._commitImport()

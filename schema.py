@@ -41,9 +41,9 @@ XSD_QGIS_DATATYPE_MAP = {DataType.STRING:QVariant.String,
                          DataType.DOUBLE:QVariant.Double,
                          DataType.DATE:QVariant.String}
 
-XSD_QGIS_GEOMETRYTYPE_MAP = {GeometryType.POINT:QVariant.Point,
-                             GeometryType.POLYLINE:QVariant.Line,
-                             GeometryType.POLYGON:QVariant.Polygon}
+XSD_QGIS_GEOMETRYTYPE_MAP = {GeometryType.POINT:QgsWkbTypes.Point,
+                             GeometryType.POLYLINE:QgsWkbTypes.LineString,
+                             GeometryType.POLYGON:QgsWkbTypes.Polygon}
 
 class PAGSchema(object):
     '''

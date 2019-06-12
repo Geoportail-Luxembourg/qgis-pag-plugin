@@ -14,6 +14,7 @@ from qgis.PyQt.QtGui import QColor
 from qgis.PyQt.QtCore import QCoreApplication, Qt, QVariant, QSettings
 
 from qgis.core import *
+from qgis.utils import *
 
 import PagLuxembourg.main
 import PagLuxembourg.project
@@ -44,14 +45,14 @@ class ImportDxfDialog(QDialog, FORM_CLASS, Importer):
         self.lblFilename.setText(filename)
 
         # Setup tables
-        self.tabLayersMapping.setHorizontalHeaderLabels([QCoreApplication.translate('ImportDxfDialog','DXF Layer'),
-                                                         QCoreApplication.translate('ImportDxfDialog','QGIS Layer'),
-                                                         QCoreApplication.translate('ImportDxfDialog','Enabled')])
+        self.tabLayersMapping.setHorizontalHeaderLabels([QCoreApplication.translate('ImportDxfDialog', 'DXF Layer'),
+                                                         QCoreApplication.translate('ImportDxfDialog', 'QGIS Layer'),
+                                                         QCoreApplication.translate('ImportDxfDialog', 'Enabled')])
         self.tabLayersMapping.setColumnWidth(0, 460)
         self.tabLayersMapping.setColumnWidth(1, 200)
-        self.tabFieldsMapping.setHorizontalHeaderLabels([QCoreApplication.translate('ImportDxfDialog','QGIS Field'),
-                                                         QCoreApplication.translate('ImportDxfDialog','Value'),
-                                                         QCoreApplication.translate('ImportDxfDialog','Enabled')])
+        self.tabFieldsMapping.setHorizontalHeaderLabels([QCoreApplication.translate('ImportDxfDialog', 'QGIS Field'),
+                                                         QCoreApplication.translate('ImportDxfDialog', 'Value'),
+                                                         QCoreApplication.translate('ImportDxfDialog', 'Enabled')])
         self.tabFieldsMapping.setColumnWidth(0, 200)
         self.tabFieldsMapping.setColumnWidth(1, 460)
 
@@ -87,7 +88,9 @@ class ImportDxfDialog(QDialog, FORM_CLASS, Importer):
         self.qgislayers = list()
 
         # Adds the PAG map layers
-        for layer in PagLuxembourg.main.qgis_interface.legendInterface().layers():
+        layers = [layer for layer in QgsProject.instance().mapLayers().values()]
+        #for layer in PagLuxembourg.main.qgis_interface.legendInterface().layers():
+        for layer in layers:
             if layer.type() == QgsMapLayer.VectorLayer and PagLuxembourg.main.current_project.isPagLayer(layer):
                 self.qgislayers.append(layer)
 
@@ -131,7 +134,7 @@ class ImportDxfDialog(QDialog, FORM_CLASS, Importer):
         '''
 
         dp = layer.dataProvider()
-        layerfield_index = dp.fields().fieldNameIndex('Layer')
+        layerfield_index = dp.fields().indexFromName('Layer')
 
         for feature in dp.getFeatures():
             value = feature[layerfield_index]
@@ -169,7 +172,7 @@ class ImportDxfDialog(QDialog, FORM_CLASS, Importer):
         if layer_mapping is None:
             layer_mapping = LayerMapping()
             layer_mapping.setSourceLayerName(dxf_layername)
-            layer_mapping.setSourceLayerFilter(u'Layer=\'{}\''.format(dxf_layername.replace('\'','\'\'')))
+            layer_mapping.setSourceLayerFilter(u'Layer=\'{}\''.format(dxf_layername.replace('\'', '\'\'')))
             self.mapping.addLayerMapping(layer_mapping)
 
         return layer_mapping
@@ -307,7 +310,7 @@ class ImportDxfDialog(QDialog, FORM_CLASS, Importer):
         qgis_fields = qgis_layer.dataProvider().fields()
 
         # Update label
-        self.lblCurrentFieldMapping.setText(QCoreApplication.translate('ImportDxfDialog','Mapping for DXF layer "{}" to QGIS layer "{}"').format(layer_mapping.sourceLayerName(), qgis_layer.name()))
+        self.lblCurrentFieldMapping.setText(QCoreApplication.translate('ImportDxfDialog', 'Mapping for DXF layer "{}" to QGIS layer "{}"').format(layer_mapping.sourceLayerName(), qgis_layer.name()))
 
 
         self.tabFieldsMapping.setRowCount(len(layer_mapping.fieldMappings()))
@@ -386,9 +389,11 @@ class ImportDxfDialog(QDialog, FORM_CLASS, Importer):
         # Loop layer mappings to check whether it is valid
         for layer_mapping in self.mapping.layerMappings():
             if layer_mapping.isEnabled() and not layer_mapping.isValid():
-                QMessageBox.critical(self,
-                                 QCoreApplication.translate('ImportDxfDialog','Error'),
-                                 QCoreApplication.translate('ImportDxfDialog','Mapping for DXF layer {} is not valid, please check it again.').format(layer_mapping.sourceLayerName()))
+                QMessageBox.critical(
+                    self,
+                    QCoreApplication.translate('ImportDxfDialog', 'Error'),
+                    QCoreApplication.translate('ImportDxfDialog', 'Mapping for DXF layer {} is not valid, please check it again.').format(layer_mapping.sourceLayerName())
+                )
                 return False
 
         return True
@@ -413,7 +418,7 @@ class ImportDxfDialog(QDialog, FORM_CLASS, Importer):
         progress2.setMaximum(self.dxflayer_points.featureCount() + self.dxflayer_linestrings.featureCount() + self.dxflayer_polygons.featureCount())
         progress2.setAlignment(Qt.AlignLeft|Qt.AlignVCenter)
         progressMessageBar.layout().addWidget(progress2)
-        PagLuxembourg.main.qgis_interface.messageBar().pushWidget(progressMessageBar, QgsMessageBar.INFO)
+        PagLuxembourg.main.qgis_interface.messageBar().pushWidget(progressMessageBar, 0) # QGis.Info = 0
 
         # Start import session
         self._startImportSession()
@@ -424,7 +429,7 @@ class ImportDxfDialog(QDialog, FORM_CLASS, Importer):
                 continue
 
             # Progression message
-            progressMessageBar.setText(QCoreApplication.translate('ImportDxfDialog','Importing {}').format(layer_mapping.sourceLayerName()))
+            progressMessageBar.setText(QCoreApplication.translate('ImportDxfDialog', 'Importing {}').format(layer_mapping.sourceLayerName()))
 
             # QGIS layer
             qgis_layer = self._getQgisLayerFromTableName(layer_mapping.destinationLayerName())
@@ -434,11 +439,13 @@ class ImportDxfDialog(QDialog, FORM_CLASS, Importer):
             progress2.setValue(0)
 
             # Import features according to geometry type
-            if qgis_layer.geometryType() == QGis.Point:
+            if qgis_layer.wkbType() == QgsWkbTypes.Point:
                 self._importLayer(self.dxflayer_points, qgis_layer, layer_indexmapping, progress2)
-            elif qgis_layer.geometryType() == QGis.Line:
+            elif qgis_layer.wkbType() == QgsWkbTypes.LineGeometry:
                 self._importLayer(self.dxflayer_linestrings, qgis_layer, layer_indexmapping, progress2)
-            elif qgis_layer.geometryType() == QGis.Polygon:
+            elif qgis_layer.wkbType() == QgsWkbTypes.LineString:
+                self._importLayer(self.dxflayer_linestrings, qgis_layer, layer_indexmapping, progress2)
+            elif qgis_layer.wkbType() == QgsWkbTypes.Polygon:
                 self._importLayer(self.dxflayer_linestrings, qgis_layer, layer_indexmapping, progress2)
                 self._importLayer(self.dxflayer_polygons, qgis_layer, layer_indexmapping, progress2)
 
@@ -463,8 +470,8 @@ class ImportDxfDialog(QDialog, FORM_CLASS, Importer):
         dialog = QFileDialog()
         dialog.setFileMode(QFileDialog.ExistingFile)
         dialog.setOption(QFileDialog.ReadOnly)
-        dialog.setNameFilter('Json file (*.json)');
-        dialog.setWindowTitle(QCoreApplication.translate('ImportDxfDialog','Select the configuration file to load'))
+        dialog.setNameFilter('Json file (*.json)')
+        dialog.setWindowTitle(QCoreApplication.translate('ImportDxfDialog', 'Select the configuration file to load'))
         dialog.setSizeGripEnabled(False)
         result = dialog.exec_()
 
@@ -495,8 +502,8 @@ class ImportDxfDialog(QDialog, FORM_CLASS, Importer):
         dialog = QFileDialog()
         dialog.setFileMode(QFileDialog.AnyFile)
         dialog.setAcceptMode(QFileDialog.AcceptSave)
-        dialog.setNameFilter('Json file (*.json)');
-        dialog.setWindowTitle(QCoreApplication.translate('ImportDxfDialog','Select the json location'))
+        dialog.setNameFilter('Json file (*.json)')
+        dialog.setWindowTitle(QCoreApplication.translate('ImportDxfDialog', 'Select the json location'))
         dialog.setSizeGripEnabled(False)
         result = dialog.exec_()
 
@@ -517,5 +524,5 @@ class ImportDxfDialog(QDialog, FORM_CLASS, Importer):
         self.mapping.writeJson(filename)
 
         QMessageBox.information(self,
-                                QCoreApplication.translate('ImportDxfDialog','Success'),
-                                QCoreApplication.translate('ImportDxfDialog','Mapping configuration saved'))
+                                QCoreApplication.translate('ImportDxfDialog', 'Success'),
+                                QCoreApplication.translate('ImportDxfDialog', 'Mapping configuration saved'))

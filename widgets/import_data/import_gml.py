@@ -57,7 +57,7 @@ class ImportGML(Importer):
         layer_structure_errors = list()
 
         # Progress bar + message
-        progressMessageBar = PagLuxembourg.main.qgis_interface.messageBar().createMessage(QCoreApplication.translate('ImportGML','Importing GML'))
+        progressMessageBar = PagLuxembourg.main.qgis_interface.messageBar().createMessage(QCoreApplication.translate('ImportGML', 'Importing GML'))
         progress = QProgressBar()
         progress.setMaximum(len(gmlschema.typeNames()))
         progress.setAlignment(Qt.AlignLeft|Qt.AlignVCenter)
@@ -65,7 +65,7 @@ class ImportGML(Importer):
         progress2 = QProgressBar()
         progress2.setAlignment(Qt.AlignLeft|Qt.AlignVCenter)
         progressMessageBar.layout().addWidget(progress2)
-        PagLuxembourg.main.qgis_interface.messageBar().pushWidget(progressMessageBar, QgsMessageBar.INFO)
+        PagLuxembourg.main.qgis_interface.messageBar().pushWidget(progressMessageBar, 0) # Qgis.Info = 0
 
         # Start import session
         self._startImportSession()
@@ -78,7 +78,7 @@ class ImportGML(Importer):
                 continue
 
             # Progression message
-            progressMessageBar.setText(QCoreApplication.translate('ImportGML','Importing {}').format(gmltype))
+            progressMessageBar.setText(QCoreApplication.translate('ImportGML', 'Importing {}').format(gmltype))
 
             gmllayer = QgsVectorLayer(u'{}|layername={}'.format(self.filename,gmltype), gmltype, "ogr")
 
@@ -143,12 +143,12 @@ class ImportGML(Importer):
             if source_field.name() == 'gml_id':
                 continue
 
-            destination_field_index = destination_fields.fieldNameIndex(source_field.name())
+            destination_field_index = destination_fields.indexFromName(source_field.name())
 
             if destination_field_index == -1:
                 continue
 
-            mapping.addFieldMapping(source_fields.fieldNameIndex(source_field.name()),
+            mapping.addFieldMapping(source_fields.indexFromName(source_field.name()),
                                     destination_field_index,
                                     None,
                                     True)
