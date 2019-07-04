@@ -660,7 +660,7 @@ class Mapping(object):
             mappings.append(mapping.asDictionary())
 
         file = open(filename, 'wb')
-        file.write(json.dumps(mappings))
+        file.write(json.dumps(mappings, ensure_ascii=False).encode('UTF-8'))
         file.close()
 
     def parseJson(self, filename):
