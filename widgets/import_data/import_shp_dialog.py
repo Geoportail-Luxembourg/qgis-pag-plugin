@@ -305,7 +305,7 @@ class ImportShpDialog(QDialog, FORM_CLASS, Importer):
         qgis_field = self._getCellValue(self.tabMapping, mapping_rowindex, 0)
 
         # Check if field editor is ValueMap
-        if qgis_layer.editorWidgetV2(qgis_layer.fieldNameIndex(qgis_field)) != 'ValueMap':
+        if qgis_layer.editorWidgetSetup(qgis_layer.indexFromName(qgis_field)).type() != 'ValueMap':
             return
 
         shp_values = self._getFieldUniqueValue(self.shplayer, shp_field)
