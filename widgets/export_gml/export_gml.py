@@ -81,7 +81,7 @@ class ExportGML(object):
         progress.setMaximum(len(QgsProject.instance().mapLayers()))
         progress.setAlignment(Qt.AlignLeft|Qt.AlignVCenter)
         progressMessageBar.layout().addWidget(progress)
-        PagLuxembourg.main.qgis_interface.messageBar().pushWidget(progressMessageBar, QgsMessageBar.INFO)
+        PagLuxembourg.main.qgis_interface.messageBar().pushWidget(progressMessageBar, 0) #INFO=0
 
         # Create final GML document
         gml = getDOMImplementation().createDocument('http://www.interlis.ch/INTERLIS2.3/GML32/INTERLIS', 'ili:TRANSFER', None)

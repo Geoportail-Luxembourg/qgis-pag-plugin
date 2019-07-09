@@ -155,7 +155,7 @@ class ErrorSummaryDialog(QDialog, FORM_CLASS):
 
         # CSV filename and directory
         csv_filename = selected_files[0]
-        csvfile = open(csv_filename, 'wb')
+        csvfile = open(csv_filename, 'w')
         csvwriter = csv.writer(csvfile, delimiter=';')
 
         # Header
@@ -167,7 +167,7 @@ class ErrorSummaryDialog(QDialog, FORM_CLASS):
 
             # Feature info
             for colindex in range(4):
-                row.append(self.tabDataErrors.item(rowindex,colindex).text())
+                row.append(self.tabDataErrors.item(rowindex, colindex).text())
 
             # Centroid
             layer, feature, field, message = self.data_errors[rowindex]
