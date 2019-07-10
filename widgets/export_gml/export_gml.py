@@ -122,18 +122,18 @@ class ExportGML(object):
 
             # Selection test in 'MODIFICATION PAG'
             QgsVectorFileWriter.writeAsVectorFormat(layer,
-                                                        filename,
-                                                        'utf-8',
-                                                        None,
-                                                        'GML',
-                                                        entity_count_PAG>0,
-                                                        datasourceOptions = ['FORMAT=GML3.2',
-                                                                             'TARGET_NAMESPACE={}'.format(self.DEFAULT_XLMNS),
-                                                                             'GML3_LONGSRS=YES',
-                                                                             'SRSDIMENSION_LOC=GEOMETRY',
-                                                                             'WRITE_FEATURE_BOUNDED_BY=NO',
-                                                                             'STRIP_PREFIX=TRUE',
-                                                                             'SPACE_INDENTATION=NO'])
+                                                    filename,
+                                                    'utf-8',
+                                                    layer.crs(),
+                                                    'GML',
+                                                    entity_count_PAG > 0,
+                                                    datasourceOptions=['FORMAT=GML3.2',
+                                                                       'TARGET_NAMESPACE={}'.format(self.DEFAULT_XLMNS),
+                                                                       'GML3_LONGSRS=YES',
+                                                                       'SRSDIMENSION_LOC=GEOMETRY',
+                                                                       'WRITE_FEATURE_BOUNDED_BY=NO',
+                                                                       'STRIP_PREFIX=TRUE',
+                                                                       'SPACE_INDENTATION=NO'])
 
             members = self._getXsdCompliantGml(filename, gml, type)
 
