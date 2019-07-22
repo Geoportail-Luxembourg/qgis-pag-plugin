@@ -20,6 +20,7 @@ from . import main
 from PagLuxembourg.schema import *
 from PagLuxembourg.widgets.stylize.stylize import *
 from PagLuxembourg.widgets.topology.topology import *
+import io
 
 FILENAME = 'project.qgs'
 DATABASE = 'database.sqlite'
@@ -457,7 +458,7 @@ class Project(QObject):
                                    'assets',
                                    'LayerTree.json')
 
-        f = open(config_path, 'r')
+        f = io.open(config_path, mode='r', encoding="utf-8")
         config_file = f.read()
         config = json.loads(config_file)
         f.close()
