@@ -9,6 +9,7 @@ from builtins import range
 import os.path
 from collections import OrderedDict
 #from pyspatialite import dbapi2 as db
+import sqlite3
 from qgis import utils
 
 from qgis.core import *
@@ -266,7 +267,10 @@ class Project(QObject):
         createdb = not os.path.isfile(self.database)
 
         #conn = db.connect(self.database)
-        conn = utils.spatialite_connect(self.database)
+        #conn = utils.spatialite_connect(self.database)
+        conn = sqlite3.connect(self.database)
+        conn.enable_load_extension(True)
+        conn.load_extension('/Library/Frameworks/SQLite3.framework/Versions/E/Modules/mod_spatialite.dylib')
 
         # Create database if not exist
         if createdb:
