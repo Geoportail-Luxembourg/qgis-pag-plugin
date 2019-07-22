@@ -6,6 +6,7 @@ Created on 18 sept. 2015
 from __future__ import absolute_import
 
 from builtins import range
+import os
 import os.path
 from collections import OrderedDict
 #from pyspatialite import dbapi2 as db
@@ -268,10 +269,12 @@ class Project(QObject):
         createdb = not os.path.isfile(self.database)
 
         #conn = db.connect(self.database)
-        #conn = utils.spatialite_connect(self.database)
-        conn = sqlite3.connect(self.database)
-        conn.enable_load_extension(True)
-        conn.load_extension('/Library/Frameworks/SQLite3.framework/Versions/E/Modules/mod_spatialite.dylib')
+        if os.name == "nt":
+            conn = utils.spatialite_connect(self.database)
+        else:
+            conn = sqlite3.connect(self.database)
+            conn.enable_load_extension(True)
+            conn.load_extension('/Library/Frameworks/SQLite3.framework/Versions/E/Modules/mod_spatialite.dylib')
 
         # Create database if not exist
         if createdb:
