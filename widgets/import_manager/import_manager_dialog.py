@@ -60,8 +60,8 @@ class ImportManagerDialog(QDialog, FORM_CLASS):
                                                    QCoreApplication.translate('ImportManagerDialog','Filename'),
                                                    QCoreApplication.translate('ImportManagerDialog','Imported layers')])
         self.tabImports.setColumnWidth(0, 230)
-        self.tabImports.setColumnWidth(1, 80)
-        self.tabImports.setColumnWidth(2, 200)
+        self.tabImports.setColumnWidth(1, 90)
+        self.tabImports.setColumnWidth(2, 190)
 
         self.tabImports.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
 

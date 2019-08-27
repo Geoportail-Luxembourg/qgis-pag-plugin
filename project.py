@@ -6,9 +6,11 @@ Created on 18 sept. 2015
 from __future__ import absolute_import
 
 from builtins import range
+import os
 import os.path
 from collections import OrderedDict
 #from pyspatialite import dbapi2 as db
+import sqlite3
 from qgis import utils
 
 from qgis.core import *
@@ -19,6 +21,7 @@ from . import main
 from PagLuxembourg.schema import *
 from PagLuxembourg.widgets.stylize.stylize import *
 from PagLuxembourg.widgets.topology.topology import *
+import io
 
 FILENAME = 'project.qgs'
 DATABASE = 'database.sqlite'
@@ -216,8 +219,7 @@ class Project(QObject):
         :type type: PAGType
         '''
 
-        #conn = db.connect(self.database)
-        conn = utils.spatialite_connect(self.database)
+        conn = self._getDbConnection()
 
         cursor = conn.cursor()
         rs = cursor.execute("PRAGMA table_info('{}')".format(type.name))
@@ -265,8 +267,7 @@ class Project(QObject):
         xsd_schema = main.xsd_schema
         createdb = not os.path.isfile(self.database)
 
-        #conn = db.connect(self.database)
-        conn = utils.spatialite_connect(self.database)
+        conn = self._getDbConnection()
 
         # Create database if not exist
         if createdb:
@@ -453,7 +454,7 @@ class Project(QObject):
                                    'assets',
                                    'LayerTree.json')
 
-        f = open(config_path, 'r')
+        f = io.open(config_path, mode='r', encoding="utf-8")
         config_file = f.read()
         config = json.loads(config_file)
         f.close()
@@ -696,3 +697,17 @@ class Project(QObject):
             'map':config
         })
         layer.setEditorWidgetSetup(fieldIndex, editor_widget_setup)
+
+    def _getDbConnection(self):
+        '''
+        Gets the database connection
+        '''
+        
+        if os.name == "nt":
+            conn = utils.spatialite_connect(self.database)
+        else:
+            conn = sqlite3.connect(self.database)
+            conn.enable_load_extension(True)
+            conn.load_extension('/Library/Frameworks/SQLite3.framework/Versions/E/Modules/mod_spatialite.dylib')
+        
+        return conn
