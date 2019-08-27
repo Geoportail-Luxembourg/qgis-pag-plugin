@@ -219,8 +219,7 @@ class Project(QObject):
         :type type: PAGType
         '''
 
-        #conn = db.connect(self.database)
-        conn = utils.spatialite_connect(self.database)
+        conn = self._getDbConnection()
 
         cursor = conn.cursor()
         rs = cursor.execute("PRAGMA table_info('{}')".format(type.name))
@@ -268,13 +267,7 @@ class Project(QObject):
         xsd_schema = main.xsd_schema
         createdb = not os.path.isfile(self.database)
 
-        #conn = db.connect(self.database)
-        if os.name == "nt":
-            conn = utils.spatialite_connect(self.database)
-        else:
-            conn = sqlite3.connect(self.database)
-            conn.enable_load_extension(True)
-            conn.load_extension('/Library/Frameworks/SQLite3.framework/Versions/E/Modules/mod_spatialite.dylib')
+        conn = self._getDbConnection()
 
         # Create database if not exist
         if createdb:
@@ -704,3 +697,17 @@ class Project(QObject):
             'map':config
         })
         layer.setEditorWidgetSetup(fieldIndex, editor_widget_setup)
+
+    def _getDbConnection(self):
+        '''
+        Gets the database connection
+        '''
+        
+        if os.name == "nt":
+            conn = utils.spatialite_connect(self.database)
+        else:
+            conn = sqlite3.connect(self.database)
+            conn.enable_load_extension(True)
+            conn.load_extension('/Library/Frameworks/SQLite3.framework/Versions/E/Modules/mod_spatialite.dylib')
+        
+        return conn
