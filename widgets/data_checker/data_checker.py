@@ -319,7 +319,7 @@ class DataChecker(object):
         errors = list()
 
         if feature.geometry() is None or feature.geometry().isEmpty():
-            errors.append((feature, None, QCoreApplication.translate('DataChecker','Geometry is empty')))
+            errors.append((feature, None, QCoreApplication.translate('DataChecker', 'Geometry is empty')))
         else:
             errors2 = feature.geometry().validateGeometry()
 

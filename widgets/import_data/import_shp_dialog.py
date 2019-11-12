@@ -159,8 +159,8 @@ class ImportShpDialog(QDialog, FORM_CLASS, Importer):
         if self.mapping.destinationLayerName() is not None and qgis_layer is None:
             QMessageBox.critical(
                 self,
-                QCoreApplication.translate('ImportShpDialog','Error'),
-                QCoreApplication.translate('ImportShpDialog','Destination layer {} not found.').format(self.mapping.destinationLayerName())
+                QCoreApplication.translate('ImportShpDialog', 'Error'),
+                QCoreApplication.translate('ImportShpDialog', 'Destination layer {} not found.').format(self.mapping.destinationLayerName())
             )
             return
 
@@ -415,7 +415,7 @@ class ImportShpDialog(QDialog, FORM_CLASS, Importer):
         self.close()
 
         # Progress bar + message
-        progressMessageBar = PagLuxembourg.main.qgis_interface.messageBar().createMessage(QCoreApplication.translate('ImportShpDialog','Importing {}').format(self.shplayer.source()))
+        progressMessageBar = PagLuxembourg.main.qgis_interface.messageBar().createMessage(QCoreApplication.translate('ImportShpDialog', 'Importing {}').format(self.shplayer.source()))
         progress = QProgressBar()
         progress.setMaximum(self.shplayer.featureCount())
         progress.setAlignment(Qt.AlignLeft|Qt.AlignVCenter)

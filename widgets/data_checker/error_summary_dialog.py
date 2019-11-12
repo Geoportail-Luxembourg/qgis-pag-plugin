@@ -140,7 +140,7 @@ class ErrorSummaryDialog(QDialog, FORM_CLASS):
         dialog = QFileDialog()
         dialog.setFileMode(QFileDialog.AnyFile)
         dialog.setAcceptMode(QFileDialog.AcceptSave)
-        dialog.setNameFilter('CSV file (*.csv)');
+        dialog.setNameFilter('CSV file (*.csv)')
         dialog.setWindowTitle(QCoreApplication.translate('ErrorSummaryDialog','Select the csv location'))
         dialog.setSizeGripEnabled(False)
         result = dialog.exec_()

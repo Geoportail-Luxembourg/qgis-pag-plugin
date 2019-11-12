@@ -702,12 +702,12 @@ class Project(QObject):
         '''
         Gets the database connection
         '''
-        
+
         if os.name == "nt":
             conn = utils.spatialite_connect(self.database)
         else:
             conn = sqlite3.connect(self.database)
             conn.enable_load_extension(True)
             conn.load_extension('/Library/Frameworks/SQLite3.framework/Versions/E/Modules/mod_spatialite.dylib')
-        
+
         return conn
