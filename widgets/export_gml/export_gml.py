@@ -57,7 +57,7 @@ class ExportGML(object):
         dialog.setAcceptMode(QFileDialog.AcceptSave)
         dialog.setNameFilter('GML file (*.gml)')
         dialog.setDefaultSuffix('gml')
-        dialog.setWindowTitle(QCoreApplication.translate('ExportGML','Select the gml location'))
+        dialog.setWindowTitle(QCoreApplication.translate('ExportGML', 'Select the gml location'))
         dialog.setSizeGripEnabled(False)
         result = dialog.exec_()
 
@@ -153,7 +153,8 @@ class ExportGML(object):
             progress.setValue(progress.value() + 1)
 
         file = open(gml_filename, 'wb')
-        file.write(gml.toprettyxml('','\n','utf-8'))
+        pretty_gml = gml.toprettyxml('', '\n', 'utf-8')
+        file.write(pretty_gml.replace(b'xsi:nil="true"', b''))
         file.close()
         shutil.rmtree(temp_dir)
 
