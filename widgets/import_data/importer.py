@@ -342,11 +342,11 @@ class Importer(object):
             return None
 
         # Simplify seems to corrupt some geometries, so we have to recreate the geometry
-        if geometry.wkbType() == QgsWkbTypes.Point:
+        if geometry.type() == QgsWkbTypes.PointGeometry:
             return QgsGeometry.fromPointXY(clean_geometry.asPoint())
-        elif geometry.wkbType() == QgsWkbTypes.LineString:
+        elif geometry.type() == QgsWkbTypes.LineGeometry:
             return QgsGeometry.fromPolylineXY(clean_geometry.asPolyline())
-        elif geometry.wkbType() == QgsWkbTypes.Polygon:
+        elif geometry.type() == QgsWkbTypes.PolygonGeometry:
             return QgsGeometry.fromPolygonXY(clean_geometry.asPolygon())
 
         return None
