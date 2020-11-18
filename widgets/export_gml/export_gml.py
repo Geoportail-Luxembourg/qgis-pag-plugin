@@ -211,6 +211,9 @@ class ExportGML(object):
                     if len(elements)>0:
                         element = elements[0]
                         self._processGmlGeometry(element, gml, xsdtype)
+                else:
+                    if len(elements[0].childNodes) == 0:
+                        element = None
 
                 if element is not None:
                     member_type.appendChild(element)
