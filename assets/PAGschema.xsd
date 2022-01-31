@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-  xmlns="http://www.interlis.ch/INTERLIS2.3/GML32/PAG" targetNamespace="http://www.interlis.ch/INTERLIS2.3/GML32/PAG" elementFormDefault="qualified" attributeFormDefault="unqualified"
+<xsd:schema 
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns="http://www.interlis.ch/INTERLIS2.3/GML32/PAG" 
+  targetNamespace="http://www.interlis.ch/INTERLIS2.3/GML32/PAG" 
+  elementFormDefault="qualified" 
+  attributeFormDefault="unqualified"
   xmlns:gml="http://www.opengis.net/gml/3.2"
-  xmlns:INTERLIS="http://www.interlis.ch/INTERLIS2.3/GML32/INTERLIS"
+  xmlns:ili="http://www.interlis.ch/INTERLIS2.3/GML32/INTERLIS"
   xmlns:ili2c="http://www.interlis.ch/ili2c"
   >
 <xsd:annotation>
@@ -13,8 +17,8 @@
     <ili2c:modelAt>mailto:david.hottua@mi.etat.lu</ili2c:modelAt>
   </xsd:appinfo>
 </xsd:annotation>
-<xsd:import namespace="http://www.opengis.net/gml/3.2"/>
-<xsd:import namespace="http://www.interlis.ch/INTERLIS2.3/GML32/INTERLIS"/>
+<xsd:import namespace="http://www.opengis.net/gml/3.2" schemaLocation="http://schemas.opengis.net/gml/3.2.1/gml.xsd"/>
+<xsd:import namespace="http://www.interlis.ch/INTERLIS2.3/GML32/INTERLIS" schemaLocation="iligml.xsd"/>
 <xsd:complexType name="LUREF">
   <xsd:complexContent>
     <xsd:restriction base="gml:PointPropertyType">
