@@ -584,8 +584,8 @@
         <xsd:element name="LARGEUR">
           <xsd:simpleType>
             <xsd:restriction base="xsd:decimal">
-              <xsd:minInclusive value="0.0"/>
-              <xsd:maxInclusive value="100.0"/>
+              <xsd:minInclusive value="0.00"/>
+              <xsd:maxInclusive value="100.00"/>
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:element>
@@ -750,56 +750,56 @@
         <xsd:element name="COS_MIN" minOccurs="0">
           <xsd:simpleType>
             <xsd:restriction base="xsd:decimal">
-              <xsd:minInclusive value="0.0"/>
-              <xsd:maxInclusive value="1.0"/>
+              <xsd:minInclusive value="0.00"/>
+              <xsd:maxInclusive value="1.00"/>
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:element>
         <xsd:element name="COS_MAX" minOccurs="0">
           <xsd:simpleType>
             <xsd:restriction base="xsd:decimal">
-              <xsd:minInclusive value="0.0"/>
-              <xsd:maxInclusive value="1.0"/>
+              <xsd:minInclusive value="0.00"/>
+              <xsd:maxInclusive value="1.00"/>
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:element>
         <xsd:element name="CUS_MIN" minOccurs="0">
           <xsd:simpleType>
             <xsd:restriction base="xsd:decimal">
-              <xsd:minInclusive value="0.0"/>
-              <xsd:maxInclusive value="10.0"/>
+              <xsd:minInclusive value="0.00"/>
+              <xsd:maxInclusive value="10.00"/>
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:element>
         <xsd:element name="CUS_MAX" minOccurs="0">
           <xsd:simpleType>
             <xsd:restriction base="xsd:decimal">
-              <xsd:minInclusive value="0.0"/>
-              <xsd:maxInclusive value="10.0"/>
+              <xsd:minInclusive value="0.00"/>
+              <xsd:maxInclusive value="10.00"/>
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:element>
         <xsd:element name="CSS_MAX" minOccurs="0">
           <xsd:simpleType>
             <xsd:restriction base="xsd:decimal">
-              <xsd:minInclusive value="0.0"/>
-              <xsd:maxInclusive value="1.0"/>
+              <xsd:minInclusive value="0.00"/>
+              <xsd:maxInclusive value="1.00"/>
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:element>
         <xsd:element name="DL_MIN" minOccurs="0">
           <xsd:simpleType>
             <xsd:restriction base="xsd:decimal">
-              <xsd:minInclusive value="0.0"/>
-              <xsd:maxInclusive value="1000.0"/>
+              <xsd:minInclusive value="0.00"/>
+              <xsd:maxInclusive value="1000.00"/>
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:element>
         <xsd:element name="DL_MAX" minOccurs="0">
           <xsd:simpleType>
             <xsd:restriction base="xsd:decimal">
-              <xsd:minInclusive value="0.0"/>
-              <xsd:maxInclusive value="1000.0"/>
+              <xsd:minInclusive value="0.00"/>
+              <xsd:maxInclusive value="1000.00"/>
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:element>
