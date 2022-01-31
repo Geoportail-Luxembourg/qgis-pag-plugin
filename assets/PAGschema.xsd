@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<xsd:schema 
-  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-  xmlns="http://www.interlis.ch/INTERLIS2.3/GML32/PAG" 
-  targetNamespace="http://www.interlis.ch/INTERLIS2.3/GML32/PAG" 
-  elementFormDefault="qualified" 
-  attributeFormDefault="unqualified"
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns="http://www.interlis.ch/INTERLIS2.3/GML32/PAG" targetNamespace="http://www.interlis.ch/INTERLIS2.3/GML32/PAG" elementFormDefault="qualified" attributeFormDefault="unqualified"
   xmlns:gml="http://www.opengis.net/gml/3.2"
-  xmlns:ili="http://www.interlis.ch/INTERLIS2.3/GML32/INTERLIS"
+  xmlns:INTERLIS="http://www.interlis.ch/INTERLIS2.3/GML32/INTERLIS"
   xmlns:ili2c="http://www.interlis.ch/ili2c"
   >
 <xsd:annotation>
@@ -17,8 +13,8 @@
     <ili2c:modelAt>mailto:david.hottua@mi.etat.lu</ili2c:modelAt>
   </xsd:appinfo>
 </xsd:annotation>
-<xsd:import namespace="http://www.opengis.net/gml/3.2" schemaLocation="http://schemas.opengis.net/gml/3.2.1/gml.xsd"/>
-<xsd:import namespace="http://www.interlis.ch/INTERLIS2.3/GML32/INTERLIS" schemaLocation="iligml.xsd"/>
+<xsd:import namespace="http://www.opengis.net/gml/3.2"/>
+<xsd:import namespace="http://www.interlis.ch/INTERLIS2.3/GML32/INTERLIS"/>
 <xsd:complexType name="LUREF">
   <xsd:complexContent>
     <xsd:restriction base="gml:PointPropertyType">
@@ -750,60 +746,66 @@
         <xsd:element name="COS_MIN" minOccurs="0">
           <xsd:simpleType>
             <xsd:restriction base="xsd:decimal">
-              <xsd:minInclusive value="0.00"/>
-              <xsd:maxInclusive value="1.00"/>
+              <xsd:minInclusive value="0.0"/>
+              <xsd:maxInclusive value="1.0"/>
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:element>
         <xsd:element name="COS_MAX" minOccurs="0">
           <xsd:simpleType>
             <xsd:restriction base="xsd:decimal">
-              <xsd:minInclusive value="0.00"/>
-              <xsd:maxInclusive value="1.00"/>
+              <xsd:minInclusive value="0.0"/>
+              <xsd:maxInclusive value="1.0"/>
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:element>
         <xsd:element name="CUS_MIN" minOccurs="0">
           <xsd:simpleType>
             <xsd:restriction base="xsd:decimal">
-              <xsd:minInclusive value="0.00"/>
-              <xsd:maxInclusive value="10.00"/>
+              <xsd:minInclusive value="0.0"/>
+              <xsd:maxInclusive value="10.0"/>
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:element>
         <xsd:element name="CUS_MAX" minOccurs="0">
           <xsd:simpleType>
             <xsd:restriction base="xsd:decimal">
-              <xsd:minInclusive value="0.00"/>
-              <xsd:maxInclusive value="10.00"/>
+              <xsd:minInclusive value="0.0"/>
+              <xsd:maxInclusive value="10.0"/>
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:element>
         <xsd:element name="CSS_MAX" minOccurs="0">
           <xsd:simpleType>
             <xsd:restriction base="xsd:decimal">
-              <xsd:minInclusive value="0.00"/>
-              <xsd:maxInclusive value="1.00"/>
+              <xsd:minInclusive value="0.0"/>
+              <xsd:maxInclusive value="1.0"/>
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:element>
         <xsd:element name="DL_MIN" minOccurs="0">
           <xsd:simpleType>
             <xsd:restriction base="xsd:decimal">
-              <xsd:minInclusive value="0.00"/>
-              <xsd:maxInclusive value="1000.00"/>
+              <xsd:minInclusive value="0.0"/>
+              <xsd:maxInclusive value="1000.0"/>
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:element>
         <xsd:element name="DL_MAX" minOccurs="0">
           <xsd:simpleType>
             <xsd:restriction base="xsd:decimal">
-              <xsd:minInclusive value="0.00"/>
-              <xsd:maxInclusive value="1000.00"/>
+              <xsd:minInclusive value="0.0"/>
+              <xsd:maxInclusive value="1000.0"/>
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:element>
-        <xsd:element name="GEOMETRIE" type="gml:SurfacePropertyType">
+        <xsd:element name="GENRE">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:enumeration value="neant"/>
+              <xsd:enumeration value="Art29bis2al3"/>
+            </xsd:restriction>
+          </xsd:simpleType>
         </xsd:element>
         <xsd:element name="DENOMINATION" minOccurs="0">
           <xsd:simpleType>
@@ -832,6 +834,8 @@
               <xsd:maxLength value="100"/>
             </xsd:restriction>
           </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="GEOMETRIE" type="gml:SurfacePropertyType">
         </xsd:element>
       </xsd:sequence>
     </xsd:extension>
