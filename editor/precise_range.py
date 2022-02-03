@@ -40,10 +40,13 @@ class PreciseRangeWidgetWrapper(QgsEditorWidgetWrapper):
             maxvalue = self.config('Max')
             step = self.config('Step')
             nullable = self.config('AllowNull')
-            self.spinbox.setMinimum(minvalue)
-            self.spinbox.setMaximum(maxvalue)
-            self.spinbox.setSingleStep(step)
-            self.spinbox.setDecimals(len(str(step).split('.')[1]) if len(str(step).split('.'))==2 else 0)
+            if minvalue:
+                self.spinbox.setMinimum(minvalue)
+            if maxvalue:
+                self.spinbox.setMaximum(maxvalue)
+            if step: 
+                self.spinbox.setSingleStep(step)
+                self.spinbox.setDecimals(len(str(step).split('.')[1]) if len(str(step).split('.'))==2 else 0)
             if nullable:
                 self.spinbox.setMinimum(minvalue - step)
                 self.spinbox.setValue(self.spinbox.minimum())
