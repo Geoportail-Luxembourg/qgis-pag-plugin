@@ -36,10 +36,10 @@ class PreciseRangeWidgetWrapper(QgsEditorWidgetWrapper):
         self.spinbox = editor if type(editor) is QDoubleSpinBox else editor.findChild(QDoubleSpinBox)
 
         if self.spinbox is not None:
-            minvalue = self.config['map']['Min']
-            maxvalue = self.config['map']['Max']
-            step = self.config['map']['Step']
-            nullable = self.config['map']['AllowNull']
+            minvalue = self.config()['map']['Min']
+            maxvalue = self.config()['map']['Max']
+            step = self.config()['map']['Step']
+            nullable = self.config()['map']['AllowNull']
             if minvalue:
                 self.spinbox.setMinimum(minvalue)
             if maxvalue:
