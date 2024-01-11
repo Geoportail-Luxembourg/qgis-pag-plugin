@@ -8,7 +8,7 @@ from __future__ import absolute_import
 from builtins import object
 from .import_shp_dialog import ImportShpDialog
 
-class ImportSHP(object):
+class ImportGeoJSON(object):
     '''
     Main class for the import data widget
     '''
@@ -17,14 +17,14 @@ class ImportSHP(object):
         '''
         Constructor
         
-        :param filename: The SHP filename
+        :param filename: The GeoJSON filename
         :type filename: str, QString
         '''
         self.filename = filename
     
     def runImport(self):
         '''
-        Import a SHP file
+        Import a GeoJSON file
         '''
         
         self.dlg = ImportShpDialog(self.filename)

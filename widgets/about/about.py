@@ -3,10 +3,12 @@ Created on 09 nov. 2015
 
 @author: arxit
 '''
+from __future__ import absolute_import
 
+from builtins import object
 import os
 
-from about_dialog import AboutDialog
+from .about_dialog import AboutDialog
 
 class About(object):
     '''

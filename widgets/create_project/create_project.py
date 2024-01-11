@@ -3,10 +3,12 @@ Created on 17 sept. 2015
 
 @author: arxit
 '''
+from __future__ import absolute_import
 
+from builtins import object
 import os
 
-from create_project_dialog import CreateProjectDialog
+from .create_project_dialog import CreateProjectDialog
 
 class CreateProject(object):
     '''

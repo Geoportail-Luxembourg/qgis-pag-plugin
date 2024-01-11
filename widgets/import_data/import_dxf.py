@@ -3,13 +3,15 @@ Created on 05 nov. 2015
 
 @author: arxit
 '''
+from __future__ import absolute_import
 
-from PyQt4.QtCore import QCoreApplication
+from builtins import object
+from qgis.PyQt.QtCore import QCoreApplication
 from qgis.core import *
 
 import PagLuxembourg.main
 
-from import_dxf_dialog import ImportDxfDialog
+from .import_dxf_dialog import ImportDxfDialog
 
 class ImportDXF(object):
     '''

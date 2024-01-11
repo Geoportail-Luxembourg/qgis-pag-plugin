@@ -23,9 +23,10 @@
 
 import os
 
-from PyQt4 import QtGui, uic
-from PyQt4.QtGui import QFileDialog, QMessageBox, QPixmap, QDesktopServices
-from PyQt4.QtCore import QCoreApplication, QUrl
+from qgis.PyQt import QtGui, uic
+from qgis.PyQt.QtWidgets import QDialog, QFileDialog, QMessageBox
+from qgis.PyQt.QtGui import QPixmap, QDesktopServices
+from qgis.PyQt.QtCore import QCoreApplication, QUrl
 
 import PagLuxembourg.main
 
@@ -33,12 +34,12 @@ FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'about_dialog.ui'))
 
 
-class AboutDialog(QtGui.QDialog, FORM_CLASS):
+class AboutDialog(QDialog, FORM_CLASS):
     def __init__(self, parent=None):
         '''
         Constructor.
         '''
-        
+
         super(AboutDialog, self).__init__(parent)
         # Set up the user interface from Designer.
         # After setupUI you can access any designer object by doing
@@ -46,7 +47,7 @@ class AboutDialog(QtGui.QDialog, FORM_CLASS):
         # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
-        
+
         logo_path = os.path.join(
             PagLuxembourg.main.plugin_dir,
             'widgets',
@@ -54,7 +55,7 @@ class AboutDialog(QtGui.QDialog, FORM_CLASS):
             'logo_pag.png')
         pixmap = QPixmap(logo_path)
         self.lblLogoPlugin.setPixmap(pixmap)
-        
+
         logo_path = os.path.join(
             PagLuxembourg.main.plugin_dir,
             'widgets',
@@ -62,7 +63,7 @@ class AboutDialog(QtGui.QDialog, FORM_CLASS):
             'logo_arxit.png')
         pixmap = QPixmap(logo_path)
         self.lblLogoArxit.setPixmap(pixmap)
-    
+
     def _showHelp(self):
         help_path = os.path.join(
             PagLuxembourg.main.plugin_dir,
