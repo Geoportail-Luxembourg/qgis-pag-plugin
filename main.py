@@ -270,7 +270,7 @@ class PAGLuxembourg(object):
         """
         found = False
         for action in self.iface.vectorMenu().actions():
-            if action.parent().objectName() == u'qgis_plugin_geometrycheckerplugin':
+            if action.parent().objectName() in (u'qgis_plugin_geometrycheckerplugin', u'qgis_plugin_plugin_geometrychecker'):
                 found = True
                 self.topoclean_widget = TopoClean(action)
                 self.pag_actions.append(self.add_action(
@@ -288,7 +288,7 @@ class PAGLuxembourg(object):
         # Topology checker
         found = False
         for action in self.iface.vectorToolBar().actions():
-            if action.parent().objectName() == u'qgis_plugin_topolplugin':
+            if action.parent().objectName() in (u'qgis_plugin_topolplugin', u'qgis_plugin_plugin_topology'):
                 found = True
                 self.topology_widget = TopologyChecker(action)
                 self.pag_actions.append(self.add_action(
