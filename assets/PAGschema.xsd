@@ -10,15 +10,15 @@
   xmlns:ili2c="http://www.interlis.ch/ili2c"
   >
 <xsd:annotation>
-  <xsd:appinfo source="http://www.interlis.ch/ili2c/ili2cversion">4.5.14-20150810</xsd:appinfo>
+  <xsd:appinfo source="http://www.interlis.ch/ili2c/ili2cversion">5.1.5-35f2a1fe63ea46830bc886ae50a3a818125c8eb9</xsd:appinfo>
   <xsd:appinfo source="http://www.interlis.ch/ili2c">
     <ili2c:model>PAG</ili2c:model>
-    <ili2c:modelVersion>2015-04-01</ili2c:modelVersion>
-    <ili2c:modelAt>mailto:david.hottua@mi.etat.lu</ili2c:modelAt>
+    <ili2c:modelVersion>2026-03-14</ili2c:modelVersion>
+    <ili2c:modelAt>mailto:geodata@mai.etat.lu</ili2c:modelAt>
   </xsd:appinfo>
 </xsd:annotation>
-<xsd:import namespace="http://www.opengis.net/gml/3.2" schemaLocation="http://schemas.opengis.net/gml/3.2.1/gml.xsd"/>
-<xsd:import namespace="http://www.interlis.ch/INTERLIS2.3/GML32/INTERLIS" schemaLocation="iligml.xsd"/>
+<xsd:import namespace="http://www.opengis.net/gml/3.2"/>
+<xsd:import namespace="http://www.interlis.ch/INTERLIS2.3/GML32/INTERLIS"/>
 <xsd:complexType name="LUREF">
   <xsd:complexContent>
     <xsd:restriction base="gml:PointPropertyType">
@@ -79,13 +79,11 @@
               <xsd:enumeration value="C046"/>
               <xsd:enumeration value="C047"/>
               <xsd:enumeration value="C048"/>
-              <xsd:enumeration value="C049"/>
               <xsd:enumeration value="C050"/>
               <xsd:enumeration value="C051"/>
               <xsd:enumeration value="C052"/>
               <xsd:enumeration value="C053"/>
               <xsd:enumeration value="C054"/>
-              <xsd:enumeration value="C055"/>
               <xsd:enumeration value="C056"/>
               <xsd:enumeration value="C057"/>
               <xsd:enumeration value="C058"/>
@@ -116,7 +114,6 @@
               <xsd:enumeration value="C086"/>
               <xsd:enumeration value="C087"/>
               <xsd:enumeration value="C088"/>
-              <xsd:enumeration value="C089"/>
               <xsd:enumeration value="C090"/>
               <xsd:enumeration value="C092"/>
               <xsd:enumeration value="C095"/>
@@ -144,10 +141,19 @@
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:element>
-        <xsd:element name="NOM_BUR_ET">
+        <xsd:element name="OBJET">
           <xsd:simpleType>
             <xsd:restriction base="xsd:normalizedString">
-              <xsd:maxLength value="50"/>
+              <xsd:enumeration value="refonte"/>
+              <xsd:enumeration value="modification"/>
+              <xsd:enumeration value="mise_a_jour_complete"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="DESCRIPTION">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="100"/>
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:element>
@@ -163,19 +169,10 @@
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:element>
-        <xsd:element name="OBJET">
+        <xsd:element name="NOM_BUR_ET">
           <xsd:simpleType>
             <xsd:restriction base="xsd:normalizedString">
-              <xsd:enumeration value="refonte"/>
-              <xsd:enumeration value="modification"/>
-              <xsd:enumeration value="mise_a_jour_complete"/>
-            </xsd:restriction>
-          </xsd:simpleType>
-        </xsd:element>
-        <xsd:element name="DESCRIPTION">
-          <xsd:simpleType>
-            <xsd:restriction base="xsd:normalizedString">
-              <xsd:maxLength value="100"/>
+              <xsd:maxLength value="50"/>
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:element>
@@ -210,8 +207,6 @@
   <xsd:complexContent>
     <xsd:extension base="gml:AbstractFeatureType">
       <xsd:sequence>
-        <xsd:element name="GEOMETRIE" type="gml:CurvePropertyType">
-        </xsd:element>
         <xsd:element name="CATEGORIE" minOccurs="0">
           <xsd:simpleType>
             <xsd:restriction base="xsd:normalizedString">
@@ -229,6 +224,8 @@
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:element>
+        <xsd:element name="GEOMETRIE" type="gml:CurvePropertyType">
+        </xsd:element>
       </xsd:sequence>
     </xsd:extension>
   </xsd:complexContent>
@@ -238,7 +235,6 @@
   <xsd:complexContent>
     <xsd:extension base="gml:AbstractFeatureType">
       <xsd:sequence>
-        <xsd:element name="GEOMETRIE" type="LUREF"/>
         <xsd:element name="CATEGORIE" minOccurs="0">
           <xsd:simpleType>
             <xsd:restriction base="xsd:normalizedString">
@@ -253,6 +249,7 @@
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:element>
+        <xsd:element name="GEOMETRIE" type="LUREF"/>
       </xsd:sequence>
     </xsd:extension>
   </xsd:complexContent>
@@ -262,8 +259,6 @@
   <xsd:complexContent>
     <xsd:extension base="gml:AbstractFeatureType">
       <xsd:sequence>
-        <xsd:element name="GEOMETRIE" type="gml:SurfacePropertyType">
-        </xsd:element>
         <xsd:element name="CATEGORIE" minOccurs="0">
           <xsd:simpleType>
             <xsd:restriction base="xsd:normalizedString">
@@ -313,6 +308,8 @@
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:element>
+        <xsd:element name="GEOMETRIE" type="gml:SurfacePropertyType">
+        </xsd:element>
       </xsd:sequence>
     </xsd:extension>
   </xsd:complexContent>
@@ -346,7 +343,12 @@
   <xsd:complexContent>
     <xsd:extension base="gml:AbstractFeatureType">
       <xsd:sequence>
-        <xsd:element name="GEOMETRIE" type="gml:CurvePropertyType">
+        <xsd:element name="CODE" minOccurs="0">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="20"/>
+            </xsd:restriction>
+          </xsd:simpleType>
         </xsd:element>
         <xsd:element name="NOM_FICHIER">
           <xsd:simpleType>
@@ -355,12 +357,7 @@
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:element>
-        <xsd:element name="CODE" minOccurs="0">
-          <xsd:simpleType>
-            <xsd:restriction base="xsd:normalizedString">
-              <xsd:maxLength value="20"/>
-            </xsd:restriction>
-          </xsd:simpleType>
+        <xsd:element name="GEOMETRIE" type="gml:CurvePropertyType">
         </xsd:element>
       </xsd:sequence>
     </xsd:extension>
@@ -371,14 +368,6 @@
   <xsd:complexContent>
     <xsd:extension base="gml:AbstractFeatureType">
       <xsd:sequence>
-        <xsd:element name="GEOMETRIE" type="LUREF"/>
-        <xsd:element name="NOM_FICHIER">
-          <xsd:simpleType>
-            <xsd:restriction base="xsd:normalizedString">
-              <xsd:maxLength value="100"/>
-            </xsd:restriction>
-          </xsd:simpleType>
-        </xsd:element>
         <xsd:element name="CODE" minOccurs="0">
           <xsd:simpleType>
             <xsd:restriction base="xsd:normalizedString">
@@ -386,6 +375,14 @@
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:element>
+        <xsd:element name="NOM_FICHIER">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="100"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="GEOMETRIE" type="LUREF"/>
       </xsd:sequence>
     </xsd:extension>
   </xsd:complexContent>
@@ -395,7 +392,12 @@
   <xsd:complexContent>
     <xsd:extension base="gml:AbstractFeatureType">
       <xsd:sequence>
-        <xsd:element name="GEOMETRIE" type="gml:SurfacePropertyType">
+        <xsd:element name="CODE" minOccurs="0">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="20"/>
+            </xsd:restriction>
+          </xsd:simpleType>
         </xsd:element>
         <xsd:element name="NOM_FICHIER">
           <xsd:simpleType>
@@ -404,12 +406,7 @@
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:element>
-        <xsd:element name="CODE" minOccurs="0">
-          <xsd:simpleType>
-            <xsd:restriction base="xsd:normalizedString">
-              <xsd:maxLength value="20"/>
-            </xsd:restriction>
-          </xsd:simpleType>
+        <xsd:element name="GEOMETRIE" type="gml:SurfacePropertyType">
         </xsd:element>
       </xsd:sequence>
     </xsd:extension>
@@ -565,15 +562,6 @@
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:element>
-        <xsd:element name="NOM_FICHIER">
-          <xsd:simpleType>
-            <xsd:restriction base="xsd:normalizedString">
-              <xsd:maxLength value="100"/>
-            </xsd:restriction>
-          </xsd:simpleType>
-        </xsd:element>
-        <xsd:element name="GEOMETRIE" type="gml:CurvePropertyType">
-        </xsd:element>
         <xsd:element name="GENRE" minOccurs="0">
           <xsd:simpleType>
             <xsd:restriction base="xsd:normalizedString">
@@ -588,6 +576,15 @@
               <xsd:maxInclusive value="100.00"/>
             </xsd:restriction>
           </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="NOM_FICHIER">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="100"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="GEOMETRIE" type="gml:CurvePropertyType">
         </xsd:element>
       </xsd:sequence>
     </xsd:extension>
@@ -609,6 +606,13 @@
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:element>
+        <xsd:element name="GENRE" minOccurs="0">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="10"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
         <xsd:element name="NOM_FICHIER">
           <xsd:simpleType>
             <xsd:restriction base="xsd:normalizedString">
@@ -617,13 +621,6 @@
           </xsd:simpleType>
         </xsd:element>
         <xsd:element name="GEOMETRIE" type="gml:SurfacePropertyType">
-        </xsd:element>
-        <xsd:element name="GENRE" minOccurs="0">
-          <xsd:simpleType>
-            <xsd:restriction base="xsd:normalizedString">
-              <xsd:maxLength value="10"/>
-            </xsd:restriction>
-          </xsd:simpleType>
         </xsd:element>
       </xsd:sequence>
     </xsd:extension>
@@ -803,14 +800,6 @@
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:element>
-        <xsd:element name="GENRE">
-          <xsd:simpleType>
-            <xsd:restriction base="xsd:normalizedString">
-              <xsd:enumeration value="neant"/>
-              <xsd:enumeration value="Art29bis2al3"/>
-            </xsd:restriction>
-          </xsd:simpleType>
-        </xsd:element>
         <xsd:element name="DENOMINATION" minOccurs="0">
           <xsd:simpleType>
             <xsd:restriction base="xsd:normalizedString">
@@ -839,6 +828,14 @@
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:element>
+        <xsd:element name="GENRE">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:enumeration value="neant"/>
+              <xsd:enumeration value="Art29bis2al3"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
         <xsd:element name="GEOMETRIE" type="gml:SurfacePropertyType">
         </xsd:element>
       </xsd:sequence>
@@ -864,14 +861,14 @@
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:element>
-        <xsd:element name="GEOMETRIE" type="gml:SurfacePropertyType">
-        </xsd:element>
         <xsd:element name="NOM_FICHIER" minOccurs="0">
           <xsd:simpleType>
             <xsd:restriction base="xsd:normalizedString">
               <xsd:maxLength value="100"/>
             </xsd:restriction>
           </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="GEOMETRIE" type="gml:SurfacePropertyType">
         </xsd:element>
       </xsd:sequence>
     </xsd:extension>
@@ -893,14 +890,14 @@
   <xsd:complexContent>
     <xsd:extension base="gml:AbstractFeatureType">
       <xsd:sequence>
-        <xsd:element name="GEOMETRIE" type="gml:SurfacePropertyType">
-        </xsd:element>
         <xsd:element name="NOM_FICHIER">
           <xsd:simpleType>
             <xsd:restriction base="xsd:normalizedString">
               <xsd:maxLength value="100"/>
             </xsd:restriction>
           </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="GEOMETRIE" type="gml:SurfacePropertyType">
         </xsd:element>
       </xsd:sequence>
     </xsd:extension>
@@ -921,8 +918,10 @@
               <xsd:enumeration value="MIX_v"/>
               <xsd:enumeration value="MIX_r"/>
               <xsd:enumeration value="BEP"/>
+              <xsd:enumeration value="ECO_c"/>
               <xsd:enumeration value="ECO_c1"/>
               <xsd:enumeration value="ECO_c2"/>
+              <xsd:enumeration value="ECO_c3"/>
               <xsd:enumeration value="ECO_r"/>
               <xsd:enumeration value="ECO_r1"/>
               <xsd:enumeration value="ECO_r2"/>
@@ -930,20 +929,27 @@
               <xsd:enumeration value="SP_n"/>
               <xsd:enumeration value="COM"/>
               <xsd:enumeration value="MIL"/>
-              <xsd:enumeration value="SPEC"/>
               <xsd:enumeration value="AERO"/>
+              <xsd:enumeration value="PORT_m"/>
+              <xsd:enumeration value="PORT_p"/>
               <xsd:enumeration value="GARE"/>
               <xsd:enumeration value="REC"/>
+              <xsd:enumeration value="SPEC"/>
               <xsd:enumeration value="JAR"/>
+              <xsd:enumeration value="ZPU"/>
               <xsd:enumeration value="AGR"/>
               <xsd:enumeration value="FOR"/>
               <xsd:enumeration value="VIT"/>
               <xsd:enumeration value="HOR"/>
-              <xsd:enumeration value="PARC"/>
               <xsd:enumeration value="VERD"/>
-              <xsd:enumeration value="PORT_p"/>
-              <xsd:enumeration value="PORT_m"/>
-              <xsd:enumeration value="ECO_c3"/>
+              <xsd:enumeration value="PARC"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="GENRE" minOccurs="0">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="10"/>
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:element>
@@ -955,13 +961,6 @@
           </xsd:simpleType>
         </xsd:element>
         <xsd:element name="GEOMETRIE" type="gml:SurfacePropertyType">
-        </xsd:element>
-        <xsd:element name="GENRE" minOccurs="0">
-          <xsd:simpleType>
-            <xsd:restriction base="xsd:normalizedString">
-              <xsd:maxLength value="10"/>
-            </xsd:restriction>
-          </xsd:simpleType>
         </xsd:element>
       </xsd:sequence>
     </xsd:extension>
@@ -1052,6 +1051,13 @@
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:element>
+        <xsd:element name="GENRE" minOccurs="0">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:normalizedString">
+              <xsd:maxLength value="10"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
         <xsd:element name="NOM_FICHIER">
           <xsd:simpleType>
             <xsd:restriction base="xsd:normalizedString">
@@ -1060,13 +1066,6 @@
           </xsd:simpleType>
         </xsd:element>
         <xsd:element name="GEOMETRIE" type="gml:SurfacePropertyType">
-        </xsd:element>
-        <xsd:element name="GENRE" minOccurs="0">
-          <xsd:simpleType>
-            <xsd:restriction base="xsd:normalizedString">
-              <xsd:maxLength value="10"/>
-            </xsd:restriction>
-          </xsd:simpleType>
         </xsd:element>
       </xsd:sequence>
     </xsd:extension>

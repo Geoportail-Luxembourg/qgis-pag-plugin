@@ -3,8 +3,10 @@ Created on 05 nov. 2015
 
 @author: arxit
 '''
+from __future__ import absolute_import
 
-from import_shp_dialog import ImportShpDialog
+from builtins import object
+from .import_shp_dialog import ImportShpDialog
 
 class ImportSHP(object):
     '''
