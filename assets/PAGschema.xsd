@@ -17,8 +17,9 @@
     <ili2c:modelAt>mailto:geodata@mai.etat.lu</ili2c:modelAt>
   </xsd:appinfo>
 </xsd:annotation>
-<xsd:import namespace="http://www.opengis.net/gml/3.2"/>
-<xsd:import namespace="http://www.interlis.ch/INTERLIS2.3/GML32/INTERLIS"/>
+<xsd:import namespace="http://www.opengis.net/gml/3.2" schemaLocation="http://schemas.opengis.net/gml/3.2.1/gml.xsd"/>
+<xsd:import namespace="http://www.interlis.ch/INTERLIS2.3/GML32/INTERLIS" schemaLocation="iligml.xsd"/>
+
 <xsd:complexType name="LUREF">
   <xsd:complexContent>
     <xsd:restriction base="gml:PointPropertyType">
